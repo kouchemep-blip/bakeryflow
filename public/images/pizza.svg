@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-labelledby="title">
+  <title>Pizza</title>
+  <circle cx="100" cy="100" r="92" fill="#d97706"/>
+  <circle cx="100" cy="100" r="82" fill="#fbbf24"/>
+  <circle cx="100" cy="100" r="67" fill="#fef3c7"/>
+  <circle cx="63" cy="75" r="13" fill="#b91c1c"/>
+  <circle cx="135" cy="70" r="13" fill="#b91c1c"/>
+  <circle cx="119" cy="127" r="13" fill="#b91c1c"/>
+  <circle cx="71" cy="132" r="13" fill="#b91c1c"/>
+  <path d="M100 47c8 13 8 24 0 37-8-13-8-24 0-37zm39 44c13 2 22 9 29 21-15 1-25-4-29-21zm-72 0c-4 17-14 22-29 21 7-12 16-19 29-21z" fill="#15803d"/>
+</svg>

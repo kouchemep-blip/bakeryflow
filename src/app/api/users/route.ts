@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { Prisma } from "@prisma/client";
 
@@ -12,12 +12,8 @@ export async function GET() {
     console.log(error);
 
     return NextResponse.json(
-      {
-        message: "Erreur lors de la récupération de l'utilisateur.",
-      },
-      {
-        status: 500,
-      },
+      { message: "Erreur lors de la récupération des utilisateurs." },
+      { status: 500 },
     );
   }
 }
@@ -38,28 +34,17 @@ export async function POST(request: Request) {
 
     return NextResponse.json(user, { status: 201 });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        return NextResponse.json(
-          {
-            message: "Email ou téléphone déjà utilisé.",
-          },
-          {
-            status: 409,
-          },
-        );
-      }
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        { message: "Email ou téléphone déjà utilisé." },
+        { status: 409 },
+      );
     }
 
     console.log(error);
-
-    return NextResponse.json(
-      {
-        message: "Erreur serveur.",
-      },
-      {
-        status: 500,
-      },
-    );
+    return NextResponse.json({ message: "Erreur serveur." }, { status: 500 });
   }
 }

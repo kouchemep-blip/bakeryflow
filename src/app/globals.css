@@ -10,6 +10,70 @@ html{
   scroll-behavior: smooth;
 }
 
-body{
-  min-height:100vh;
+html::-webkit-scrollbar {
+  width: 4px;
+}
+
+html::-webkit-scrollbar-track {
+  background: white; 
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #C3B9B1; 
+  border-radius: 10px;
+  backdrop-filter: 150px;
+
+}
+
+
+body {
+  min-height: 100vh;
+  padding-inline: 16px;
+  background-color: #f8fafc;
+}
+
+.nav_light {
+  position : absolute;
+  top : 0;
+  left: 1.3em;
+  background-color: rgb(230, 50, 50);
+  width: 4em;
+  height: .4em;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  transition: .3s ease;
+}
+
+.nav_light::before {
+  content: '';
+  width : 5em;
+  height: 7em;
+  position: absolute;
+  top: .4em;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, .3) -50%, rgba(255, 255, 255, 0) 90%);
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0% 100%);
+}
+
+.nav_link.active a {
+  opacity: 1;
+}
+
+/* ces propriétés s'applique à chaque nth-child(i)  */
+
+.nav_link.active a .bx-home-alt-2 {
+  color: white;
+  text-shadow: 0 0 15px blue, 0 0 30px blue, 0 0 45px blue, 0 0 60px blue,
+}
+
+.nav_link:nth-child(1).active ~ .nav_light {
+  background-color: aqua;
+}
+
+
+
+@media (min-width: 768px) {
+  body {
+    padding-inline: 32px;
+  }
 }

@@ -19,7 +19,7 @@ export default function FormulaireAdhesion() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch("/api/users", {
+    const response = await fetch("../api/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export default function FormulaireAdhesion() {
 
   return (
     <>
-      <style>{`
+      <head><style>{`
         @font-face {
           font-family: "Merienda";
           src: url(/Merienda/Merienda-VariableFont_wght.ttf) format(truetype);
@@ -152,7 +152,7 @@ export default function FormulaireAdhesion() {
           background: linear-gradient(90deg, #00ff80, #00ffff);
           box-shadow: 0 5px 15px #00ffff80;
         }
-      `}</style>
+      `}</style></head>
 
       <div className="page-wrapper">
         <div className="form-container">
