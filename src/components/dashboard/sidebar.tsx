@@ -22,19 +22,18 @@ const NAV_LINK = [
   },
 ];
 
+import Link from "next/link";
+
 export function DashboardNav() {
   return (
-    <div className="relative w-[15vw] bg-amber-400">
-      <div className="relative bg-white/10 backdrop-blur-xl backdrop-saturate-150 border-b border-white/15 shadow-[0_4px_30px_rgba(0,0,0,0.1)] w-[0%] h-full left-[25%] rounded-full flex items-center justify-center">
-        <ul className="relative flex flex-col gap-20 w-full items-center justify-center">
+    <nav className="w-full bg-amber-400 p-3 md:min-h-screen md:w-60 md:p-5">
+      <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm md:flex-col md:items-stretch md:gap-3">
           {NAV_LINK.map((item) => (
-            <li key={item.href} className="text-ls inline-block">
-              <div className="nav_light mt-6"></div>
-              {item.name}
+            <li key={item.href}>
+              <Link className="block rounded-lg px-3 py-2 transition-colors hover:bg-white/50" href={item.href}>{item.name}</Link>
             </li>
           ))}
-        </ul>
-      </div>
-    </div>
+      </ul>
+    </nav>
   );
 }

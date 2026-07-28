@@ -1,13 +1,23 @@
 @import "tailwindcss";
 
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-merienda), cursive;
+    font-weight: 300;
+  }
 
-html{
-  scroll-behavior: smooth;
+  html {
+    scroll-behavior: smooth;
+  }
+  
+
+  body {
+    min-height: 100vh;
+    background-color: #f8fafc;
+  }
 }
 
 html::-webkit-scrollbar {
@@ -25,12 +35,10 @@ html::-webkit-scrollbar-thumb {
 
 }
 
-
-body {
-  min-height: 100vh;
-  padding-inline: 16px;
-  background-color: #f8fafc;
+@theme {
+  --font-merienda: var(--font-merienda);
 }
+
 
 .nav_light {
   position : absolute;
@@ -68,12 +76,4 @@ body {
 
 .nav_link:nth-child(1).active ~ .nav_light {
   background-color: aqua;
-}
-
-
-
-@media (min-width: 768px) {
-  body {
-    padding-inline: 32px;
-  }
 }

@@ -1,7 +1,7 @@
-import { HeroLanding } from "@/components/landing/hero";
 import Footer from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import type { Metadata, Viewport } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,10 +20,11 @@ export default function LandingLayout({
 }>) {
   return (
     <div>
+      <div className="fixed inset-0 w-full">
+        <Image src={"/images/bg.jpg"} fill alt="background" />
+      </div>
       <Navbar />
       <main>
-        <HeroLanding />
-        <div className="bg-white h-[40vh] inset-0" />
         {children}
       </main>
       <Footer />

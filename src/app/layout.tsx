@@ -1,21 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Open_Sans } from "next/font/google";
+import { Merienda } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const merienda = Merienda({
+  variable: "--font-merienda",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const openSans = Open_Sans({
-  variable: "--font-open-sans",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: "300",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -31,9 +22,9 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} ${openSans.variable} h-full antialiased`}
+      className={`${merienda.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col [@media(max-width:768px)]:overflow-x-hidden md:overflow-x-hidden">
+      <body className="flex min-h-full flex-col overflow-x-hidden">
         {children}
       </body>
     </html>

@@ -7,7 +7,8 @@ type ProductTableProps = {
 
 export default function ProductTable({ products }: ProductTableProps) {
   return (
-    <table className="w-full border-collapse">
+    <div className="w-full overflow-x-auto rounded-lg border">
+    <table className="min-w-[680px] w-full border-collapse">
       <thead>
         <tr className="border-b">
           <th className="p-3 text-left">Image</th>
@@ -25,5 +26,6 @@ export default function ProductTable({ products }: ProductTableProps) {
         ))}
       </tbody>
     </table>
+    </div>
   );
 }
