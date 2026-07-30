@@ -79,15 +79,15 @@ export function RegisterForm({
 }: Props) {
   return (
     <div
-      className={`absolute left-0 top-0 h-full w-full sm:w-1/2 transition-all duration-[600ms] ease-in-out ${
+      className={`absolute left-0 top-0 h-full w-full sm:w-1/2 transition-all duration-600 ease-in-out ${
         rightPanelActive
-          ? "z-[5] translate-x-0 opacity-100 animate-show sm:translate-x-full"
-          : "z-[1] translate-x-0 opacity-0"
+          ? "z-5 translate-x-0 opacity-100 animate-show sm:translate-x-full"
+          : "z-1 translate-x-0 opacity-0"
       }`}
     >
       <form
         onSubmit={onSubmit}
-        className="relative flex h-full flex-col items-center justify-center overflow-y-auto overflow-x-hidden bg-white px-5 pb-5 pt-[205px] text-center [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C3B9B1] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-[4px] sm:px-14 sm:pb-0 sm:pt-8"
+        className="relative flex h-full flex-col mt-2 gap-2 items-center justify-center overflow-y-auto overflow-x-hidden bg-white px-5 pb-5 pt-51.25 text-center [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C3B9B1] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar]:w-1 sm:px-14 sm:pb-0 sm:pt-8"
       >
         <div className="mb-3 flex flex-col items-center gap-1">
          
@@ -100,7 +100,7 @@ export function RegisterForm({
         </div>
 
         {/* ── Prénom + Nom (côte à côte) ── */}
-        <div className="flex w-full flex-col gap-3 sm:flex-row">
+        <div className="flex w-full flex-col gap-6 sm:flex-row">
           <Field
             label="Prénom"
             placeholder="Jean"
@@ -127,18 +127,18 @@ export function RegisterForm({
           value={regEmail.value}
           error={regEmail.error}
           onChange={onEmailChange}
-          className="mb-4"
+          className="mb-1"
         />
 
         {/* ── Téléphone ── */}
         <Field
           type="tel"
           label="Téléphone"
-          placeholder="+33 6 00 00 00 00"
+          placeholder="+229 01 00 00 00 00"
           value={regPhone.value}
           error={regPhone.error}
           onChange={onPhoneChange}
-          className="mb-4"
+          className="mb-1"
         />
 
         {/* ── Mot de passe ── */}
@@ -153,7 +153,7 @@ export function RegisterForm({
         />
 
         {/* ── Bouton submit ── */}
-        <div className="mb-4 flex w-full flex-col items-center justify-center">
+        <div className="-mt-12 mb-1 flex w-full flex-col items-center justify-center">
           {registerServerError && (
             <p className="mb-2 w-full text-left text-xs text-red-600">{registerServerError}</p>
           )}

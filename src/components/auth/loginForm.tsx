@@ -155,7 +155,7 @@ export function LoginForm({
         </div>
 
         {/* ── Séparateur ── */}
-        <div className="flex w-full items-center gap-3">
+        <div className="flex w-full items-center gap-3 mb-3">
           <div className="h-px flex-1 bg-gray-100" />
           <span className="text-xs text-gray-400">ou continue avec</span>
           <div className="h-px flex-1 bg-gray-100" />

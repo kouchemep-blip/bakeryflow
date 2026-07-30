@@ -10,35 +10,49 @@ type Category = {
 };
 type ProductFormProps = {
   categories: Category[];
+  product?: Product;
 };
 
-import { productSchema, ProductFormData } from "@/shemas/productSchema";
+import { productSchema, ProductFormData } from "@/schemas/productSchema";
+import { Product } from "@prisma/client";
 
-export default function ProductForm({ categories }: ProductFormProps) {
+export default function ProductForm({ product, categories }: ProductFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: product?.name ?? "",
+      description: product?.description ?? "",
+      price: product?.price ?? 0,
+      categoryId: product?.categoryId ?? undefined,
+      status: product?.status ?? "AVAILABLE",
+    },
   });
 
   const router = useRouter();
+  const url = product ? `/api/products/${product.id}` : "/api/products";
+  const method = product 
+    ? "PATCH"
+    : "POST"
 
   async function onSubmit(data: ProductFormData) {
-    const response = await fetch("/api/products", {
-      method: "POST",
+    const response = await fetch(url, {
+      method,
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         ...data,
-        image: "default-product.png",
+        image: product?.image ?? "default-product.png",
       }),
     });
 
     if (response.ok) {
       router.push("/dashboard/products");
+      router.refresh();
     }
 
     const result = await response.json();
@@ -99,7 +113,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
         <p>{errors.status?.message}</p>
       </div>
 
-      <button type="submit">Enregistrer</button>
+      <button type="submit">{product ? "Mettre à jour" : "Créer le produit"}</button>
     </form>
   );
 }
