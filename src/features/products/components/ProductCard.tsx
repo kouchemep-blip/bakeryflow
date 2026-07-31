@@ -2,7 +2,15 @@
 import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart, Check, Star, Flame, Leaf, Sparkles, TrendingUp } from "lucide-react";
+import {
+  ShoppingCart,
+  Check,
+  Star,
+  Flame,
+  Leaf,
+  Sparkles,
+  TrendingUp,
+} from "lucide-react";
 import { useCartStore } from "@/features/cart/store/cart.store";
 import { getAverageRating } from "@/types/products";
 import type { ProductWithCategoryAndReviews } from "@/types/products";
@@ -31,18 +39,38 @@ function resolveTags(product: ProductWithCategoryAndReviews): Tag[] {
 
   // Végé : détection naïve par nom/description (à affiner selon ton catalogue)
   const isVege = /salade|végé|vegan|légume/i.test(
-    product.name + product.description
+    product.name + product.description,
   );
 
   // Épicé : détection par nom/description
   const isSpicy = /épicé|pimenté|harissa|spicy/i.test(
-    product.name + product.description
+    product.name + product.description,
   );
 
-  if (isNew)     tags.push({ label: "Nouveau",   color: "bg-blue-500",   icon: <Sparkles size={10} /> });
-  if (isPopular) tags.push({ label: "Populaire", color: "bg-orange-500", icon: <TrendingUp size={10} /> });
-  if (isVege)    tags.push({ label: "Végé",      color: "bg-green-500",  icon: <Leaf size={10} /> });
-  if (isSpicy)   tags.push({ label: "Épicé",     color: "bg-red-500",    icon: <Flame size={10} /> });
+  if (isNew)
+    tags.push({
+      label: "Nouveau",
+      color: "bg-blue-500",
+      icon: <Sparkles size={10} />,
+    });
+  if (isPopular)
+    tags.push({
+      label: "Populaire",
+      color: "bg-orange-500",
+      icon: <TrendingUp size={10} />,
+    });
+  if (isVege)
+    tags.push({
+      label: "Végé",
+      color: "bg-green-500",
+      icon: <Leaf size={10} />,
+    });
+  if (isSpicy)
+    tags.push({
+      label: "Épicé",
+      color: "bg-red-500",
+      icon: <Flame size={10} />,
+    });
 
   return tags;
 }
@@ -52,7 +80,7 @@ function resolveTags(product: ProductWithCategoryAndReviews): Tag[] {
 type ProductCardProps = {
   product: ProductWithCategoryAndReviews;
   // Ref du bouton panier pour l'animation fly-to-cart (étape 5)
-  cartButtonRef?: React.RefObject<HTMLElement>;
+  cartButtonRef?: React.RefObject<HTMLElement | null>;
   // Callback déclenché après ajout (pour fly-to-cart)
   onAddToCart?: (productEl: HTMLElement) => void;
 };
@@ -60,18 +88,44 @@ type ProductCardProps = {
 // ─── Composant ────────────────────────────────────────────────────────────────
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
-  const addItem    = useCartStore((state) => state.addItem);
+  const addItem = useCartStore((state) => state.addItem);
   const openDrawer = useCartStore((state) => state.openDrawer);
 
   // Feedback bouton : idle | added (check) | back à idle après 1.5s
   const [btnState, setBtnState] = useState<"idle" | "added">("idle");
 
   const isUnavailable = product.status === "UNAVAILABLE";
-  const avgRating     = getAverageRating(product.reviews);
-  const tags          = resolveTags(product);
+  const avgRating = getAverageRating(product.reviews);
+  const tags = resolveTags(product);
 
   // Ref sur l'image pour passer au fly-to-cart
   const imageRef = useState<HTMLDivElement | null>(null);
+
+  // const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.stopPropagation();
+  //   if (isUnavailable || btnState === "added") return;
+
+  //   addItem({
+  //     product: {
+  //       id: product.id,
+  //       name: product.name,
+  //       image: product.image,
+  //       price: product.price,
+  //       categoryId: product.categoryId,
+  //     },
+  //   });
+
+  //   setBtnState("added");
+  //   setTimeout(() => setBtnState("idle"), 1500);
+
+  //   // Fly-to-cart : passe l'élément image source au parent
+  //   if (onAddToCart && imageRef.current) {
+  //     onAddToCart(imageRef.current);
+  //   }
+  // };
+
+  // // Dans le JSX, branche imageRef sur le div image :
+  // // <div ref={imageRef} className="relative w-full h-48 overflow-hidden bg-gray-50">
 
   const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -79,10 +133,10 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
     addItem({
       product: {
-        id:         product.id,
-        name:       product.name,
-        image:      product.image,
-        price:      product.price,
+        id: product.id,
+        name: product.name,
+        image: product.image,
+        price: product.price,
         categoryId: product.categoryId,
       },
     });
@@ -113,7 +167,9 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
     >
       {/* ── Image ────────────────────────────────────────────────────────── */}
       <div
-        ref={(el) => { imageRef[1](el); }}
+        ref={(el) => {
+          imageRef[1](el);
+        }}
         className="relative w-full h-48 overflow-hidden bg-gray-50"
       >
         <Image
@@ -158,7 +214,6 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
       {/* ── Contenu ──────────────────────────────────────────────────────── */}
       <div className="flex flex-col flex-1 p-4 gap-2">
-
         {/* Catégorie */}
         <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">
           {product.category.name}
@@ -178,7 +233,9 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         {avgRating !== null && (
           <div className="flex items-center gap-1">
             <Star size={13} className="fill-amber-400 text-amber-400" />
-            <span className="text-sm font-medium text-gray-700">{avgRating}</span>
+            <span className="text-sm font-medium text-gray-700">
+              {avgRating}
+            </span>
             <span className="text-xs text-gray-400">
               ({product.reviews.length} avis)
             </span>
@@ -203,8 +260,8 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               isUnavailable
                 ? "bg-gray-100 text-gray-300 cursor-not-allowed"
                 : btnState === "added"
-                ? "bg-green-500 text-white"
-                : "bg-gray-900 text-white hover:bg-amber-500",
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-900 text-white hover:bg-amber-500",
             ].join(" ")}
           >
             <AnimatePresence mode="wait" initial={false}>

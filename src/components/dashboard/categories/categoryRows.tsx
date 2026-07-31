@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type CategoryRowProps = {
   category: {
@@ -15,13 +16,16 @@ type CategoryRowProps = {
 export default function CategoryRow({
   category,
 }: CategoryRowProps) {
+  const router = useRouter();
+
   async function handleDelete() {
     if (
       !confirm(
         "Voulez-vous vraiment supprimer cette catégorie ?"
       )
-    )
+    ) {
       return;
+    }
 
     const response = await fetch(
       `/api/categories/${category.id}`,
@@ -37,7 +41,7 @@ export default function CategoryRow({
       return;
     }
 
-    // window.location.reload();
+    router.refresh();
   }
 
   return (

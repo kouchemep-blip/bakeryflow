@@ -1,34 +1,9 @@
-import { prisma } from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+﻿import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 type Params = Promise<{
-  id: number;
+  id: string;
 }>;
-
-export async function DELETE(request: Request, { params }: { params: Params }) {
-  try {
-    const { id } = await params;
-    await prisma.category.delete({
-      where: {
-        id: id,
-      },
-    });
-
-    return NextResponse.json({
-      message: "Catégory spprimée",
-    });
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        message: "Error lors de la suppression",
-      },
-      {
-        status: 500,
-      },
-    );
-  }
-}
 
 export async function PATCH(
   request: Request,
@@ -49,11 +24,59 @@ export async function PATCH(
 
     return NextResponse.json(category);
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return NextResponse.json(
       {
-        message: "Erreur lors de la modification.",
+        message: "Erreur lors de la modification de la catégorie.",
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Params },
+) {
+  try {
+    const { id } = await params;
+
+    const productsCount = await prisma.product.count({
+      where: {
+        categoryId: Number(id),
+      },
+    });
+
+    if (productsCount > 0) {
+      return NextResponse.json(
+        {
+          message:
+            "Impossible de supprimer cette catégorie car elle contient encore des produits.",
+        },
+        {
+          status: 409,
+        },
+      );
+    }
+
+    await prisma.category.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    return NextResponse.json({
+      message: "Catégorie supprimée avec succès.",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      {
+        message: "Erreur lors de la suppression de la catégorie.",
       },
       {
         status: 500,

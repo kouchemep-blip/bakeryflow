@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { uploadImage } from "@/lib/upload";
 
 // ─── GET — liste des produits (landing page client) ───────────────────────────
 export async function GET(request: Request) {
@@ -43,32 +44,60 @@ export async function GET(request: Request) {
 // ─── POST — création produit (dashboard admin) — inchangé ─────────────────────
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const formData = await request.formData();
 
-    if (!body.name || !body.description || !body.price || !body.categoryId) {
+    const name = formData.get("name") as string;
+    const description = formData.get("description") as string;
+    const price = Number(formData.get("price"));
+    const categoryId = Number(formData.get("categoryId"));
+    const status = formData.get("status") as
+      | "AVAILABLE"
+      | "UNAVAILABLE";
+
+    const image = formData.get("image") as File | null;
+
+    if (!image) {
       return NextResponse.json(
-        { message: "Données manquantes." },
-        { status: 400 }
+        {
+          message: "Veuillez sélectionner une image.",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
+    const bytes = await image.arrayBuffer();
+
+    const buffer = Buffer.from(bytes);
+
+    const uploaded = await uploadImage(buffer);
+
     const product = await prisma.product.create({
       data: {
-        name: body.name,
-        description: body.description,
-        price: body.price,
-        image: body.image,
-        categoryId: body.categoryId,
-        status: body.status,
+        name,
+        description,
+        price,
+        categoryId,
+        status,
+        image: uploaded.secure_url,
       },
     });
 
-    return NextResponse.json(product, { status: 201 });
+    return NextResponse.json(product, {
+      status: 201,
+    });
+
   } catch (error) {
-    console.log(error);
+    console.error(error);
+
     return NextResponse.json(
-      { message: "Erreur lors de la création du produit." },
-      { status: 500 }
+      {
+        message: "Erreur lors de la création du produit.",
+      },
+      {
+        status: 500,
+      }
     );
   }
 }

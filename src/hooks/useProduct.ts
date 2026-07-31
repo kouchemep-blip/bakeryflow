@@ -28,7 +28,7 @@ export function useProducts(): UseProductsReturn {
     setError(null);
 
     try {
-      const res = await fetch("/api/product");
+      const res = await fetch("/api/products");
 
       if (!res.ok) {
         const data = await res.json().catch(() => null);

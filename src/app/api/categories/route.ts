@@ -28,7 +28,7 @@ export async function POST(request: Request) {
         message: "Erreur lors de la création",
       },
       {
-        status: 508,
+        status: 500,
       },
     );
   }

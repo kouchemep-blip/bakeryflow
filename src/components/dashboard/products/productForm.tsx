@@ -3,24 +3,33 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+import ImagePicker from "./imagePicker";
+
+import { productSchema, ProductFormData } from "@/schemas/productSchema";
+
+import { Product } from "@prisma/client";
 
 type Category = {
   id: number;
   name: string;
 };
+
 type ProductFormProps = {
   categories: Category[];
   product?: Product;
 };
 
-import { productSchema, ProductFormData } from "@/schemas/productSchema";
-import { Product } from "@prisma/client";
-
 export default function ProductForm({ product, categories }: ProductFormProps) {
+  const router = useRouter();
+
+  const [image, setImage] = useState<File | null>(null);
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -32,76 +41,86 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
     },
   });
 
-  const router = useRouter();
-  const url = product ? `/api/products/${product.id}` : "/api/products";
-  const method = product 
-    ? "PATCH"
-    : "POST"
-
   async function onSubmit(data: ProductFormData) {
-    const response = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...data,
-        image: product?.image ?? "default-product.png",
-      }),
-    });
+    console.log("Le formulaire est soumis");
+    console.log(image);
+    const formData = new FormData();
 
-    if (response.ok) {
-      router.push("/dashboard/products");
-      router.refresh();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", String(data.price));
+    formData.append("categoryId", String(data.categoryId));
+    formData.append("status", data.status);
+
+    if (image) {
+      formData.append("image", image);
+    }
+    console.log("Envoi de la requête...");
+    const response = await fetch(
+      product ? `/api/products/${product.id}` : "/api/products",
+      {
+        method: product ? "PATCH" : "POST",
+        body: formData,
+      },
+    );
+
+    console.log(response.status);
+
+    if (!response.ok) {
+      const error = await response.json();
+
+      alert(error.message);
+
+      return;
     }
 
-    const result = await response.json();
-    console.log(result);
+    router.push("/dashboard/products");
+    router.refresh();
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
         <label>Nom</label>
 
-        <input {...register("name")} className="border p-2" />
+        <input {...register("name")} className="w-full rounded border p-3" />
 
-        <p>{errors.name?.message}</p>
+        <p className="text-red-500">{errors.name?.message}</p>
       </div>
+
       <div>
         <label>Description</label>
 
-        <textarea {...register("description")} className="border p-2" />
+        <textarea
+          {...register("description")}
+          className="w-full rounded border p-3"
+        />
 
-        <p>{errors.description?.message}</p>
+        <p className="text-red-500">{errors.description?.message}</p>
       </div>
+
       <div>
         <label>Prix</label>
 
         <input
           type="number"
-          {...register("price", { valueAsNumber: true })}
-          className="border p-2"
+          {...register("price", {
+            valueAsNumber: true,
+          })}
+          className="w-full rounded border p-3"
         />
 
-        <p>{errors.price?.message}</p>
+        <p className="text-red-500">{errors.price?.message}</p>
       </div>
-      <div>
-        <label>Status</label>
 
-        <select {...register("status")} className="border p-2">
-          <option value="AVAILABLE">Disponible</option>
-          <option value="UNAVAILABLE">Indisponible</option>
-        </select>
-
-        <p>{errors.status?.message}</p>
-      </div>
       <div>
-        <label>Categorie</label>
+        <label>Catégorie</label>
 
         <select
-          {...register("categoryId", { valueAsNumber: true })}
-          className="border p-2"
+          {...register("categoryId", {
+            valueAsNumber: true,
+          })}
+          className="w-full rounded border p-3"
         >
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
@@ -109,11 +128,26 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
             </option>
           ))}
         </select>
-
-        <p>{errors.status?.message}</p>
       </div>
 
-      <button type="submit">{product ? "Mettre à jour" : "Créer le produit"}</button>
+      <div>
+        <label>Statut</label>
+
+        <select {...register("status")} className="w-full rounded border p-3">
+          <option value="AVAILABLE">Disponible</option>
+
+          <option value="UNAVAILABLE">Indisponible</option>
+        </select>
+      </div>
+
+      <ImagePicker onChange={setImage} initialImage={product?.image} />
+
+      <button
+        disabled={isSubmitting}
+        className="rounded bg-orange-500 px-6 py-3 text-white"
+      >
+        {product ? "Mettre à jour" : "Créer le produit"}
+      </button>
     </form>
   );
 }

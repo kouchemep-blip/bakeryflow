@@ -1,40 +1,35 @@
-
-
 import { prisma } from "@/lib/prisma";
-import CategoryTable from "@/components/dashboard/categories/categoryTable";
 import CategoryForm from "@/components/dashboard/categories/categoryForm";
+import { notFound } from "next/navigation";
 
-export default async function CategoriesPage() {
-  const categories = await prisma.category.findMany({
-    orderBy: {
-      name: "asc",
-    },
-    include: {
-      _count: {
-        select: {
-          products: true,
-        },
-      },
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export default async function EditCategoryPage({
+  params,
+}: Props) {
+  const { id } = await params;
+
+  const category = await prisma.category.findUnique({
+    where: {
+      id: Number(id),
     },
   });
 
+  if (!category) {
+    notFound();
+  }
+
   return (
-    <div className="space-y-10">
-      <div>
-        <h1 className="mb-6 text-3xl font-bold">
-          Catégories
-        </h1>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold">
+        Modifier la catégorie
+      </h1>
 
-        <CategoryTable categories={categories} />
-      </div>
-
-      <div className="rounded-xl border p-6">
-        <h2 className="mb-6 text-2xl font-bold">
-          Ajouter une catégorie
-        </h2>
-
-        <CategoryForm />
-      </div>
+      <CategoryForm category={category} />
     </div>
   );
 }

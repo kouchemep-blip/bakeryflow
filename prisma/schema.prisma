@@ -61,6 +61,7 @@ model Product {
   description String
   price       Int
   image       String
+  imagePublicId String?
   status      ProductStatus @default(AVAILABLE)
 
   categoryId Int
