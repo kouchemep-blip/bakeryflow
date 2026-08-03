@@ -10,8 +10,8 @@ type CartItemProps = {
 };
 
 export function CartItem({ item }: CartItemProps) {
-  const addItem    = useCartStore((state) => state.addItem);
-  const removeOne  = useCartStore((state) => state.removeOne);
+  const addItem = useCartStore((state) => state.addItem);
+  const removeOne = useCartStore((state) => state.removeOne);
   const removeLine = useCartStore((state) => state.removeLine);
 
   const handleIncrement = () => {
@@ -36,14 +36,21 @@ export function CartItem({ item }: CartItemProps) {
       className="flex gap-3 py-4 border-b border-gray-100 last:border-0"
     >
       {/* ── Image produit ──────────────────────────────────────────────────── */}
+      {/* Remplace le bloc Image dans CartItem : */}
       <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-gray-50">
-        <Image
-          src={item.product.image}
-          alt={item.product.name}
-          fill
-          sizes="64px"
-          className="object-cover"
-        />
+        {item.product.image ? (
+          <Image
+            src={item.product.image}
+            alt={item.product.name}
+            fill
+            sizes="64px"
+            className="object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-amber-50">
+            <span className="text-2xl">🍞</span>
+          </div>
+        )}
       </div>
 
       {/* ── Détails ────────────────────────────────────────────────────────── */}
@@ -108,7 +115,7 @@ export function CartItem({ item }: CartItemProps) {
             <motion.span
               key={item.quantity}
               initial={{ scale: 1.3, opacity: 0 }}
-              animate={{ scale: 1,   opacity: 1 }}
+              animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.2 }}
               className="w-5 text-center text-sm font-semibold text-gray-900"
             >

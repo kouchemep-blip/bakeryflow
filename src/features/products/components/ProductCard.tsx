@@ -100,33 +100,6 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
   // Ref sur l'image pour passer au fly-to-cart
   const imageRef = useState<HTMLDivElement | null>(null);
-
-  // const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   e.stopPropagation();
-  //   if (isUnavailable || btnState === "added") return;
-
-  //   addItem({
-  //     product: {
-  //       id: product.id,
-  //       name: product.name,
-  //       image: product.image,
-  //       price: product.price,
-  //       categoryId: product.categoryId,
-  //     },
-  //   });
-
-  //   setBtnState("added");
-  //   setTimeout(() => setBtnState("idle"), 1500);
-
-  //   // Fly-to-cart : passe l'élément image source au parent
-  //   if (onAddToCart && imageRef.current) {
-  //     onAddToCart(imageRef.current);
-  //   }
-  // };
-
-  // // Dans le JSX, branche imageRef sur le div image :
-  // // <div ref={imageRef} className="relative w-full h-48 overflow-hidden bg-gray-50">
-
   const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (isUnavailable || btnState === "added") return;
@@ -172,16 +145,20 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         }}
         className="relative w-full h-48 overflow-hidden bg-gray-50"
       >
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className={[
-            "object-cover transition-transform duration-500",
-            isUnavailable ? "" : "group-hover:scale-105",
-          ].join(" ")}
-        />
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover transition-transform duration-500"
+          />
+        ) : (
+          // Fallback si pas d'image
+          <div className="w-full h-full flex items-center justify-center bg-amber-50">
+            <span className="text-4xl">🍞</span>
+          </div>
+        )}
 
         {/* Rupture de stock overlay */}
         {isUnavailable && (

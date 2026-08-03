@@ -81,6 +81,7 @@ export async function POST(request: Request) {
         categoryId,
         status,
         image: uploaded.secure_url,
+        imagePublicId : uploaded.public_id
       },
     });
 

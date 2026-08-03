@@ -1,5 +1,6 @@
 import Footer from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
+import { GlassFilter } from "@/components/ui/GlassFilter";
 import { CartDrawer } from "@/features/cart/components/cartDrawer";
 import type { Metadata, Viewport } from "next";
 import Image from "next/image";
@@ -26,6 +27,7 @@ export default function LandingLayout({
       </div>
       <Navbar />
       <main>
+      <GlassFilter />
         {children}
         <CartDrawer />
       </main>

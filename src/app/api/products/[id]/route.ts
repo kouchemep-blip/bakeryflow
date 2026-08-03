@@ -6,10 +6,7 @@ type Params = Promise<{
   id: string;
 }>;
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Params }
-) {
+export async function DELETE(request: Request, { params }: { params: Params }) {
   try {
     const { id } = await params;
 
@@ -26,12 +23,16 @@ export async function DELETE(
         },
         {
           status: 404,
-        }
+        },
       );
     }
 
     if (product.imagePublicId) {
-      await deleteImage(product.imagePublicId);
+      console.log("Public ID :", product.imagePublicId);
+
+      const result = await deleteImage(product.imagePublicId);
+
+      console.log(result);
     }
 
     await prisma.product.delete({
@@ -52,15 +53,12 @@ export async function DELETE(
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: Params }
-) {
+export async function PATCH(request: Request, { params }: { params: Params }) {
   try {
     const { id } = await params;
 
@@ -70,9 +68,7 @@ export async function PATCH(
     const description = formData.get("description") as string;
     const price = Number(formData.get("price"));
     const categoryId = Number(formData.get("categoryId"));
-    const status = formData.get("status") as
-      | "AVAILABLE"
-      | "UNAVAILABLE";
+    const status = formData.get("status") as "AVAILABLE" | "UNAVAILABLE";
 
     const image = formData.get("image") as File | null;
 
@@ -89,7 +85,7 @@ export async function PATCH(
         },
         {
           status: 404,
-        }
+        },
       );
     }
 
@@ -136,7 +132,7 @@ export async function PATCH(
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }

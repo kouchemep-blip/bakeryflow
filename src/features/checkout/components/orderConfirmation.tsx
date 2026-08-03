@@ -21,7 +21,7 @@ export function OrderConfirmation({
   itemCount,
   onClose,
 }: OrderConfirmationProps) {
-  const router    = useRouter();
+  const router = useRouter();
   const clearCart = useCartStore((state) => state.clearCart);
 
   // Vide le panier Zustand côté client après confirmation
@@ -49,8 +49,8 @@ export function OrderConfirmation({
       <motion.div
         key="confirm-modal"
         initial={{ opacity: 0, scale: 0.9, y: 24 }}
-        animate={{ opacity: 1, scale: 1,   y: 0  }}
-        exit={{ opacity: 0, scale: 0.9, y: 24    }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 24 }}
         transition={{ type: "spring", stiffness: 380, damping: 30 }}
         className={[
           "fixed z-[90] bg-white rounded-2xl shadow-2xl",
@@ -65,20 +65,30 @@ export function OrderConfirmation({
         <div className="flex justify-center mb-6">
           <div className="relative w-20 h-20">
             {/* Cercle de fond pulsant */}
+            {/* Remplace l'animation du cercle de fond : */}
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: [0, 1.2, 1], opacity: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5, ease: "backOut" }}
               className="absolute inset-0 bg-green-100 rounded-full"
             />
             {/* Icône check */}
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.4, type: "spring", stiffness: 300 }}
+              transition={{
+                delay: 0.2,
+                duration: 0.4,
+                type: "spring",
+                stiffness: 300,
+              }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              <CheckCircle size={44} className="text-green-500" strokeWidth={1.5} />
+              <CheckCircle
+                size={44}
+                className="text-green-500"
+                strokeWidth={1.5}
+              />
             </motion.div>
           </div>
         </div>
@@ -86,7 +96,7 @@ export function OrderConfirmation({
         {/* ── Texte ─────────────────────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0  }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.4 }}
           className="flex flex-col items-center gap-2 text-center mb-6"
         >
@@ -101,7 +111,7 @@ export function OrderConfirmation({
         {/* ── Récap commande ────────────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0  }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45, duration: 0.4 }}
           className="bg-gray-50 rounded-xl px-5 py-4 flex flex-col gap-2 mb-6"
         >
@@ -126,7 +136,7 @@ export function OrderConfirmation({
         {/* ── Temps estimé ──────────────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0  }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.4 }}
           className="flex items-center gap-2 justify-center text-sm text-amber-600 bg-amber-50 rounded-xl px-4 py-3 mb-8"
         >
@@ -137,7 +147,7 @@ export function OrderConfirmation({
         {/* ── CTA ───────────────────────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0  }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.4 }}
           className="flex flex-col gap-3"
         >

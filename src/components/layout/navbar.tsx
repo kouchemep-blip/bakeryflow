@@ -27,9 +27,10 @@ export function Navbar() {
             </Link>
           </svg>
         </div>
-        {/* Liens centrés */}
-        <div className="bg-white/50 backdrop-blur-xl backdrop-saturate-150 border-b border-white/15 shadow-[0_4px_30px_rgba(0,0,0,0.1)] absolute left-1/2 -translate-x-1/2 top-4 w-[45%] h-[10vh] rounded-full flex items-center justify-center">
-          <ul className="flex flex-row uppercase gap-10 xl:gap-20 items-center justify-center">
+
+        {/* Liens centrés — effet glass */}
+        <div className="glass-nav absolute left-1/2 -translate-x-1/2 top-4 w-[45%] h-[10vh] rounded-full flex items-center justify-center">
+          <ul className="flex flex-row uppercase gap-10 xl:gap-20 items-center justify-center relative z-10">
             {NAV_LINK.map((link) => (
               <li
                 key={link}
@@ -51,10 +52,8 @@ export function Navbar() {
 
       {/* ── Mobile ── */}
       <div className="flex md:hidden items-center justify-between px-5 py-4 bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm">
-        {/* Logo texte ou SVG simplifié */}
         <span className="font-bold text-gray-900 text-lg">Logo</span>
 
-        {/* Hamburger */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="flex flex-col gap-1.5 p-2"
@@ -95,6 +94,57 @@ export function Navbar() {
           </Link>
         </div>
       </div>
+
+      <style jsx>{`
+        .glass-nav {
+          background: rgba(255, 255, 255, 0.35);
+          backdrop-filter: url(#glass-distortion) blur(16px) saturate(180%);
+          -webkit-backdrop-filter: blur(16px) saturate(180%);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.5);
+          overflow: hidden;
+          transition:
+            transform 0.5s ease,
+            box-shadow 0.5s ease;
+        }
+
+        .glass-nav::before {
+          content: "";
+          position: absolute;
+          top: -50%;
+          left: -60%;
+          width: 60%;
+          height: 200%;
+          background: linear-gradient(
+            120deg,
+            transparent,
+            rgba(255, 255, 255, 0.5),
+            transparent
+          );
+          transform: rotate(15deg);
+          animation: sweep 6s ease-in-out infinite;
+        }
+
+        .glass-nav:hover {
+          box-shadow:
+            0 12px 40px rgba(0, 0, 0, 0.15),
+            inset 0 1px 1px rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes sweep {
+          0% {
+            left: -60%;
+          }
+          50% {
+            left: 120%;
+          }
+          100% {
+            left: 120%;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -33,8 +33,8 @@ export const CartButton = forwardRef<HTMLButtonElement>((_, ref) => {
           onClick={openDrawer}
           // Apparition au 1er ajout : bounce depuis le bas
           initial={{ y: 80, opacity: 0, scale: 0.8 }}
-          animate={{ y: 0,  opacity: 1, scale: 1  }}
-          exit={{    y: 80, opacity: 0, scale: 0.8 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          exit={{ y: 80, opacity: 0, scale: 0.8 }}
           transition={{ type: "spring", stiffness: 400, damping: 28 }}
           aria-label={`Ouvrir le panier — ${totalItems} article${totalItems > 1 ? "s" : ""}`}
           className={[
@@ -51,12 +51,19 @@ export const CartButton = forwardRef<HTMLButtonElement>((_, ref) => {
           <div className="relative">
             <ShoppingCart size={20} />
 
-            {/* Badge — spring animation à chaque incrément */}
+            {/* Remplace le badge compteur dans CartButton — fix spring 3 keyframes : */}
             <motion.span
               key={totalItems}
               animate={
                 badgeBump
-                  ? { scale: [1, 1.5, 1], transition: { duration: 0.4, type: "spring" } }
+                  ? {
+                      scale: [1, 1.5, 1],
+                      transition: {
+                        duration: 0.4,
+                        // tween supporte 3 keyframes, pas spring
+                        ease: "easeOut",
+                      },
+                    }
                   : { scale: 1 }
               }
               className={[
