@@ -1,17 +1,21 @@
 ﻿import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
+import { categorySchema } from "@/schemas/categorySchema";
 
 type Params = Promise<{
   id: string;
 }>;
 
 export async function PATCH(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Params },
 ) {
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
   try {
     const { id } = await params;
-    const body = await request.json();
+    const body = categorySchema.parse(await request.json());
 
     const category = await prisma.category.update({
       where: {
@@ -38,9 +42,11 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Params },
 ) {
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
   try {
     const { id } = await params;
 

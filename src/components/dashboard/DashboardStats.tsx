@@ -1,38 +1,21 @@
+import { prisma } from "@/lib/prisma";
 import StatCard from "./statcard";
-const stats = [
-  {
-    title: "Produits",
-    value: 25,
-    description: "Produits enregistrés",
-  },
-  {
-    title: "Commandes",
-    value: 12,
-    description: "Commandes aujourd'hui",
-  },
-  {
-    title: "Messages",
-    value: 5,
-    description: "Messages non lus",
-  },
-  {
-    title: "Avis",
-    value: 18,
-    description: "Avis publiés",
-  },
-];
 
-export default function DashboardStats() {
-  return (
-    <section className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-      {stats.map((stat) => (
-        <StatCard
-          key={stat.title}
-          title={stat.title}
-          value={stat.value}
-          description={stat.description}
-        />
-      ))}
-    </section>
-  );
+export default async function DashboardStats() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const [products, ordersToday, unreadMessages, reviews] = await Promise.all([
+    prisma.product.count(),
+    prisma.order.count({ where: { createdAt: { gte: today } } }),
+    prisma.message.count({ where: { isRead: false } }),
+    prisma.review.count(),
+  ]);
+  const stats = [
+    { title: "Produits", value: products, description: "Produits enregistrés" },
+    { title: "Commandes", value: ordersToday, description: "Commandes aujourd'hui" },
+    { title: "Messages", value: unreadMessages, description: "Messages non lus" },
+    { title: "Avis", value: reviews, description: "Avis publiés" },
+  ];
+
+  return <section className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">{stats.map((stat) => <StatCard key={stat.title} {...stat} />)}</section>;
 }

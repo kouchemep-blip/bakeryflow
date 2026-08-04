@@ -17,7 +17,7 @@ type OrderRowProps = {
       firstName: string;
       lastName: string;
     };
-    items: {
+    orderitem: {
       id: number;
     }[];
   };
@@ -37,7 +37,7 @@ export default function OrderRow({
       </td>
 
       <td className="p-4 text-center">
-        {order.items.length}
+        {order.orderitem.length}
       </td>
 
       <td className="p-4">

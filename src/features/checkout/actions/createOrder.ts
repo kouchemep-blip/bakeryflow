@@ -25,6 +25,7 @@ export async function createOrder(
   let userId: number;
   try {
     const payload = verifyToken(token.value) as { id: number; role: string };
+    if (payload.role !== "CLIENT") return { success: false, error: "Seuls les clients peuvent passer commande." };
     userId = payload.id;
   } catch {
     return { success: false, error: "Session invalide." };
@@ -36,7 +37,10 @@ export async function createOrder(
   }
 
   // ── 3. Vérifie que tous les produits existent et sont disponibles ────────
-  const productIds = items.map((i) => i.product.id);
+  if (items.some((item) => !Number.isInteger(item.quantity) || item.quantity < 1 || item.options.some((option) => option.priceModifier !== 0))) {
+    return { success: false, error: "Le contenu du panier est invalide." };
+  }
+  const productIds = [...new Set(items.map((i) => i.product.id))];
   const products = await prisma.product.findMany({
     where: {
       id: { in: productIds },
@@ -56,8 +60,7 @@ export async function createOrder(
 
   const totalPrice = items.reduce((sum, item) => {
     const serverPrice = priceMap.get(item.product.id) ?? 0;
-    const optionsExtra = item.options.reduce((s, o) => s + o.priceModifier, 0);
-    return sum + (serverPrice + optionsExtra) * item.quantity;
+    return sum + serverPrice * item.quantity;
   }, 0);
 
   // ── 5. Crée la commande + les OrderItems en transaction ──────────────────
@@ -73,7 +76,7 @@ export async function createOrder(
       });
 
       // Crée les lignes de commande
-      await tx.orderItem.createMany({
+      await tx.orderitem.createMany({
         data: items.map((item) => ({
           orderId: newOrder.id,
           productId: item.product.id,
@@ -100,7 +103,7 @@ export async function createOrder(
       // Vide le CartItem Prisma de l'utilisateur si existant
       const cart = await tx.cart.findUnique({ where: { userId } });
       if (cart) {
-        await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
+      await tx.cartitem.deleteMany({ where: { cartId: cart.id } });
       }
 
       return newOrder;

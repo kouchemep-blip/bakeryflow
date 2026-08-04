@@ -1,6 +1,5 @@
-type Props = {
-  order: any;
-};
+import type { OrderWithUserAndItems } from "@/types/order";
+type Props = { order: OrderWithUserAndItems };
 
 export default function OrderSummary({
   order,

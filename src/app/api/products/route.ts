@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { uploadImage } from "@/lib/upload";
+import { requireAdmin } from "@/lib/auth";
+import { productSchema } from "@/schemas/productSchema";
 
 // ─── GET — liste des produits (landing page client) ───────────────────────────
 export async function GET(request: Request) {
@@ -20,7 +22,7 @@ export async function GET(request: Request) {
       include: {
         category: true,
         // Moyenne des avis pour affichage note sur la carte produit
-        reviews: {
+        review: {
           select: {
             rating: true,
           },
@@ -42,17 +44,18 @@ export async function GET(request: Request) {
 }
 
 // ─── POST — création produit (dashboard admin) — inchangé ─────────────────────
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
   try {
     const formData = await request.formData();
 
-    const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
-    const price = Number(formData.get("price"));
-    const categoryId = Number(formData.get("categoryId"));
-    const status = formData.get("status") as
-      | "AVAILABLE"
-      | "UNAVAILABLE";
+    const parsed = productSchema.safeParse({
+      name: formData.get("name"), description: formData.get("description"), price: Number(formData.get("price")),
+      categoryId: Number(formData.get("categoryId")), status: formData.get("status"),
+    });
+    if (!parsed.success) return NextResponse.json({ message: "Données produit invalides." }, { status: 400 });
+    const { name, description, price, categoryId, status } = parsed.data;
 
     const image = formData.get("image") as File | null;
 

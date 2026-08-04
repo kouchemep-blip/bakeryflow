@@ -3,7 +3,6 @@
 // Principe : clone visuel de l'image produit, animé de sa position
 // vers la position du bouton panier, puis disparaît
 
-import { useEffect, useRef } from "react";
 import { animate } from "framer-motion";
 
 type FlyToCartOptions = {

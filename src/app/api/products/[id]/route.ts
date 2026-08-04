@@ -1,12 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { deleteImage, uploadImage } from "@/lib/upload";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
+import { productSchema } from "@/schemas/productSchema";
 
 type Params = Promise<{
   id: string;
 }>;
 
-export async function DELETE(request: Request, { params }: { params: Params }) {
+export async function DELETE(request: NextRequest, { params }: { params: Params }) {
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
   try {
     const { id } = await params;
 
@@ -58,17 +62,17 @@ export async function DELETE(request: Request, { params }: { params: Params }) {
   }
 }
 
-export async function PATCH(request: Request, { params }: { params: Params }) {
+export async function PATCH(request: NextRequest, { params }: { params: Params }) {
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
   try {
     const { id } = await params;
 
     const formData = await request.formData();
 
-    const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
-    const price = Number(formData.get("price"));
-    const categoryId = Number(formData.get("categoryId"));
-    const status = formData.get("status") as "AVAILABLE" | "UNAVAILABLE";
+    const parsed = productSchema.safeParse({ name: formData.get("name"), description: formData.get("description"), price: Number(formData.get("price")), categoryId: Number(formData.get("categoryId")), status: formData.get("status") });
+    if (!parsed.success) return NextResponse.json({ message: "Données produit invalides." }, { status: 400 });
+    const { name, description, price, categoryId, status } = parsed.data;
 
     const image = formData.get("image") as File | null;
 

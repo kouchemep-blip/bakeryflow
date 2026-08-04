@@ -31,7 +31,11 @@ app.prepare().then(() => {
   // ── Middleware auth Socket.IO ──────────────────────────────────────────
   // Vérifie le token JWT passé en handshake avant toute connexion
   io.use(async (socket, next) => {
-    const token = socket.handshake.auth?.token as string | undefined;
+    const cookieToken = socket.handshake.headers.cookie
+      ?.split(";")
+      .map((part) => part.trim().split("="))
+      .find(([key]) => key === "token")?.[1];
+    const token = (socket.handshake.auth?.token as string | undefined) ?? cookieToken;
 
     if (!token) {
       return next(new Error("Non authentifié."));
@@ -89,6 +93,11 @@ app.prepare().then(() => {
         if (!content?.trim()) return;
 
         try {
+          const conv = await prisma.conversation.findUnique({ where: { id: conversationId } });
+          if (!conv || (role === "CLIENT" && conv.userId !== userId)) {
+            socket.emit("error", "Accès refusé.");
+            return;
+          }
           // Sauvegarde en base
           const message = await prisma.message.create({
             data: {
@@ -117,6 +126,8 @@ app.prepare().then(() => {
     // ── Marquer les messages comme lus ───────────────────────────────────
     socket.on("mark_read", async (conversationId: number) => {
       try {
+        const conv = await prisma.conversation.findUnique({ where: { id: conversationId } });
+        if (!conv || (role === "CLIENT" && conv.userId !== userId)) return;
         await prisma.message.updateMany({
           where: {
             conversationId,

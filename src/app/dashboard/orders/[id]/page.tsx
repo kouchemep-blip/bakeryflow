@@ -23,7 +23,7 @@ export default async function OrderPage({ params }: Props) {
     },
     include: {
       user: true,
-      items: {
+      orderitem: {
         include: {
           product: true,
         },
@@ -41,7 +41,7 @@ export default async function OrderPage({ params }: Props) {
 
       <OrderCustomerCard order={order} />
 
-      <OrderItemsTable items={order.items} />
+      <OrderItemsTable items={order.orderitem} />
 
       <OrderSummary order={order} />
 

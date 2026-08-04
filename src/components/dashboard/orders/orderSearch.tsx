@@ -23,7 +23,7 @@ export default function OrderSearch() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [value]);
+  }, [value, params, router]);
 
   return (
     <div className="flex items-center gap-3">

@@ -1,17 +1,17 @@
 import { Prisma } from "@prisma/client";
 
 // ── Existant — utilisé par le dashboard admin ──────────────────────────────
-export type ProductWithCategory = Prisma.ProductGetPayload<{
+export type ProductWithCategory = Prisma.productGetPayload<{
   include: {
     category: true;
   };
 }>;
 
 // ── Nouveau — utilisé par la landing page (inclut les avis pour la note) ──
-export type ProductWithCategoryAndReviews = Prisma.ProductGetPayload<{
+export type ProductWithCategoryAndReviews = Prisma.productGetPayload<{
   include: {
     category: true;
-    reviews: {
+    review: {
       select: {
         rating: true;
       };

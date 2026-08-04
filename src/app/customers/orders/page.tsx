@@ -29,7 +29,7 @@ export default async function ClientOrdersPage() {
     },
 
     include: {
-      items: {
+      orderitem: {
         include: {
           product: true,
         },
@@ -83,7 +83,7 @@ export default async function ClientOrdersPage() {
               </div>
 
               <div className="mt-4">
-                <p>{order.items.length} produit(s)</p>
+                <p>{order.orderitem.length} produit(s)</p>
 
                 <p className="font-semibold">
                   {order.totalPrice.toLocaleString()} FCFA

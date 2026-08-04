@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isAdmin } from "@/lib/auth";
 
 export async function GET(
   request: NextRequest,
@@ -27,7 +27,7 @@ export async function GET(
     },
 
     include: {
-      messages: {
+      message: {
         orderBy: {
           createdAt: "asc",
         },
@@ -47,7 +47,7 @@ export async function GET(
   }
 
   // Sécurité : vérifier que la conversation appartient au client
-  if (conversation.userId !== user.id) {
+  if (!isAdmin(user.role) && conversation.userId !== user.id) {
     return NextResponse.json(
       {
         message: "Accès interdit",

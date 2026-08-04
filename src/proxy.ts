@@ -50,6 +50,10 @@ export function proxy(request: NextRequest) {
 
   }
 
+  if (pathname.startsWith("/customers") && payload.role !== "CLIENT") {
+    return NextResponse.redirect(new URL(payload.role === "ADMIN" || payload.role === "SUPER_ADMIN" ? "/dashboard" : "/", request.url));
+  }
+
 
   return NextResponse.next();
 }
@@ -58,5 +62,6 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
+    "/customers/:path*",
   ],
 };

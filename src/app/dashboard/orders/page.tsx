@@ -3,7 +3,7 @@ import OrderSearch from "@/components/dashboard/orders/orderSearch";
 import OrderStatCard from "@/components/dashboard/orders/orderStatCard";
 import OrderTable from "@/components/dashboard/orders/orderTable";
 import { prisma } from "@/lib/prisma";
-import { OrderStatus } from "@prisma/client";
+import { order_status, Prisma } from "@prisma/client";
 
 type Props = {
   searchParams: Promise<{
@@ -14,10 +14,10 @@ type Props = {
 
 export default async function OrdersPage({ searchParams }: Props) {
   const { status, search } = await searchParams;
-  const where: any = {};
+  const where: Prisma.orderWhereInput = {};
 
   if (status) {
-    where.status = status as OrderStatus;
+    if (Object.values(order_status).includes(status as order_status)) where.status = status as order_status;
   }
 
   if (search) {
@@ -62,7 +62,7 @@ export default async function OrdersPage({ searchParams }: Props) {
     where,
     include: {
       user: true,
-      items: {
+      orderitem: {
         include: {
           product: true,
         },
@@ -72,8 +72,6 @@ export default async function OrdersPage({ searchParams }: Props) {
       createdAt: "desc",
     },
   });
-
-  console.log(orders);
 
   const totalOrders = orders.length;
 

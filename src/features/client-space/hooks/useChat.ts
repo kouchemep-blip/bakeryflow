@@ -73,7 +73,7 @@ export function useChat({
   // ─────────────────────────────────────────
   useEffect(() => {
 
-    loadHistory();
+    const historyTimer = window.setTimeout(loadHistory, 0);
 
 
     const socket = io(
@@ -131,6 +131,7 @@ export function useChat({
 
     return () => {
 
+      window.clearTimeout(historyTimer);
       socket.disconnect();
 
     };

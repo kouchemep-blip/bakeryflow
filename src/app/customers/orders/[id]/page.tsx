@@ -30,7 +30,7 @@ export default async function OrderDetailPage({ params }: Props) {
     },
 
     include: {
-      items: {
+      orderitem: {
         include: {
           product: true,
         },
@@ -56,7 +56,7 @@ export default async function OrderDetailPage({ params }: Props) {
         <h2 className="mb-4 text-xl font-semibold">Produits</h2>
 
         <div className="space-y-3">
-          {order.items.map((item) => (
+          {order.orderitem.map((item) => (
             <div key={item.id} className="flex justify-between">
               <span>
                 {item.product.name} x{item.quantity}

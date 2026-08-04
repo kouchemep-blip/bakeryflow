@@ -27,6 +27,9 @@ export default async function ClientChatPage() {
     redirect("/");
   }
 
+  const hasOrder = await prisma.order.count({ where: { userId } });
+  if (hasOrder === 0) redirect("/customers/orders");
+
   // Cherche la conversation du client
   let conversation = await prisma.conversation.findUnique({
     where: {

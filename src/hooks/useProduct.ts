@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { ProductWithCategoryAndReviews } from "@/types/products";
 
 type UseProductsReturn = {
@@ -19,8 +19,6 @@ export function useProducts(): UseProductsReturn {
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
 
   // Ref pour accéder à activeCategory dans fetchProducts sans en faire une dépendance
-  const activeCategoryRef = useRef(activeCategory);
-  activeCategoryRef.current = activeCategory;
 
   // fetchProducts stable — ne change jamais de référence
   const fetchProducts = useCallback(async () => {
@@ -41,8 +39,8 @@ export function useProducts(): UseProductsReturn {
 
       // Applique le filtre actif via ref (pas de dépendance → pas de boucle)
       setProducts(
-        activeCategoryRef.current
-          ? data.filter((p) => p.categoryId === activeCategoryRef.current)
+        activeCategory
+          ? data.filter((p) => p.categoryId === activeCategory)
           : data
       );
     } catch (err) {
@@ -50,12 +48,13 @@ export function useProducts(): UseProductsReturn {
     } finally {
       setIsLoading(false);
     }
-  }, []); // [] = référence stable
+  }, [activeCategory]);
 
   // Chargement initial uniquement
   useEffect(() => {
-    fetchProducts();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const timer = window.setTimeout(fetchProducts, 0);
+    return () => window.clearTimeout(timer);
+  }, [fetchProducts]);
 
   // Filtre côté client — pas d'appel API, juste un filtre sur allProducts
   const filterByCategory = useCallback(

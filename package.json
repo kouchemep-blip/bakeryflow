@@ -6,7 +6,11 @@
     "dev": "ts-node --project tsconfig.server.json server.ts",
     "build": "next build",
     "start": "NODE_ENV=production ts-node --project tsconfig.server.json server.ts",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "ts-node --project tsconfig.server.json prisma/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",

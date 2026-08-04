@@ -9,7 +9,7 @@ import ImagePicker from "./imagePicker";
 
 import { productSchema, ProductFormData } from "@/schemas/productSchema";
 
-import { Product } from "@prisma/client";
+import { product } from "@prisma/client";
 
 type Category = {
   id: number;
@@ -18,7 +18,7 @@ type Category = {
 
 type ProductFormProps = {
   categories: Category[];
-  product?: Product;
+  product?: product;
 };
 
 export default function ProductForm({ product, categories }: ProductFormProps) {

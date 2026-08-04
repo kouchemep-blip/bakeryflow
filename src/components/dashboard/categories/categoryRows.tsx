@@ -8,7 +8,7 @@ type CategoryRowProps = {
     id: number;
     name: string;
     _count: {
-      products: number;
+      product: number;
     };
   };
 };
@@ -49,7 +49,7 @@ export default function CategoryRow({
       <td className="border px-4 py-3">{category.name}</td>
 
       <td className="border px-4 py-3 text-center">
-        {category._count.products}
+        {category._count.product}
       </td>
 
       <td className="border px-4 py-3">

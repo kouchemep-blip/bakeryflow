@@ -1,7 +1,8 @@
 import Image from "next/image";
+import type { OrderItemWithProduct } from "@/types/order";
 
 type Props = {
-  items: any[];
+  items: OrderItemWithProduct[];
 };
 
 export default function OrderItemsTable({

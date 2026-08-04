@@ -70,7 +70,7 @@ model order {
   status     order_status @default(PENDING)
   totalPrice Int
   createdAt  DateTime     @default(now())
-  updatedAt  DateTime
+  updatedAt  DateTime   @updatedAt
   user       user         @relation(fields: [userId], references: [id], map: "Order_userId_fkey")
   orderitem  orderitem[]
 
@@ -99,7 +99,7 @@ model product {
   status        product_status @default(AVAILABLE)
   categoryId    Int
   createdAt     DateTime       @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime       @updatedAt
   imagePublicId String?
   cartitem      cartitem[]
   orderitem     orderitem[]
@@ -133,7 +133,7 @@ model user {
   avatar       String?
   role         user_role      @default(CLIENT)
   createdAt    DateTime       @default(now())
-  updatedAt    DateTime
+  updatedAt    DateTime       @updatedAt
   isActive     Boolean        @default(true)
   cart         cart?
   conversation conversation?

@@ -1,13 +1,13 @@
 "use client";
 
-import { Category } from "@prisma/client";
+import { category } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema, CategoryFormData } from "@/schemas/categorySchema";
 import { useRouter } from "next/navigation";
 
 type CategoryFormProps = {
-  category?: Category;
+  category?: category;
 };
 
 export default function CategoryForm({ category }: CategoryFormProps) {
@@ -43,6 +43,7 @@ export default function CategoryForm({ category }: CategoryFormProps) {
       }
 
       router.refresh();
+      return;
     }
 
     const error = await response.json();

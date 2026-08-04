@@ -1,11 +1,25 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { Prisma } from "@prisma/client";
+import { z } from "zod";
+import { requireAdmin } from "@/lib/auth";
 
-export async function GET() {
+const registrationSchema = z.object({
+  firstName: z.string().trim().min(2).max(30),
+  lastName: z.string().trim().min(2).max(30),
+  email: z.string().trim().email().max(191),
+  phone: z.string().trim().min(6).max(20),
+  password: z.string().min(8).max(72),
+});
+
+export async function GET(request: NextRequest) {
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      select: { id: true, firstName: true, lastName: true, email: true, phone: true, role: true, isActive: true, createdAt: true },
+    });
 
     return NextResponse.json(users);
   } catch (error) {
@@ -20,8 +34,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const hashedPassword = await bcrypt.hash(body.password, 10);
+    const body = registrationSchema.parse(await request.json());
+    const hashedPassword = await bcrypt.hash(body.password, 12);
     const user = await prisma.user.create({
       data: {
         firstName: body.firstName,
@@ -32,8 +46,11 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(user, { status: 201 });
+    return NextResponse.json({ id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, { status: 201 });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ message: "Les informations d'inscription sont invalides." }, { status: 400 });
+    }
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"

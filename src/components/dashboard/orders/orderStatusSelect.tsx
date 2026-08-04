@@ -2,9 +2,10 @@
 
 import { allowedTransitions } from "@/lib/orderStatus";
 import { useRouter } from "next/navigation";
+import type { OrderWithUserAndItems } from "@/types/order";
 
 type Props = {
-  order: any;
+  order: OrderWithUserAndItems;
 };
 
 export default function OrderStatusSelect({ order }: Props) {

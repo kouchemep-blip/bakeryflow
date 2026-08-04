@@ -1,6 +1,6 @@
-import { OrderStatus } from "@prisma/client";
+import { order_status } from "@prisma/client";
 
-export const allowedTransitions: Record<OrderStatus, OrderStatus[]> = {
+export const allowedTransitions: Record<order_status, order_status[]> = {
   PENDING: ["CONFIRMED", "CANCELLED"],
 
   CONFIRMED: ["PREPARING", "CANCELLED"],
@@ -15,8 +15,8 @@ export const allowedTransitions: Record<OrderStatus, OrderStatus[]> = {
 };
 
 export function canChangeStatus(
-  current: OrderStatus,
-  next: OrderStatus
+  current: order_status,
+  next: order_status
 ) {
   return allowedTransitions[current].includes(next);
 }

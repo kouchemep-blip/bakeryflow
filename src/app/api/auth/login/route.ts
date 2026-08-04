@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
 import { generateToken } from "@/lib/jwt";
+import { z } from "zod";
+
+const loginSchema = z.object({ email: z.string().email(), password: z.string().min(1) });
 
 export async function GET() {
   return Response.json({
@@ -11,7 +14,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const { email, password } = loginSchema.parse(await request.json());
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {

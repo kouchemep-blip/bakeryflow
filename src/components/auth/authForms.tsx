@@ -6,9 +6,6 @@ import { useAuthForm } from "@/hooks/useAuthForm";
 import { RegisterForm } from "./registerForm";
 import { LoginForm }    from "./loginForm";
 import { AuthOverlay }  from "./authOverlay";
-import Link from "next/link";
-import { DiscoverButton } from "../ui/DiscoverBtn";
-import { FaArrowLeft } from "react-icons/fa";
 
 export default function AuthForm() {
   const auth = useAuthForm();

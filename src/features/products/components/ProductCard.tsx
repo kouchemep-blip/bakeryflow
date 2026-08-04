@@ -27,7 +27,7 @@ type Tag = {
 
 function resolveTags(product: ProductWithCategoryAndReviews): Tag[] {
   const tags: Tag[] = [];
-  const avg = getAverageRating(product.reviews);
+  const avg = getAverageRating(product.review);
 
   // Nouveau : créé dans les 7 derniers jours
   const isNew =
@@ -35,7 +35,7 @@ function resolveTags(product: ProductWithCategoryAndReviews): Tag[] {
     Date.now() - 7 * 24 * 60 * 60 * 1000;
 
   // Populaire : note ≥ 4.5 avec au moins 3 avis
-  const isPopular = avg !== null && avg >= 4.5 && product.reviews.length >= 3;
+  const isPopular = avg !== null && avg >= 4.5 && product.review.length >= 3;
 
   // Végé : détection naïve par nom/description (à affiner selon ton catalogue)
   const isVege = /salade|végé|vegan|légume/i.test(
@@ -89,13 +89,12 @@ type ProductCardProps = {
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
-  const openDrawer = useCartStore((state) => state.openDrawer);
 
   // Feedback bouton : idle | added (check) | back à idle après 1.5s
   const [btnState, setBtnState] = useState<"idle" | "added">("idle");
 
   const isUnavailable = product.status === "UNAVAILABLE";
-  const avgRating = getAverageRating(product.reviews);
+  const avgRating = getAverageRating(product.review);
   const tags = resolveTags(product);
 
   // Ref sur l'image pour passer au fly-to-cart
@@ -214,7 +213,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               {avgRating}
             </span>
             <span className="text-xs text-gray-400">
-              ({product.reviews.length} avis)
+              ({product.review.length} avis)
             </span>
           </div>
         )}

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isAdmin } from "@/lib/auth";
 
 // ── GET : historique des messages d'une conversation ──────────────────────────
 export async function GET(request: NextRequest) {
@@ -8,13 +8,21 @@ export async function GET(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ message: "Non authentifié." }, { status: 401 });
   }
+  if (isAdmin(user.role)) {
+    return NextResponse.json({ message: "Utilisez la conversation d'un client." }, { status: 400 });
+  }
+
+  const hasOrder = await prisma.order.count({ where: { userId: user.id } });
+  if (hasOrder === 0) {
+    return NextResponse.json({ message: "Le chat est disponible après votre première commande." }, { status: 403 });
+  }
 
   try {
     // Trouve ou crée la conversation du client
     let conversation = await prisma.conversation.findUnique({
       where: { userId: user.id },
       include: {
-        messages: {
+        message: {
           orderBy: { createdAt: "asc" },
           take: 50, // 50 derniers messages
         },
@@ -25,7 +33,7 @@ export async function GET(request: NextRequest) {
     if (!conversation) {
       conversation = await prisma.conversation.create({
         data: { userId: user.id },
-        include: { messages: true },
+        include: { message: true },
       });
     }
 

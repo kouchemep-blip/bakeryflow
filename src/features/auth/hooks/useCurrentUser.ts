@@ -37,7 +37,8 @@ export function useCurrentUser(): UseCurrentUserReturn {
   }, []);
 
   useEffect(() => {
-    fetchUser();
+    const timer = window.setTimeout(fetchUser, 0);
+    return () => window.clearTimeout(timer);
   }, [fetchUser]); // fetchUser stable → s'exécute une seule fois
 
   return { user, isLoading, refetch: fetchUser };

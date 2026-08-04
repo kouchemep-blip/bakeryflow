@@ -5,7 +5,7 @@ type CategoryTableProps = {
     id: number;
     name: string;
     _count: {
-      products: number;
+      product: number;
     };
   }[];
 };

@@ -1,7 +1,6 @@
 import { ChatWithChef } from "@/features/client-space/components/ChatWithChef";
 import { prisma } from "@/lib/prisma";
-import { notFound, redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{
@@ -10,9 +9,6 @@ type Props = {
 };
 
 export default async function OrderChatPage({ params }: Props) {
-  const cookieStore = await cookies();
-
-  const token = cookieStore.get("token")?.value ?? "";
   const { id } = await params;
 
   const order = await prisma.order.findUnique({
@@ -30,7 +26,7 @@ export default async function OrderChatPage({ params }: Props) {
       userId: order.userId,
     },
     include: {
-      messages: true,
+      message: true,
       user: true,
     },
   });
@@ -41,7 +37,7 @@ export default async function OrderChatPage({ params }: Props) {
         userId: order.userId,
       },
       include: {
-        messages: true,
+        message: true,
         user: true,
       },
     });
@@ -52,7 +48,9 @@ export default async function OrderChatPage({ params }: Props) {
       <>
         <h1>Commande #{order.id}</h1>
 
-        <ChatWithChef token={token} />
+        <div className="h-[600px]">
+          <ChatWithChef conversationId={conversation.id} />
+        </div>
       </>
     </div>
   );

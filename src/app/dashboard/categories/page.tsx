@@ -10,7 +10,7 @@ export default async function CategoriesPage() {
     include: {
       _count: {
         select: {
-          products: true,
+          product: true,
         },
       },
     },

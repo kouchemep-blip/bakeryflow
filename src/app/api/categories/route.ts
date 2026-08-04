@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
+import { categorySchema } from "@/schemas/categorySchema";
 
 export async function GET() {
   const categories = await prisma.category.findMany({
@@ -10,9 +12,11 @@ export async function GET() {
   return NextResponse.json(categories);
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
   try {
-    const body = await request.json();
+    const body = categorySchema.parse(await request.json());
 
     const category = await prisma.category.create({
       data: {
@@ -22,7 +26,7 @@ export async function POST(request: Request) {
     return NextResponse.json(category, {
       status: 201,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         message: "Erreur lors de la création",

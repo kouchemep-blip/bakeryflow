@@ -152,7 +152,8 @@ export function useAuthForm() {
         setLoginServerError(data?.message || "*Email ou mot de passe incorrect");
         return;
       }
-      window.location.href = "/dashboard";
+      const data = await response.json();
+      window.location.href = data.user.role === "CLIENT" ? "/customers" : "/dashboard";
     } catch {
       setLoginServerError("*Impossible de se connecter au serveur, réessaie plus tard");
     } finally {

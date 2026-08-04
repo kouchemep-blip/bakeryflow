@@ -1,6 +1,8 @@
 import { allowedTransitions, canChangeStatus } from "@/lib/orderStatus";
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
+import { order_status } from "@prisma/client";
 
 type Props = {
   params: Promise<{
@@ -8,7 +10,9 @@ type Props = {
   }>;
 };
 
-export async function PATCH(request: Request, { params }: Props) {
+export async function PATCH(request: NextRequest, { params }: Props) {
+  const admin = await requireAdmin(request);
+  if (admin instanceof NextResponse) return admin;
   try {
     const { id } = await params;
 
@@ -31,7 +35,10 @@ export async function PATCH(request: Request, { params }: Props) {
     }
 
 
-    const nextStatus = body.status;
+    const nextStatus = body.status as order_status;
+    if (!Object.values(order_status).includes(nextStatus)) {
+      return NextResponse.json({ message: "Statut invalide." }, { status: 400 });
+    }
 
     const currentStatus = order.status;
 
@@ -46,24 +53,7 @@ export async function PATCH(request: Request, { params }: Props) {
       );
     }
 
-    const existingOrder = await prisma.order.findUnique({
-      where: {
-        id: Number(id),
-      },
-    });
-
-    if (!existingOrder) {
-      return NextResponse.json(
-        {
-          message: "Commande introuvable.",
-        },
-        {
-          status: 404,
-        },
-      );
-    }
-
-    if (!canChangeStatus(existingOrder.status, body.status)) {
+    if (!canChangeStatus(order.status, nextStatus)) {
       return NextResponse.json(
         {
           message: "Transition interdite.",
@@ -74,16 +64,16 @@ export async function PATCH(request: Request, { params }: Props) {
       );
     }
 
-    await prisma.order.update({
+    const updatedOrder = await prisma.order.update({
       where: {
         id: Number(id),
       },
       data: {
-        status: body.status,
+        status: nextStatus,
       },
     });
 
-    return NextResponse.json(order);
+    return NextResponse.json(updatedOrder);
   } catch (error) {
     console.log(error);
 

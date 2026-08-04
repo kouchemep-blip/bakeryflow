@@ -1,7 +1,8 @@
 import OrderRow from "./orderRow";
+import type { OrderWithUserAndItems } from "@/types/order";
 
 type OrderTableProps = {
-  orders: any[];
+  orders: OrderWithUserAndItems[];
 };
 
 export default function OrderTable({
