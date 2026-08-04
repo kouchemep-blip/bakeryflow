@@ -8,13 +8,12 @@ import { verifyToken } from "@/lib/jwt";
 import type { CartItem } from "@/features/cart/cart.types";
 
 type CreateOrderResult =
-  | { success: true;  orderId: number; totalPrice: number }
+  | { success: true; orderId: number; totalPrice: number }
   | { success: false; error: string };
 
 export async function createOrder(
-  items: CartItem[]
+  items: CartItem[],
 ): Promise<CreateOrderResult> {
-
   // ── 1. Récupère et vérifie le token depuis le cookie ────────────────────
   const cookieStore = await cookies();
   const token = cookieStore.get("token");
@@ -57,10 +56,7 @@ export async function createOrder(
 
   const totalPrice = items.reduce((sum, item) => {
     const serverPrice = priceMap.get(item.product.id) ?? 0;
-    const optionsExtra = item.options.reduce(
-      (s, o) => s + o.priceModifier,
-      0
-    );
+    const optionsExtra = item.options.reduce((s, o) => s + o.priceModifier, 0);
     return sum + (serverPrice + optionsExtra) * item.quantity;
   }, 0);
 
@@ -79,12 +75,27 @@ export async function createOrder(
       // Crée les lignes de commande
       await tx.orderItem.createMany({
         data: items.map((item) => ({
-          orderId:   newOrder.id,
+          orderId: newOrder.id,
           productId: item.product.id,
-          quantity:  item.quantity,
+          quantity: item.quantity,
           unitPrice: priceMap.get(item.product.id) ?? 0,
         })),
       });
+
+      // Crée la conversation liée à la commande
+      const existingConversation = await tx.conversation.findUnique({
+        where: {
+          userId,
+        },
+      });
+
+      if (!existingConversation) {
+        await tx.conversation.create({
+          data: {
+            userId,
+          },
+        });
+      }
 
       // Vide le CartItem Prisma de l'utilisateur si existant
       const cart = await tx.cart.findUnique({ where: { userId } });
@@ -96,9 +107,11 @@ export async function createOrder(
     });
 
     return { success: true, orderId: order.id, totalPrice };
-
   } catch (error) {
     console.error("createOrder error:", error);
-    return { success: false, error: "Erreur lors de la création de la commande." };
+    return {
+      success: false,
+      error: "Erreur lors de la création de la commande.",
+    };
   }
 }

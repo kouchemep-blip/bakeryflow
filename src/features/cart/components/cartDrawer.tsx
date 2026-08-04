@@ -199,8 +199,8 @@ export function CartDrawer() {
                 <CartEmpty onClose={closeDrawer} />
               ) : (
                 <AnimatePresence initial={false}>
-                  {items.map((item) => (
-                    <CartItem key={item.cartItemId} item={item} />
+                  {items.map((item, index) => (
+                    <CartItem key={`${item.product.id}-${index}`} item={item} />
                   ))}
                 </AnimatePresence>
               )}
