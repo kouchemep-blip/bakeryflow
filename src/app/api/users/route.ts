@@ -18,18 +18,29 @@ export async function GET(request: NextRequest) {
   if (admin instanceof NextResponse) return admin;
   try {
     const users = await prisma.user.findMany({
-      select: { id: true, firstName: true, lastName: true, email: true, phone: true, role: true, isActive: true, createdAt: true },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        role: true,
+        isActive: true,
+        createdAt: true,
+      },
     });
 
     return NextResponse.json(users);
   } catch (error) {
-    console.log(error);
+    console.error("ERREUR API USERS :", error);
 
-    return NextResponse.json(
-      { message: "Erreur lors de la récupération des utilisateurs." },
-      { status: 500 },
-    );
+    return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
   }
+
+  return NextResponse.json(
+    { message: "Erreur lors de la récupération des utilisateurs." },
+    { status: 500 },
+  );
 }
 
 export async function POST(request: Request) {
@@ -46,10 +57,22 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({ id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, { status: 201 });
+    return NextResponse.json(
+      {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+      },
+      { status: 201 },
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ message: "Les informations d'inscription sont invalides." }, { status: 400 });
+      return NextResponse.json(
+        { message: "Les informations d'inscription sont invalides." },
+        { status: 400 },
+      );
     }
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&

@@ -70,7 +70,7 @@ model order {
   status     order_status @default(PENDING)
   totalPrice Int
   createdAt  DateTime     @default(now())
-  updatedAt  DateTime   @updatedAt
+  updatedAt  DateTime     @updatedAt
   user       user         @relation(fields: [userId], references: [id], map: "Order_userId_fkey")
   orderitem  orderitem[]
 
@@ -93,7 +93,7 @@ model orderitem {
 model product {
   id            Int            @id @default(autoincrement())
   name          String
-  description   String
+  description   String         @db.Text
   price         Int
   image         String
   status        product_status @default(AVAILABLE)
@@ -114,7 +114,7 @@ model review {
   userId    Int
   productId Int
   rating    Int
-  comment   String
+  comment   String   @db.Text
   createdAt DateTime @default(now())
   product   product  @relation(fields: [productId], references: [id], map: "Review_productId_fkey")
   user      user     @relation(fields: [userId], references: [id], map: "Review_userId_fkey")

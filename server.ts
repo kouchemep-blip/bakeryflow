@@ -154,7 +154,7 @@ app.prepare().then(() => {
     });
   });
 
-  httpServer.listen(port, () => {
-    console.log(`> BakeryFlow prêt sur http://localhost:${port}`);
+  httpServer.listen(port, "0.0.0.0", () => {
+    console.log(`> BakeryFlow prêt sur le port ${port}`);
   });
 });
