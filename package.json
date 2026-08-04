@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "ts-node --project tsconfig.server.json server.ts",
     "postinstall": "prisma generate",
-    "build": "next build --webpack",
-    "start": "cross-env NODE_ENV=production ts-node --project tsconfig.server.json server.ts",
+    "build": "next build --webpack && npm run build:server",
+    "build:server": "tsc --project tsconfig.server.json",
+    "start": "cross-env NODE_ENV=production node dist/server.js",
     "lint": "eslint",
     "db:seed": "prisma db seed"
   },
