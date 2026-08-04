@@ -49,7 +49,7 @@ export default async function ClientChatPage() {
   return (
     <main className="max-w-2xl mx-auto px-4 py-12">
       <h1 className="text-2xl font-bold text-gray-900 mb-8">
-        Discussion avec la cheffe
+        Discussion avec Lino&apos;s Food
       </h1>
 
       <div className="h-[600px]">

@@ -17,6 +17,8 @@ type UseChatReturn = {
   isConnected: boolean;
   isLoading: boolean;
   sendMessage: (content: string) => void;
+  editMessage: (messageId: number, content: string) => void;
+  deleteMessage: (messageId: number) => void;
   markRead: () => void;
 };
 
@@ -52,7 +54,13 @@ export function useChat({
 
       const data = await res.json();
 
-      setMessages(data.messages ?? []);
+      // L'API Prisma expose la relation sous le nom `message` (au singulier).
+      // Fusionner évite qu'un événement Socket reçu pendant la requête disparaisse.
+      setMessages((current) => {
+        const byId = new Map(current.map((message) => [message.id, message]));
+        for (const message of data.message ?? []) byId.set(message.id, message);
+        return [...byId.values()].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      });
 
     } catch (error) {
       console.error(
@@ -128,6 +136,19 @@ export function useChat({
       }
     );
 
+    // Met à jour le statut "Lu" chez l'expéditeur dès que le destinataire ouvre le fil.
+    socket.on("messages_read", () => {
+      void loadHistory();
+    });
+
+    socket.on("message_updated", (message: ChatMessage) => {
+      setMessages((current) => current.map((item) => item.id === message.id ? message : item));
+    });
+
+    socket.on("message_deleted", ({ messageId }: { messageId: number }) => {
+      setMessages((current) => current.filter((message) => message.id !== messageId));
+    });
+
 
     return () => {
 
@@ -161,13 +182,21 @@ export function useChat({
         "send_message",
         {
           conversationId,
-          content,
+          content: content.trim(),
         }
       );
 
     },
     [conversationId]
   );
+
+  const editMessage = useCallback((messageId: number, content: string) => {
+    if (content.trim() && socketRef.current) socketRef.current.emit("edit_message", { messageId, content: content.trim() });
+  }, []);
+
+  const deleteMessage = useCallback((messageId: number) => {
+    socketRef.current?.emit("delete_message", { messageId });
+  }, []);
 
 
 
@@ -194,6 +223,8 @@ export function useChat({
     isConnected,
     isLoading,
     sendMessage,
+    editMessage,
+    deleteMessage,
     markRead,
   };
 }

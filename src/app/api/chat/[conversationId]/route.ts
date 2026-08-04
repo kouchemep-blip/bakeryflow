@@ -20,10 +20,15 @@ export async function GET(
   }
 
   const { conversationId } = await params;
+  const id = Number(conversationId);
+
+  if (!Number.isInteger(id) || id < 1) {
+    return NextResponse.json({ message: "Conversation invalide" }, { status: 400 });
+  }
 
   const conversation = await prisma.conversation.findUnique({
     where: {
-      id: Number(conversationId),
+      id,
     },
 
     include: {
@@ -58,5 +63,20 @@ export async function GET(
     );
   }
 
-  return NextResponse.json(conversation);
+  // L'ouverture d'une conversation acquitte uniquement les messages de l'autre partie.
+  await prisma.message.updateMany({
+    where: {
+      conversationId: id,
+      senderId: { not: user.id },
+      isRead: false,
+    },
+    data: { isRead: true },
+  });
+
+  return NextResponse.json({
+    ...conversation,
+    message: conversation.message.map((message) =>
+      message.senderId === user.id ? message : { ...message, isRead: true },
+    ),
+  });
 }

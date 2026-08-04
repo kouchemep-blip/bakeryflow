@@ -1,11 +1,14 @@
 "use client";
 import { motion } from "framer-motion";
+import { Pencil, Trash2 } from "lucide-react";
 import type { ChatMessage as ChatMessageType } from "../hooks/useChat";
 
 type ChatMessageProps = {
   message: ChatMessageType;
   // true = message envoyé par l'utilisateur courant
   isMine: boolean;
+  onEdit: (message: ChatMessageType) => void;
+  onDelete: (messageId: number) => void;
 };
 
 // Formate HH:MM depuis une date ISO
@@ -16,7 +19,7 @@ function formatTime(dateStr: string): string {
   });
 }
 
-export function ChatMessageBubble({ message, isMine }: ChatMessageProps) {
+export function ChatMessageBubble({ message, isMine, onEdit, onDelete }: ChatMessageProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8, scale: 0.97 }}
@@ -50,6 +53,12 @@ export function ChatMessageBubble({ message, isMine }: ChatMessageProps) {
             message.isRead ? "text-amber-500" : "text-gray-300",
           ].join(" ")}>
             {message.isRead ? "Lu" : "Envoyé"}
+          </span>
+        )}
+        {isMine && (
+          <span className="ml-1 flex gap-1">
+            <button aria-label="Modifier le message" onClick={() => onEdit(message)} className="text-gray-400 hover:text-amber-600"><Pencil size={12} /></button>
+            <button aria-label="Supprimer le message" onClick={() => onDelete(message.id)} className="text-gray-400 hover:text-red-600"><Trash2 size={12} /></button>
           </span>
         )}
       </div>

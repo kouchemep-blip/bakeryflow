@@ -10,9 +10,11 @@ import { ChatPresence } from "./ChatPresence";
 
 type ChatWithChefProps = {
   conversationId: number;
+  participantName?: string;
+  participantSubtitle?: string;
 };
 
-export function ChatWithChef({ conversationId }: ChatWithChefProps) {
+export function ChatWithChef({ conversationId, participantName = "Lino's Food", participantSubtitle }: ChatWithChefProps) {
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
   const {
@@ -20,6 +22,8 @@ export function ChatWithChef({ conversationId }: ChatWithChefProps) {
     isConnected,
     isLoading,
     sendMessage,
+    editMessage,
+    deleteMessage,
     markRead,
   } = useChat({
     conversationId,
@@ -74,6 +78,15 @@ export function ChatWithChef({ conversationId }: ChatWithChefProps) {
     }
   }
 
+  function handleEdit(message: (typeof messages)[number]) {
+    const content = window.prompt("Modifier le message", message.content);
+    if (content !== null && content.trim() && content.trim() !== message.content) editMessage(message.id, content);
+  }
+
+  function handleDelete(messageId: number) {
+    if (window.confirm("Supprimer définitivement ce message ?")) deleteMessage(messageId);
+  }
+
   return (
     <div className="flex flex-col h-full max-h-[600px] bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
@@ -85,9 +98,10 @@ export function ChatWithChef({ conversationId }: ChatWithChefProps) {
 
         <div>
           <h2 className="font-semibold text-gray-900">
-            La Cheffe
+            {participantName}
           </h2>
 
+          {participantSubtitle && <p className="text-xs text-gray-500">{participantSubtitle}</p>}
           <ChatPresence isConnected={isConnected} />
         </div>
       </div>
@@ -118,7 +132,7 @@ export function ChatWithChef({ conversationId }: ChatWithChefProps) {
             />
 
             <p className="text-sm text-gray-400">
-              Pas encore de message. Commencez la discussion avec la cheffe.
+              Pas encore de message. Commencez la discussion avec notre équipe.
             </p>
           </div>
         )}
@@ -129,6 +143,8 @@ export function ChatWithChef({ conversationId }: ChatWithChefProps) {
               key={message.id}
               message={message}
               isMine={message.senderId === currentUserId}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           ))}
         </AnimatePresence>

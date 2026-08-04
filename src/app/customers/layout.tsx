@@ -1,4 +1,5 @@
 import ClientSidebar from "@/components/customers/clientSidebar";
+import { MessageNotifier } from "@/components/customers/MessageNotifier";
 
 export default function ClientLayout({
   children,
@@ -13,6 +14,7 @@ export default function ClientLayout({
       <main className="flex-1 p-8">
         {children}
       </main>
+      <MessageNotifier />
 
     </div>
   );

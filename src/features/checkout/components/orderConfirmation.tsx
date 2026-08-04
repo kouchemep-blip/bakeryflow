@@ -31,7 +31,7 @@ export function OrderConfirmation({
 
   const handleGoToDashboard = () => {
     onClose();
-    router.push("/client");
+    router.push(`/customers/orders/${orderId}`);
   };
 
   return (

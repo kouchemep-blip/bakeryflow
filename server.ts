@@ -57,9 +57,16 @@ app.prepare().then(() => {
     const userId: number = socket.data.userId;
     const role:   string = socket.data.role;
 
+    // Cette room personnelle permet de prévenir un client même lorsqu'il n'est pas sur la page chat.
+    socket.join(`user_${userId}`);
+
     console.log(`Socket connecté — userId: ${userId}, role: ${role}`);
 
     // ── Rejoindre la room de conversation ───────────────────────────────
+    socket.on("join_admin_inbox", () => {
+      if (role === "ADMIN" || role === "SUPER_ADMIN") socket.join("admin_inbox");
+    });
+
     socket.on("join_conversation", async (conversationId: number) => {
       // Vérifie que l'user a bien accès à cette conversation
       const conv = await prisma.conversation.findUnique({
@@ -71,7 +78,7 @@ app.prepare().then(() => {
         socket.emit("error", "Conversation introuvable.");
         return;
       }
-      if (role === "CLIENT" && conv.userId !== userId) {
+      if (role !== "ADMIN" && role !== "SUPER_ADMIN" && conv.userId !== userId) {
         socket.emit("error", "Accès refusé.");
         return;
       }
@@ -90,11 +97,14 @@ app.prepare().then(() => {
         conversationId: number;
         content: string;
       }) => {
-        if (!content?.trim()) return;
+        if (!content?.trim() || content.trim().length > 2_000) {
+          socket.emit("error", "Le message doit contenir entre 1 et 2 000 caractères.");
+          return;
+        }
 
         try {
           const conv = await prisma.conversation.findUnique({ where: { id: conversationId } });
-          if (!conv || (role === "CLIENT" && conv.userId !== userId)) {
+          if (!conv || ((role !== "ADMIN" && role !== "SUPER_ADMIN") && conv.userId !== userId)) {
             socket.emit("error", "Accès refusé.");
             return;
           }
@@ -116,6 +126,11 @@ app.prepare().then(() => {
             isRead:         message.isRead,
             createdAt:      message.createdAt,
           });
+          io.to("admin_inbox").emit("inbox_updated", { conversationId });
+          // La notification est réservée au destinataire client : un client ne se notifie pas lui-même.
+          if (role === "ADMIN" || role === "SUPER_ADMIN") {
+            io.to(`user_${conv.userId}`).emit("message_notification", { conversationId, content: message.content });
+          }
         } catch (error) {
           console.error("send_message error:", error);
           socket.emit("error", "Erreur lors de l'envoi du message.");
@@ -127,7 +142,7 @@ app.prepare().then(() => {
     socket.on("mark_read", async (conversationId: number) => {
       try {
         const conv = await prisma.conversation.findUnique({ where: { id: conversationId } });
-        if (!conv || (role === "CLIENT" && conv.userId !== userId)) return;
+        if (!conv || ((role !== "ADMIN" && role !== "SUPER_ADMIN") && conv.userId !== userId)) return;
         await prisma.message.updateMany({
           where: {
             conversationId,
@@ -143,9 +158,28 @@ app.prepare().then(() => {
           conversationId,
           readBy: userId,
         });
+        io.to("admin_inbox").emit("inbox_updated", { conversationId });
       } catch (error) {
         console.error("mark_read error:", error);
       }
+    });
+
+    // Un utilisateur peut uniquement modifier ou supprimer ses propres messages.
+    socket.on("edit_message", async ({ messageId, content }: { messageId: number; content: string }) => {
+      if (!content?.trim() || content.trim().length > 2_000) return;
+      const message = await prisma.message.findUnique({ where: { id: messageId } });
+      if (!message || message.senderId !== userId) return;
+      const updated = await prisma.message.update({ where: { id: messageId }, data: { content: content.trim() } });
+      io.to(`conv_${updated.conversationId}`).emit("message_updated", updated);
+      io.to("admin_inbox").emit("inbox_updated", { conversationId: updated.conversationId });
+    });
+
+    socket.on("delete_message", async ({ messageId }: { messageId: number }) => {
+      const message = await prisma.message.findUnique({ where: { id: messageId } });
+      if (!message || message.senderId !== userId) return;
+      await prisma.message.delete({ where: { id: messageId } });
+      io.to(`conv_${message.conversationId}`).emit("message_deleted", { messageId });
+      io.to("admin_inbox").emit("inbox_updated", { conversationId: message.conversationId });
     });
 
     // ── Présence : notifie la room à la déconnexion ──────────────────────
