@@ -36,12 +36,14 @@ export function useChat({
   const [isLoading, setIsLoading] = useState(true);
 
   const socketRef = useRef<Socket | null>(null);
+  const activeConversationIdRef = useRef(conversationId);
 
 
   // ─────────────────────────────────────────
   // Charger l'historique des messages
   // ─────────────────────────────────────────
   const loadHistory = useCallback(async () => {
+    const requestedConversationId = conversationId;
     try {
       const res = await fetch(
         `/api/chat/${conversationId}`,
@@ -53,6 +55,8 @@ export function useChat({
       if (!res.ok) return;
 
       const data = await res.json();
+
+      if (activeConversationIdRef.current !== requestedConversationId) return;
 
       // L'API Prisma expose la relation sous le nom `message` (au singulier).
       // Fusionner évite qu'un événement Socket reçu pendant la requête disparaisse.
@@ -80,6 +84,10 @@ export function useChat({
   // Connexion Socket.IO
   // ─────────────────────────────────────────
   useEffect(() => {
+
+    activeConversationIdRef.current = conversationId;
+    setMessages([]);
+    setIsLoading(true);
 
     const historyTimer = window.setTimeout(loadHistory, 0);
 
@@ -119,6 +127,8 @@ export function useChat({
       "new_message",
       (message: ChatMessage) => {
 
+        if (message.conversationId !== activeConversationIdRef.current) return;
+
         setMessages((prev) => {
 
           const exists = prev.some(
@@ -142,6 +152,7 @@ export function useChat({
     });
 
     socket.on("message_updated", (message: ChatMessage) => {
+      if (message.conversationId !== activeConversationIdRef.current) return;
       setMessages((current) => current.map((item) => item.id === message.id ? message : item));
     });
 

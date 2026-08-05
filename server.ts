@@ -83,6 +83,9 @@ app.prepare().then(() => {
         return;
       }
 
+      for (const room of socket.rooms) {
+        if (room.startsWith("conv_")) socket.leave(room);
+      }
       socket.join(`conv_${conversationId}`);
       socket.emit("joined", { conversationId });
     });

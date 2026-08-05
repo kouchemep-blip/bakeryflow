@@ -1,169 +1,192 @@
 "use client";
-// FoodHero.jsx — Section Hero Food
-// Données importées depuis hero.data.ts
-// Reproduit fidèlement le design Dribbble (layout 2 colonnes, floating dish, app mockup)
 
-import { HERO_DATA } from "@/features/landing/hero.data";
+import React, { useState } from "react";
+import Image from "next/image";
+import { 
+  ShoppingBag, 
+  ArrowRight, 
+  ChevronLeft, 
+  ChevronRight, 
+  Heart,
+  UtensilsCrossed,
+  Pizza,
+  Cake,
+  Beef
+} from "lucide-react";
 
-// ─── Icône panier ─────────────────────────────────────────────────────────────
-type HeroData = typeof HERO_DATA;
-type Category = HeroData["categories"][number];
-type CarouselItem = HeroData["carouselItems"][number];
-type AppItem = HeroData["appMockup"]["items"][number];
+// --- DONNÉES LOCALES (MOCK DATA) ---
+const CATEGORIES = [
+  { id: 1, label: "Burgers", icon: UtensilsCrossed },
+  { id: 2, label: "Pizzas", icon: Pizza },
+  { id: 3, label: "Desserts", icon: Cake },
+  { id: 4, label: "Viandes", icon: Beef },
+];
 
-function CartIcon({ count = 2 }: { count?: number }) {
+const PLAT_SUGGESTIONS = [
+  {
+    id: 1,
+    title: "Ramen au Crabe",
+    desc: "Épicé à l'ail sauvage",
+    price: "24.00",
+    image: "/crab-ramen.png", // Pensez à ajouter vos propres images dans /public
+  },
+  {
+    id: 2,
+    title: "Émincé de Poulet",
+    desc: "Poulet véritable grillé",
+    price: "12.00",
+    image: "/chicken-slice.png",
+  },
+];
+
+export function Hero() {
+  const [panierCount, setPanierCount] = useState(2);
+
   return (
-    <div className="relative">
-      <div className="w-12 h-12 bg-gray-900 rounded-2xl flex items-center justify-center shadow-lg">
-        <svg viewBox="0 0 24 24" className="w-5 h-5 text-white fill-none stroke-white stroke-2">
-          <path strokeLinecap="round" strokeLinejoin="round"
-            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.03-7.078A4.5 4.5 0 0 0 16.5 3.75H7.5L5.106 5.272M7.5 14.25 5.106 5.272m0 0-.617 2.318" />
-        </svg>
-      </div>
-      <span className="absolute -top-1 -right-1 w-5 h-5 bg-orange-500 rounded-full text-white text-[10px] font-bold flex items-center justify-center">
-        {count}
-      </span>
-    </div>
-  );
-}
-
-// ─── Badge "Taste" flottant ────────────────────────────────────────────────────
-function TasteBadge({ badge }: { badge: HeroData["badge"] }) {
-  return (
-    <div className="absolute top-6 left-6 bg-white rounded-2xl px-4 py-2 shadow-md z-10">
-      <p className="text-xs text-gray-400 font-medium">{badge.label}</p>
-      <p className="text-sm font-bold text-gray-800">{badge.price}</p>
-    </div>
-  );
-}
-
-// ─── Catégories (icônes rondes) ────────────────────────────────────────────────
-function CategoryIcons({ categories }: { categories: Category[] }) {
-  return (
-    <div className="flex gap-3 mt-6">
-      {categories.map((cat) => (
-        <button
-          key={cat.id}
-          className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-xl hover:shadow-md hover:scale-105 transition-all duration-200"
-          aria-label={cat.label}
-        >
-          {cat.icon}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-// ─── Carousel bas (cartes produits) ───────────────────────────────────────────
-function CarouselCard({ item }: { item: CarouselItem }) {
-  return (
-    <div className="bg-white rounded-2xl p-3 shadow-md w-36 flex-shrink-0">
-      <div className="w-full h-20 bg-amber-50 rounded-xl flex items-center justify-center text-4xl mb-2">
-        {item.image}
-      </div>
-      <p className="font-bold text-gray-800 text-sm">{item.name}</p>
-      <p className="text-xs text-gray-400">{item.description}</p>
-      <div className="flex items-center justify-between mt-2">
-        <span className="text-sm font-bold text-gray-900">{item.price}</span>
-        <button className="w-7 h-7 bg-gray-900 rounded-full flex items-center justify-center text-white text-sm hover:bg-orange-500 transition-colors duration-200">
-          +
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ─── Mockup mobile ─────────────────────────────────────────────────────────────
-function AppMockup({ data }: { data: HeroData["appMockup"] }) {
-  return (
-    <div className="bg-white rounded-3xl shadow-2xl p-4 w-52 z-10">
-      {/* Header mockup */}
-      <div className="flex items-center justify-between mb-3">
-        <p className="font-bold text-gray-800 text-sm">{data.heading}</p>
-        <div className="w-7 h-7 bg-gray-900 rounded-lg flex items-center justify-center text-white text-xs">
-          🛒
+    <div className="relative min-h-screen bg-[#ede6dc] text-[#1a1a1a] font-sans antialiased overflow-x-hidden selection:bg-[#c5a880] p-4 md:p-8">
+      
+      {/* --- EN-TÊTE / PANIER --- */}
+      <header className="flex justify-between items-center max-w-7xl mx-auto mb-8">
+        <div className="flex flex-col">
+          <span className="text-xl font-bold tracking-wider uppercase text-[#2c2c2c]">Taste</span>
+          <span className="text-xs text-gray-500 font-medium">Restaurant & BBQ</span>
         </div>
-      </div>
-      {/* Icônes catégories mini */}
-      <div className="flex gap-2 mb-3">
-        {["🍔","🍕","🥤","🍜"].map((icon, i) => (
-          <div key={i} className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-sm">
-            {icon}
+        
+        {/* Bouton Panier Flottant */}
+        <button className="relative p-3 bg-black text-white rounded-2xl hover:bg-neutral-800 transition shadow-lg group">
+          <ShoppingBag className="w-6 h-6 transition-transform group-hover:scale-110" />
+          {panierCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+              {panierCount}
+            </span>
+          )}
+        </button>
+      </header>
+
+      {/* --- CONTENU PRINCIPAL CONTENEUR --- */}
+      <main className="max-w-7xl mx-auto bg-[#f5efe6] rounded-[40px] shadow-sm p-6 md:p-12 lg:p-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative overflow-hidden">
+        
+        {/* --- COLONNE GAUCHE : TEXTES ET AVANT-PLAN --- */}
+        <div className="lg:col-span-6 space-y-8 z-10">
+          <div className="space-y-4">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-black leading-[1.1] tracking-tight">
+              Une Cuisine <br />
+              <span className="text-neutral-800">Exquise vous</span> <br />
+              Attend Chez Vous
+            </h1>
           </div>
-        ))}
-      </div>
-      {/* Liste plats */}
-      {data.items.map((item: AppItem) => (
-        <div key={item.id} className="flex items-center gap-2 mb-2 p-2 bg-gray-50 rounded-xl">
-          <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-xl flex-shrink-0">
-            {item.image}
+
+          {/* Bouton d'Action */}
+          <div>
+            <button className="inline-flex items-center gap-3 bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-neutral-800 transition-all shadow-md group">
+              Voir le Menu
+              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            </button>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-gray-800 truncate">{item.name}</p>
-            <div className="flex items-center justify-between mt-0.5">
-              <span className="text-xs text-gray-500">{item.price}</span>
-              <button className="w-5 h-5 bg-gray-900 rounded-full flex items-center justify-center text-white text-[10px]">+</button>
+
+          {/* Sélecteur de Catégories (Icônes Lucide) */}
+          <div className="flex flex-wrap gap-4 pt-4">
+            {CATEGORIES.map((cat) => {
+              const IconComponent = cat.icon;
+              return (
+                <button
+                  key={cat.id}
+                  className="flex items-center justify-center p-4 bg-white/80 backdrop-blur-sm rounded-2xl hover:bg-white transition-all shadow-sm hover:shadow-md border border-neutral-200/50 group"
+                  title={cat.label}
+                >
+                  <IconComponent className="w-6 h-6 text-neutral-700 group-hover:text-black transition-colors" />
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Carrousel de Suggestions du Bas */}
+          <div className="pt-6 space-y-4">
+            {/* Flèches de navigation du mini-carrousel */}
+            <div className="flex gap-2">
+              <button className="p-2 rounded-full border border-neutral-300 hover:bg-white transition bg-transparent">
+                <ChevronLeft className="w-4 h-4 text-neutral-600" />
+              </button>
+              <button className="p-2 rounded-full border border-neutral-300 hover:bg-white transition bg-transparent">
+                <ChevronRight className="w-4 h-4 text-neutral-600" />
+              </button>
+            </div>
+
+            {/* Grille de cartes suggestions */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {PLAT_SUGGESTIONS.map((plat) => (
+                <div 
+                  key={plat.id} 
+                  className="bg-white/90 backdrop-blur-sm p-4 rounded-[24px] border border-neutral-100 flex flex-col items-center text-center shadow-sm relative group hover:shadow-md transition"
+                >
+                  {/* Conteneur Image avec width et height imposés pour Next.js */}
+                  <div className="relative w-28 h-28 mb-3 bg-neutral-100 rounded-full overflow-hidden flex items-center justify-center text-xs text-neutral-400">
+                    <Image 
+                      src={plat.image} 
+                      alt={plat.title}
+                      width={112}
+                      height={112}
+                      className="object-cover group-hover:scale-105 transition duration-300"
+                      onError={(e) => {
+                        // Remplacement visuel si l'image locale n'existe pas encore
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <span className="absolute inset-0 flex items-center justify-center font-medium bg-neutral-200 text-neutral-700 pointer-events-none group-hover:opacity-0 transition">
+                      [Plat]
+                    </span>
+                  </div>
+
+                  <h3 className="font-bold text-sm text-neutral-900">{plat.title}</h3>
+                  <p className="text-xs text-neutral-500 mb-2">{plat.desc}</p>
+                  <span className="font-extrabold text-sm text-neutral-900">${plat.price}</span>
+
+                  {/* Bouton favori */}
+                  <button className="absolute top-3 right-3 p-1.5 rounded-full bg-neutral-50 hover:bg-red-50 text-neutral-400 hover:text-red-500 transition">
+                    <Heart className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      ))}
-    </div>
-  );
-}
 
-// ─── Boutons store ─────────────────────────────────────────────────────────────
-function StoreButton({ label, icon }: { label: string; icon: string }) {
-  return (
-    <a
-      href="#"
-      className="flex items-center gap-2 bg-gray-900 text-white rounded-xl px-4 py-2.5 hover:bg-gray-700 transition-colors duration-200"
-    >
-      <span className="text-lg">{icon}</span>
-      <div>
-        <p className="text-[9px] text-gray-400 leading-none">Download on the</p>
-        <p className="text-xs font-bold leading-tight">{label}</p>
-      </div>
-    </a>
-  );
-}
-
-// ─── Hero principal ────────────────────────────────────────────────────────────
-export function Hero() {
-  const d = HERO_DATA;
-
-  return (
-    <section className="relative min-h-screen overflow-hidden bg-[#f5efe6] pt-20 sm:pt-28">
-      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-8 px-4 py-10 sm:gap-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:px-16">
-        <div>
-          <span className="inline-flex rounded-full bg-white px-4 py-2 text-sm font-semibold text-orange-600 shadow-sm">{d.badge.label}</span>
-          <h1 className="mt-6 text-4xl font-black leading-tight text-gray-900 sm:text-5xl md:text-7xl">
-            {d.title.line1}<br />{d.title.line2}<br /><span className="text-orange-500">{d.title.line3}</span>
-          </h1>
-          <p className="mt-6 max-w-lg text-lg leading-8 text-gray-600">{d.rightSection.tagline}</p>
-          <a href={d.cta.href} className="mt-8 inline-flex rounded-xl bg-gray-900 px-6 py-4 font-bold text-white transition-colors hover:bg-orange-500">{d.cta.label}</a>
-          <CategoryIcons categories={d.categories} />
-        </div>
-        <div className="relative rounded-[2rem] bg-orange-100 p-4 shadow-xl sm:p-8">
-          <TasteBadge badge={d.badge} />
-          <div className="absolute right-6 top-6"><CartIcon /></div>
-          <div className="pt-16 text-center text-8xl" aria-label={d.mainDish.alt} role="img">🍞</div>
-          <p className="mx-auto mt-6 max-w-md text-center text-gray-600">{d.rightSection.subtext}</p>
-          <div className="mt-8 flex gap-4 overflow-x-auto pb-2">
-            {d.carouselItems.map((item) => <CarouselCard key={item.id} item={item} />)}
-          </div>
-          <div className="mt-8 flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-            <AppMockup data={d.appMockup} />
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">{d.appSection.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-gray-600">{d.appSection.description}</p>
-              <div className="mt-4 flex flex-wrap gap-3">
-                <StoreButton label={d.appSection.appStore.label} icon="" />
-                <StoreButton label={d.appSection.googlePlay.label} icon="▶" />
+        {/* --- COLONNE DROITE : GRAND VISUEL ET ARGUMENTAIRE --- */}
+        <div className="lg:col-span-6 flex flex-col justify-between h-full space-y-12 lg:space-y-0 lg:pl-6 relative">
+          
+          {/* Grand Plat Principal Centré */}
+          <div className="flex justify-center items-center relative my-auto">
+            <div className="relative w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] md:w-[450px] md:h-[450px] drop-shadow-2xl rounded-full bg-neutral-200 flex items-center justify-center text-neutral-500 text-sm overflow-hidden">
+              <Image
+                src="/images/hero-plat.jpg" 
+                alt="Plat principal délicieux"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-w-7xl) 100vw, 450px"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/5 pointer-events-none">
+                <span className="font-bold text-lg text-neutral-800">[ Image Principale du Plat ]</span>
+                <span className="text-xs text-neutral-600 mt-1">Placez votre image transparente ici</span>
               </div>
             </div>
           </div>
+
+          {/* Section Argumentaire en Bas à Droite */}
+          <div className="space-y-4 lg:max-w-md lg:self-end text-left pt-6 border-t border-neutral-200/60">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-black leading-tight">
+              Nous vous servons les plats les plus savoureux de la ville
+            </h2>
+            <p className="text-sm leading-relaxed text-neutral-600 font-medium">
+              Chaque matin est une nouvelle opportunité de savourer des créations uniques, préparées avec passion à partir d&apos;ingrédients locaux minutieusement sélectionnés pour éveiller vos papilles.
+            </p>
+          </div>
+
         </div>
-      </div>
-    </section>
+      </main>
+    </div>
   );
 }

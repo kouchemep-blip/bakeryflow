@@ -1,32 +1,12 @@
 "use client";
 
-/**
- * Page de déconnexion — "L'Addition"
- * ------------------------------------------------------------
- * Concept : la déconnexion est mise en scène comme le moment où
- * l'addition est présentée en fin de repas — un sceau de cire
- * (initiale du restaurant) se brise à l'écran, dans une ambiance
- * tamisée façon bougie.
- *
- * Style : Tailwind CSS uniquement (aucune dépendance supplémentaire).
- * Police : celle par défaut de votre projet (aucun import de police).
- *
- * Utilisation (Next.js App Router) :
- *   - Renommez ce fichier en `page.tsx` et placez-le dans
- *     `app/deconnexion/page.tsx` (ou l'emplacement de votre choix).
- *   - Adaptez RESTAURANT_NAME, RESTAURANT_TAGLINE et les liens
- *     HREF_RECONNEXION / HREF_ACCUEIL ci-dessous.
- */
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-// ---- À personnaliser -------------------------------------------------
 const RESTAURANT_NAME = "Le Jardin Doré";
 const RESTAURANT_TAGLINE = "Cuisine de saison";
 const HREF_RECONNEXION = "/inscription"; // Lien vers la page de connexion ou d'inscription
 const HREF_ACCUEIL = "/";
-// ------------------------------------------------------------------------
 
 export default function DeconnexionPage() {
   const [sceauBrise, setSceauBrise] = useState(false);

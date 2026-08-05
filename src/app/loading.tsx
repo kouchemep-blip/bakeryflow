@@ -10,22 +10,11 @@
  * Police display : Merienda (chargée via next/font dans layout.tsx)
  * Police corps    : Lato (Google Fonts, sobre, se marie avec Merienda)
  */
-import { Lato } from "next/font/google";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
 
 // ─── Messages selon la page ───────────────────────────────────────────────────
 // usePathname permet d'afficher un message contextuel selon l'URL courante
-
-const lato = Lato({ subsets: ["latin"], weight: ["300", "400"] });
-const PAGE_MESSAGES: Record<string, string> = {
-  "/":          "Mise en place...",
-  "/menu":      "Préparation de la carte...",
-  "/commande":  "Chargement de votre commande...",
-  "/client":    "Accès à votre espace...",
-  "/dashboard": "Chargement du tableau de bord...",
-};
 
 const DEFAULT_MESSAGE = "Préparation de votre expérience...";
 
@@ -189,34 +178,23 @@ function AnimatedDots() {
 // ─── Composant principal ───────────────────────────────────────────────────────
 
 export default function Loading() {
-  const pathname = usePathname();
-
-  // Message contextuel selon la page
-  const message = PAGE_MESSAGES[pathname] ?? DEFAULT_MESSAGE;
+  const message = DEFAULT_MESSAGE;
 
   // Affiche un message d'attente supplémentaire si > 2 secondes
   const [showLongWait, setShowLongWait] = useState(false);
 
-  // Évite le flash sur les chargements très rapides
-  // (le composant ne s'affiche visuellement qu'après 100ms)
-  const [visible, setVisible] = useState(false);
-
   useEffect(() => {
-    // Délai minimal d'affichage — évite le flash
-    const visibilityTimer = setTimeout(() => setVisible(true), 100);
-
     // Message d'attente après 2 secondes
     const longWaitTimer = setTimeout(() => setShowLongWait(true), 2000);
 
     return () => {
-      clearTimeout(visibilityTimer);
       clearTimeout(longWaitTimer);
     };
   }, []);
 
   return (
     <AnimatePresence>
-      {visible && (
+      {(
         <motion.div
           key="loading-screen"
           initial={{ opacity: 0 }}

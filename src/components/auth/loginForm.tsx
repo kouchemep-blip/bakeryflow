@@ -108,7 +108,7 @@ export function LoginForm({
         </div>
 
         {/* ── Se souvenir + mot de passe oublié ── */}
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between mb-20">
           <label className="flex cursor-pointer items-center gap-2 select-none">
             <div className="relative">
               <input type="checkbox" id="checkbox" className="peer sr-only" />

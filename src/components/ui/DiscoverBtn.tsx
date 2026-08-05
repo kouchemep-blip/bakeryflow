@@ -50,7 +50,7 @@ const isLeftArrow = Icon.name === "FaArrowLeft";
     <button
       type={type}
       disabled={disabled}
-      className="flex items-stretch gap-2 cursor-pointer mt-20 select-none disabled:cursor-not-allowed disabled:opacity-60"
+      className="flex items-stretch gap-2 cursor-pointer mt-2 select-none disabled:cursor-not-allowed disabled:opacity-60"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}

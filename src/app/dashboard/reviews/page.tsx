@@ -1,3 +1,11 @@
-export default function ReviewsPage() {
-  return <h1 className="text-2xl font-bold">Avis</h1>;
+import { prisma } from "@/lib/prisma";
+import { DeleteReviewButton } from "@/components/dashboard/reviews/DeleteReviewButton";
+
+export default async function ReviewsPage() {
+  const [reviews, aggregate] = await Promise.all([
+    prisma.review.findMany({ include: { user: { select: { firstName: true, lastName: true, email: true } }, product: { select: { name: true } } }, orderBy: { createdAt: "desc" } }),
+    prisma.review.aggregate({ _avg: { rating: true }, _count: { id: true } }),
+  ]);
+  const average = aggregate._avg.rating ? aggregate._avg.rating.toFixed(1) : "—";
+  return <section className="space-y-6"><div className="flex flex-wrap items-end justify-between gap-4"><div><h1 className="text-2xl font-bold">Avis clients</h1><p className="mt-1 text-sm text-gray-500">Suivez les retours publiés après les commandes livrées.</p></div><div className="rounded-xl bg-amber-50 px-5 py-3 text-center"><p className="text-xl font-bold text-amber-600">{average} / 5</p><p className="text-xs text-gray-500">{aggregate._count.id} avis publiés</p></div></div>{reviews.length === 0 ? <div className="rounded-xl border border-dashed bg-white p-10 text-center text-gray-500">Aucun avis client pour le moment.</div> : <div className="overflow-x-auto rounded-xl border bg-white"><table className="w-full min-w-[740px]"><thead className="bg-gray-50 text-left text-sm text-gray-600"><tr><th className="p-4">Client</th><th className="p-4">Produit</th><th className="p-4">Note</th><th className="p-4">Commentaire</th><th className="p-4">Date</th><th className="p-4 text-right">Action</th></tr></thead><tbody>{reviews.map((review) => <tr key={review.id} className="border-t align-top"><td className="p-4"><p className="font-medium">{review.user.firstName} {review.user.lastName}</p><p className="text-xs text-gray-500">{review.user.email}</p></td><td className="p-4 font-medium">{review.product.name}</td><td className="p-4 whitespace-nowrap text-amber-500">{"★".repeat(review.rating)}<span className="text-gray-300">{"★".repeat(5 - review.rating)}</span></td><td className="max-w-md p-4 text-sm text-gray-600">{review.comment}</td><td className="p-4 whitespace-nowrap text-sm text-gray-500">{review.createdAt.toLocaleDateString("fr-FR")}</td><td className="p-4 text-right"><DeleteReviewButton reviewId={review.id} /></td></tr>)}</tbody></table></div>}</section>;
 }

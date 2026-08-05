@@ -1,120 +1,154 @@
-// components/Footer.tsx
+"use client";
+
 import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Twitter,
+  Instagram,
+  Facebook,
+  Linkedin,
+  ArrowRight,
+  Wheat,
+} from "lucide-react";
+
+const FOOTER_LINKS = [
+  {
+    column: [
+      { label: "ACCUEIL", href: "/" },
+      { label: "A VENIR", href: "/coming-soon" },
+    ],
+  },
+  {
+    column: [
+      { label: "FAQs", href: "/faqs" },
+      { label: "NOUS TROUVER", href: "/find-us" },
+    ],
+  },
+  {
+    column: [
+      { label: "Mentions Légales", href: "/mentions-legales" },
+      { label: "Confidentialité", href: "/confidentialite" },
+    ],
+  },
+];
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="relative top-20 w-full sm:top-35">
-      {/* Zone crème */}
-      <div className="bg-[#f5efe0] relative">
-        <div className="px-5 py-8 text-center sm:px-16">
-          <h2 className="text-3xl text-[#8b1a1a] sm:text-[3rem]">
-            Buon Appetito 🌿
-          </h2>
-          <p className="tracking-[0.3em] text-[0.8rem] text-[#555] mb-12">
-            · ITALIAN KITCHEN ·
-          </p>
+    <footer className="relative w-full min-h-[50vh] flex flex-col justify-end text-neutral-800 bg-[#FDFBF7] overflow-hidden pt-20">
+      {/* ── IMAGE DE FOND EN LOCAL ── */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/bg.jpg"
+          alt="Arrière-plan footer"
+          fill
+          priority
+          className="object-cover object-bottom"
+        />
+        {/* Voile beige semi-transparent pour adoucir l'image et l'intégrer à votre charte graphique */}
+        <div className="absolute inset-0 bg-[#FDFBF7]/85 backdrop-blur-[2px]" />
+      </div>
 
-          {/* Grille responsive : 1 col sur mobile, 4 cols sur grand écran */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-left mt-8">
-            {/* About */}
-            <div>
-              <h3 className="font-extrabold text-[0.85rem] tracking-[0.1em] mb-4 text-[#222]">
-                ABOUT US
-              </h3>
-              <p className="text-[#555] text-[0.9rem] leading-relaxed">
-                Authentic Italian flavors, made with fresh ingredients and a
-                passion for tradition.
-              </p>
-            </div>
-
-            {/* Menu */}
-            <div>
-              <h3 className="font-extrabold text-[0.85rem] tracking-[0.1em] mb-4 text-[#222]">
-                MENU
-              </h3>
-              <ul className="flex flex-col gap-2 text-[#555] text-[0.9rem]">
-                <li>Pizzas</li>
-                <li>Pasta</li>
-                <li>Starters</li>
-                <li>Salads</li>
-                <li>Desserts</li>
-              </ul>
-            </div>
-
-            {/* Customer Care */}
-            <div>
-              <h3 className="font-extrabold text-[0.85rem] tracking-[0.1em] mb-4 text-[#222]">
-                CUSTOMER CARE
-              </h3>
-              <ul className="flex flex-col gap-2 text-[#555] text-[0.9rem]">
-                <li>FAQ</li>
-                <li>Delivery Information</li>
-                <li>Returns & Refunds</li>
-                <li>Reservations</li>
-              </ul>
-            </div>
-
-            {/* Connect */}
-            <div>
-              <h3 className="font-extrabold text-[0.85rem] tracking-[0.1em] mb-4 text-[#222]">
-                LET&apos;S CONNECT
-              </h3>
-              <div className="flex gap-2 mb-4">
-                <a
-                  href="#"
-                  className="w-9 h-9 bg-[#222] color-white rounded-full flex items-center justify-content-center text-[0.7rem] no-underline text-white hover:opacity-80 transition-opacity"
-                >
-                  Insta
-                </a>
-                <a
-                  href="#"
-                  className="w-9 h-9 bg-[#222] color-white rounded-full flex items-center justify-content-center text-[0.7rem] no-underline text-white hover:opacity-80 transition-opacity"
-                >
-                  FB
-                </a>
-                <a
-                  href="#"
-                  className="w-9 h-9 bg-[#222] color-white rounded-full flex items-center justify-content-center text-[0.7rem] no-underline text-white hover:opacity-80 transition-opacity"
-                >
-                  Pin
-                </a>
+      {/* ── CONTENU PRINCIPAL ── */}
+      <div className="max-w-7xl w-full mx-auto px-6 md:px-12 xl:px-24 relative z-10 flex flex-col gap-12">
+        {/* Section haute : Logo, Liens et CTA */}
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10 md:gap-6">
+          {/* Bloc Marque / Slogan */}
+          <div className="flex flex-col gap-4 max-w-xs">
+            <div className="mb-8 hidden items-center gap-2 px-2 md:flex">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#C2703D]">
+                <Wheat className="h-5 w-5 text-[#161310]" strokeWidth={2.5} />
               </div>
-              <p className="text-[#555] text-[0.9rem]">Stay updated! ♡</p>
-              <div className="flex border border-[#ccc] rounded-md overflow-hidden mt-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 p-2 border-none outline-none bg-white text-[0.85rem]"
-                />
-                <button className="px-3 py-2 bg-[#c0392b] text-white border-none cursor-pointer hover:bg-[#a93226] transition-colors">
-                  →
-                </button>
-              </div>
+              <span className="text-[15px] font-semibold tracking-tight text-[#F5F1EA]">
+                BakeryFlow
+              </span>
             </div>
+            <p className="text-sm font-medium text-neutral-600 leading-relaxed">
+              Une expérience culinaire unique au cœur de Cotonou. Des produits
+              frais, locaux et de saison.
+            </p>
+          </div>
+
+          {/* Grille de liens centrale (Structure calquée sur l'image d'inspiration) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-12 gap-y-6 md:gap-x-16">
+            {FOOTER_LINKS.map((group, colIndex) => (
+              <ul key={colIndex} className="flex flex-col gap-3">
+                {group.column.map((link, linkIndex) => (
+                  <li key={linkIndex}>
+                    <Link
+                      href={link.href}
+                      className="text-xs font-bold tracking-wider text-neutral-600 hover:text-[#EA580C] uppercase transition-colors duration-200"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+
+          {/* Bouton d'action à droite (CTA) */}
+          <div className="shrink-0">
+            <Link
+              href="/reservation"
+              className="inline-flex items-center gap-2 bg-[#EA580C] hover:bg-neutral-900 text-white font-bold text-xs uppercase px-6 py-4 rounded-xl transition-all duration-300 shadow-md shadow-orange-600/10 hover:shadow-none"
+            >
+              Réserver une table
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
-      </div>
 
-      {/* Vague entre crème et vert — SVG */}
-      <div className="-mt-[2px] block w-full h-[80px]">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-          <path
-            fill="#f5efe0"
-            fillOpacity="1"
-            d="M0,192L10,192C20,192,40,192,60,181.3C80,171,100,149,120,149.3C140,149,160,171,180,176C200,181,220,171,240,186.7C260,203,280,245,300,224C320,203,340,117,360,80C380,43,400,53,420,96C440,139,460,213,480,208C500,203,520,117,540,101.3C560,85,580,139,600,149.3C620,160,640,128,660,144C680,160,700,224,720,245.3C740,267,760,245,780,197.3C800,149,820,75,840,64C860,53,880,107,900,144C920,181,940,203,960,176C980,149,1000,75,1020,53.3C1040,32,1060,64,1080,101.3C1100,139,1120,181,1140,218.7C1160,256,1180,288,1200,272C1220,256,1240,192,1260,170.7C1280,149,1300,171,1320,160C1340,149,1360,107,1380,101.3C1400,96,1420,128,1430,144L1440,160L1440,0L1430,0C1420,0,1400,0,1380,0C1360,0,1340,0,1320,0C1300,0,1280,0,1260,0C1240,0,1220,0,1200,0C1180,0,1160,0,1140,0C1120,0,1100,0,1080,0C1060,0,1040,0,1020,0C1000,0,980,0,960,0C940,0,920,0,900,0C880,0,860,0,840,0C820,0,800,0,780,0C760,0,740,0,720,0C700,0,680,0,660,0C640,0,620,0,600,0C580,0,560,0,540,0C520,0,500,0,480,0C460,0,440,0,420,0C400,0,380,0,360,0C340,0,320,0,300,0C280,0,260,0,240,0C220,0,200,0,180,0C160,0,140,0,120,0C100,0,80,0,60,0C40,0,20,0,10,0L0,0Z"
-          ></path>
-        </svg>
-      </div>
+        {/* ── BARRE INFÉRIEURE : SÉPARATION & RÉSEAUX ── */}
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 pb-8 border-t border-neutral-200">
+          {/* Copyright et Slogan bas */}
+          <div className="flex flex-col items-center sm:items-start gap-1">
+            <span className="text-xs font-semibold text-neutral-500">
+              © {currentYear} Bakeryflow. Tous droits réservés.
+            </span>
+            <span className="text-[10px] text-neutral-400 font-medium tracking-wide">
+              Fait maison avec passion.
+            </span>
+          </div>
 
-      {/* Zone verte */}
-      <div className="-mt-10 flex min-h-[220px] flex-col items-center gap-2 rounded-b-[60px] bg-[#2d5a27] p-8 text-center text-white sm:h-[45vh] sm:rounded-b-[100px]">
-        <span className="text-xl">🍕</span>
-        <p className="text-2xl sm:text-[1.8rem]">
-          Good food, good mood.
-        </p>
-        <p className="text-[0.7rem] tracking-[0.1em] text-white/70 uppercase">
-          © 2026 BUON APPETITO ITALIAN KITCHEN. ALL RIGHTS RESERVED.
-        </p>
+          {/* Icônes Réseaux Sociaux (Alignées à droite comme sur l'image) */}
+          <div className="flex items-center gap-5 text-neutral-500">
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#EA580C] transition-colors duration-200"
+            >
+              <Twitter className="w-4 h-4" />
+            </a>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#EA580C] transition-colors duration-200"
+            >
+              <Instagram className="w-4 h-4" />
+            </a>
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#EA580C] transition-colors duration-200"
+            >
+              <Facebook className="w-4 h-4" />
+            </a>
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#EA580C] transition-colors duration-200"
+            >
+              <Linkedin className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
   );

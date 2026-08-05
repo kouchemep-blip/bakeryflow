@@ -153,7 +153,7 @@ export function RegisterForm({
         />
 
         {/* ── Bouton submit ── */}
-        <div className="-mt-12 mb-1 flex w-full flex-col items-center justify-center">
+        <div className="mt-4 mb-1 flex w-full flex-col items-center justify-center">
           {registerServerError && (
             <p className="mb-2 w-full text-left text-xs text-red-600">{registerServerError}</p>
           )}

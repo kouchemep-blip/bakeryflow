@@ -1,5 +1,8 @@
+"use client";
 import Link from "next/link";
 import OrderStatus from "./orderStatus";
+import { SimpleBtn } from "@/components/ui/SimpleBtn";
+import { Eye } from "lucide-react";
 
 type OrderRowProps = {
   order: {
@@ -55,9 +58,9 @@ export default function OrderRow({
       <td className="p-4">
         <Link
           href={`/dashboard/orders/${order.id}`}
-          className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
+          // className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
         >
-          Voir
+          <SimpleBtn icon={Eye} />
         </Link>
       </td>
     </tr>

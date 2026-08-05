@@ -1,5 +1,5 @@
 "use client";
-import { DiscoverButton } from "@/components/ui/DiscoverBtn";
+import { SimpleBtn } from "@/components/ui/SimpleBtn";
 import { useRouter } from "next/navigation";
 import { FaTrash } from "react-icons/fa6";
 
@@ -14,17 +14,14 @@ export default function DeleteProductButton({
 
   async function handleDelete() {
     const confirmed = window.confirm(
-      "Voulez-vous vraiment supprimer ce produit ?"
+      "Voulez-vous vraiment supprimer ce produit ?",
     );
 
     if (!confirmed) return;
 
-    const response = await fetch(
-      `/api/products/${productId}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch(`/api/products/${productId}`, {
+      method: "DELETE",
+    });
 
     if (response.ok) {
       router.refresh();
@@ -34,9 +31,8 @@ export default function DeleteProductButton({
   }
 
   return (
-      <DiscoverButton
-        onClick={handleDelete}
-        icon={FaTrash}
-        label="Supprimer"
-      />  );
+    <button onClick={handleDelete}>
+      <SimpleBtn icon={FaTrash} />
+    </button>
+  );
 }

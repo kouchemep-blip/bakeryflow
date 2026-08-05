@@ -1,144 +1,16 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import {
-  Home,
-  ShoppingBag,
-  MessageCircle,
-  User,
-  ShieldCheck,
-} from "lucide-react";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { MessageCircle, PackageCheck, ShoppingBag, Star } from "lucide-react";
+import { prisma } from "@/lib/prisma";
+import { verifyToken } from "@/lib/jwt";
 
-type UserType = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-};
-
-export default function ClientPage() {
-  const [user, setUser] = useState<UserType | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("/api/auth/me");
-
-        if (!res.ok) return;
-
-        const data = await res.json();
-        setUser(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  return (
-    <div className="space-y-8">
-
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800">
-            Bonjour {user?.firstName ?? "..."} 
-          </h1>
-
-          <p className="mt-2 text-gray-500 font-merienda">
-            Heureux de vous retrouver sur votre espace client.
-            Retrouvez ici vos commandes, vos discussions avec notre équipe
-            ainsi que les informations liées à votre compte.
-          </p>
-        </div>
-
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-3 text-white font-medium hover:bg-orange-600 transition"
-        >
-          <Home size={20} />
-          Retour à l&apos;accueil
-        </Link>
-
-      </div>
-
-      {/* Cartes */}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-
-        <div className="rounded-2xl border bg-white p-6 shadow-sm hover:shadow-md transition">
-          <User className="text-orange-500" size={32} />
-
-          <h2 className="mt-4 text-lg font-semibold">
-            Mon compte
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            Consultez et modifiez vos informations personnelles.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border bg-white p-6 shadow-sm hover:shadow-md transition">
-          <ShoppingBag className="text-green-600" size={32} />
-
-          <h2 className="mt-4 text-lg font-semibold">
-            Mes commandes
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            Suivez facilement toutes vos commandes et leur statut.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border bg-white p-6 shadow-sm hover:shadow-md transition">
-          <MessageCircle className="text-blue-600" size={32} />
-
-          <h2 className="mt-4 text-lg font-semibold">
-            Messagerie
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            Discutez directement avec notre équipe en cas de besoin.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border bg-white p-6 shadow-sm hover:shadow-md transition">
-          <ShieldCheck className="text-purple-600" size={32} />
-
-          <h2 className="mt-4 text-lg font-semibold">
-            Statut du compte
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            Connecté en tant que{" "}
-            <span className="font-semibold text-gray-700">
-              {user?.role ?? "..."}
-            </span>
-          </p>
-        </div>
-
-      </div>
-
-      {/* Bannière */}
-
-      <div className="rounded-2xl bg-gradient-to-r from-orange-500 to-orange-400 p-8 text-white">
-
-        <h2 className="text-2xl font-bold">
-          Merci pour votre confiance 
-        </h2>
-
-        <p className="mt-3 max-w-2xl opacity-95">
-          Nous mettons tout en œuvre pour vous proposer des repas
-          savoureux et un service rapide. N&apos;hésitez pas à passer
-          une nouvelle commande ou à nous contacter via la messagerie.
-        </p>
-
-      </div>
-
-    </div>
-  );
+export default async function ClientDashboard() {
+  const token = (await cookies()).get("token")?.value; if (!token) redirect("/login");
+  let userId: number; try { userId = (verifyToken(token) as { id: number }).id; } catch { redirect("/login"); }
+  const [user, totalOrders, deliveredOrders, pendingOrders, totalSpent, reviews, unreadMessages, recentOrders] = await Promise.all([
+    prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { firstName: true } }), prisma.order.count({ where: { userId } }), prisma.order.count({ where: { userId, status: "DELIVERED" } }), prisma.order.count({ where: { userId, status: { in: ["PENDING", "CONFIRMED", "PREPARING", "READY"] } } }), prisma.order.aggregate({ where: { userId, status: "DELIVERED" }, _sum: { totalPrice: true } }), prisma.review.count({ where: { userId } }), prisma.message.count({ where: { conversation: { userId }, senderId: { not: userId }, isRead: false } }), prisma.order.findMany({ where: { userId }, orderBy: { createdAt: "desc" }, take: 4, select: { id: true, status: true, totalPrice: true, createdAt: true } })
+  ]);
+  const stats = [{ label: "Commandes", value: totalOrders, detail: `${pendingOrders} en cours`, icon: ShoppingBag, color: "text-blue-600" }, { label: "Livrées", value: deliveredOrders, detail: "commandes finalisées", icon: PackageCheck, color: "text-green-600" }, { label: "Dépenses", value: `${(totalSpent._sum.totalPrice ?? 0).toLocaleString()} FCFA`, detail: "sur les commandes livrées", icon: ShoppingBag, color: "text-orange-600" }, { label: "Avis publiés", value: reviews, detail: "retours partagés", icon: Star, color: "text-amber-500" }];
+  return <section className="space-y-8"><div><h1 className="text-3xl font-bold text-gray-800">Bonjour {user.firstName}</h1><p className="mt-2 text-gray-500">Voici le bilan de votre activité sur BakeryFlow.</p></div><div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">{stats.map(({ icon: Icon, ...stat }) => <div key={stat.label} className="rounded-2xl border bg-white p-5 shadow-sm"><Icon className={stat.color} /><p className="mt-4 text-sm text-gray-500">{stat.label}</p><p className="mt-1 text-2xl font-bold">{stat.value}</p><p className="mt-1 text-xs text-gray-400">{stat.detail}</p></div>)}</div><div className="grid gap-6 xl:grid-cols-3"><section className="rounded-2xl border bg-white p-6 xl:col-span-2"><div className="flex items-center justify-between"><h2 className="text-xl font-semibold">Commandes récentes</h2><Link href="/customers/orders" className="text-sm font-medium text-orange-600">Tout voir</Link></div>{recentOrders.length ? <div className="mt-4 divide-y">{recentOrders.map((order) => <Link href={`/customers/orders/${order.id}`} key={order.id} className="flex items-center justify-between py-4 hover:bg-orange-50"><div><p className="font-medium">Commande #{order.id}</p><p className="text-sm text-gray-500">{order.createdAt.toLocaleDateString("fr-FR")}</p></div><div className="text-right"><p className="font-medium">{order.totalPrice.toLocaleString()} FCFA</p><p className="text-xs text-orange-600">{order.status}</p></div></Link>)}</div> : <p className="mt-5 text-gray-500">Aucune commande pour le moment.</p>}</section><aside className="rounded-2xl bg-orange-500 p-6 text-white"><MessageCircle /><h2 className="mt-4 text-xl font-bold">Besoin d&apos;aide ?</h2><p className="mt-2 text-sm opacity-90">{unreadMessages ? `${unreadMessages} nouveau(x) message(s) vous attend(ent).` : "Notre équipe est disponible pour vous répondre."}</p><Link href="/customers/chat" className="mt-5 inline-block rounded-lg bg-white px-4 py-2 text-sm font-semibold text-orange-600">Ouvrir la discussion</Link><Link href="/customers/reviews" className="mt-3 block text-sm underline">Donner mon avis</Link></aside></div></section>;
 }

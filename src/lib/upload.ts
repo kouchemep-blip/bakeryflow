@@ -1,13 +1,13 @@
 import cloudinary from "./cloudinary";
 
-export async function uploadImage(buffer: Buffer) {
+export async function uploadImage(buffer: Buffer, folder = "bakeryflow/products") {
   return new Promise<{
     secure_url: string;
     public_id: string;
   }>((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
-        folder: "bakeryflow/products",
+        folder,
       },
       (error, result) => {
         if (error || !result) {

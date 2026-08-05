@@ -44,7 +44,8 @@ export function ProductGrid() {
   };
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 md:px-8 py-12">
+    // Ajout du fond crème (#f5efe6) et des arrondis pour s'intégrer au Hero
+    <section className="w-full bg-[#f5efe6] rounded-[40px] px-6 md:px-12 py-16 my-8">
       <p
         role="status"
         aria-live="polite"
@@ -53,13 +54,14 @@ export function ProductGrid() {
       >
         {/* Contenu injecté via JS après chaque ajout — voir étape suivante */}
       </p>
-      <div className="flex flex-col gap-6 mb-10">
+      <div className="flex flex-col bg-[#f5efe6] gap-6 mb-10">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">
-            Notre carte
+          {/* Titre principal mis en valeur en noir intense */}
+          <h2 className="text-4xl font-black text-black tracking-tight">
+            Découvrez Notre Carte
           </h2>
-          <p className="text-gray-500 mt-1 text-sm">
-            Commandez en quelques clics, livré avec soin.
+          <p className="text-gray-500 mt-2 text-sm font-medium">
+            Commandez en quelques clics, livré avec soin chez vous.
           </p>
         </div>
 

@@ -39,7 +39,7 @@ export function AuthOverlay({ rightPanelActive, onShowLogin, onShowRegister }: P
           <button
             type="button"
             onClick={onShowLogin}
-            className="relative flex cursor-pointer items-center gap-2 rounded-[20px] border-2 border-white bg-white/20 px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 ease-in-out hover:tracking-[1.9px] active:scale-95 sm:gap-3 sm:px-18 sm:py-3 sm:text-sm"
+            className="relative flex cursor-pointer items-center gap-2 rounded-[20px] border-2 border-white bg-white/20 px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 ease-in-out hover:tracking-[1.6px] active:scale-95 sm:gap-3 sm:px-18 sm:py-3 sm:text-sm"
           >
             <FaArrowLeft />
             Se connecter
