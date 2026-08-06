@@ -53,14 +53,14 @@ export function Hero() {
         </div>
         
         {/* Bouton Panier Flottant */}
-        <button className="relative p-3 bg-black text-white rounded-2xl hover:bg-neutral-800 transition shadow-lg group">
+        {/* <button className="relative p-3 bg-black text-white rounded-2xl hover:bg-neutral-800 transition shadow-lg group">
           <ShoppingBag className="w-6 h-6 transition-transform group-hover:scale-110" />
           {panierCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
               {panierCount}
             </span>
           )}
-        </button>
+        </button> */}
       </header>
 
       {/* --- CONTENU PRINCIPAL CONTENEUR --- */}
