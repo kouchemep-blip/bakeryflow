@@ -6,6 +6,11 @@ import { Home, ShoppingBag, MessageCircle, Star, User, Wheat } from "lucide-reac
 
 const links = [
   {
+    label: "Accueil du site",
+    href: "/",
+    icon: Home,
+  },
+  {
     label: "Accueil",
     href: "/customers",
     icon: Home,
@@ -50,7 +55,7 @@ export default function ClientSidebar() {
         {links.map((link) => {
           const Icon = link.icon;
           const active =
-            link.href === "/customers"
+            link.href === "/" || link.href === "/customers"
               ? pathname === link.href
               : pathname.startsWith(link.href);
 

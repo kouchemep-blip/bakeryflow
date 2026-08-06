@@ -12,9 +12,11 @@ import {
   Star,
   Settings,
   Wheat,
+  Home,
 } from "lucide-react";
 
 const NAV_LINKS = [
+  { name: "Accueil du site", href: "/", icon: Home },
   { name: "Tableau de bord", href: "/dashboard", icon: LayoutGrid },
   { name: "Produits", href: "/dashboard/products", icon: Croissant },
   { name: "Commandes", href: "/dashboard/orders", icon: ClipboardList },
@@ -41,7 +43,7 @@ export function DashboardNav() {
       <ul className="flex w-full flex-1 items-center justify-around gap-1 md:flex-col md:items-stretch md:justify-start">
         {NAV_LINKS.map((item) => {
           const active =
-            item.href === "/dashboard"
+            item.href === "/" || item.href === "/dashboard"
               ? pathname === item.href
               : pathname.startsWith(item.href);
           const Icon = item.icon;

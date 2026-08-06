@@ -45,7 +45,7 @@ export function ProductGrid() {
 
   return (
     // Ajout du fond crème (#f5efe6) et des arrondis pour s'intégrer au Hero
-    <section className="w-full bg-[#f5efe6] rounded-[40px] px-6 md:px-12 py-16 my-8">
+    <section className="my-8 w-full rounded-[40px] border border-white/40 bg-white/40 px-6 py-16 backdrop-blur-md md:px-12">
       <p
         role="status"
         aria-live="polite"
@@ -54,7 +54,7 @@ export function ProductGrid() {
       >
         {/* Contenu injecté via JS après chaque ajout — voir étape suivante */}
       </p>
-      <div className="flex flex-col bg-[#f5efe6] gap-6 mb-10">
+      <div className="mb-10 flex flex-col gap-6">
         <div>
           {/* Titre principal mis en valeur en noir intense */}
           <h2 className="text-4xl font-black text-black tracking-tight">

@@ -94,12 +94,7 @@ export function CartDrawer() {
 
   // Une seule déclaration — gère les deux cas (connecté / non connecté)
   // Remplace handleCheckout
-  const handleCheckout = async () => {
-    if (!user) {
-      setShowAuthGate(true);
-      return;
-    }
-
+  const submitOrder = async () => {
     try {
       setIsSubmitting(true);
       setOrderError(null);
@@ -122,6 +117,15 @@ export function CartDrawer() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleCheckout = () => {
+    if (!user) {
+      setShowAuthGate(true);
+      return;
+    }
+
+    void submitOrder();
   };
 
   return (
@@ -270,7 +274,7 @@ export function CartDrawer() {
             <AuthGate
               onAuthSuccess={() => {
                 setShowAuthGate(false);
-                handleCheckout();
+                void submitOrder();
               }}
               onClose={() => setShowAuthGate(false)}
             />

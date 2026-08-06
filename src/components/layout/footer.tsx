@@ -61,7 +61,7 @@ export default function Footer() {
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#C2703D]">
                 <Wheat className="h-5 w-5 text-[#161310]" strokeWidth={2.5} />
               </div>
-              <span className="text-[15px] font-semibold tracking-tight text-[#F5F1EA]">
+              <span className="text-[15px] font-semibold tracking-tight text-black">
                 BakeryFlow
               </span>
             </div>

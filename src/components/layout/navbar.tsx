@@ -56,7 +56,7 @@ export function Navbar() {
   return (
     <div className="fixed inset-x-0 top-0 z-50">
       <div className="hidden md:flex flex-row items-center h-[23vh]">
-        <div className="relative left-8 h-full w-[26vw] shrink-0 text-white group">
+        <div className="relative left-8 h-full w-[26vw] shrink-0 text-[#F5EFE6] group">
           {/* Le lien englobe tout le bloc pour rendre l'ensemble cliquable proprement */}
           <Link href="/" className="block h-full w-full relative">
             {/* Fond SVG graphique */}
@@ -71,16 +71,13 @@ export function Navbar() {
                 fill="currentColor"
               />
             </svg>
-
-            {/* Zone invisible superposée qui centre parfaitement l'image sur grand écran */}
-            <div className="absolute inset-0 hidden md:flex items-center justify-center">
-              <Image
-                src="/logo.jpg"
-                alt="Logo BakeryFlow"
-                width={250} // Augmenté légèrement pour un meilleur rendu sur grand écran
-                height={150}
-                className="object-contain transition-transform duration-200 group-hover:scale-105"
-              />
+            <div className="absolute top-6 left-4 hidden items-center gap-2 px-2 md:flex">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EA580C]">
+                <Wheat className="h-6 w-6 text-[#161310]" strokeWidth={2} />
+              </div>
+              <span className="text-[35px] font-semibold tracking-tight text-black">
+                BakeryFlow
+              </span>
             </div>
           </Link>
         </div>
