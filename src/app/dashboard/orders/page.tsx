@@ -1,5 +1,4 @@
 import OrderFilters from "@/components/dashboard/orders/orderFilters";
-import OrderSearch from "@/components/dashboard/orders/orderSearch";
 import OrderStatCard from "@/components/dashboard/orders/orderStatCard";
 import OrderTable from "@/components/dashboard/orders/orderTable";
 import { prisma } from "@/lib/prisma";
@@ -17,7 +16,8 @@ export default async function OrdersPage({ searchParams }: Props) {
   const where: Prisma.orderWhereInput = {};
 
   if (status) {
-    if (Object.values(order_status).includes(status as order_status)) where.status = status as order_status;
+    if (Object.values(order_status).includes(status as order_status))
+      where.status = status as order_status;
   }
 
   if (search) {
@@ -92,8 +92,8 @@ export default async function OrdersPage({ searchParams }: Props) {
     .reduce((sum, order) => sum + order.totalPrice, 0);
 
   return (
-    <div className="flex flex-col gap-10">
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-5">
+    <div className="flex flex-col gap-10 mt-[26vh] lg:mt-[12vh]">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-4 xl:grid-cols-5">
         <OrderStatCard title="Total commandes" value={totalOrders} />
 
         <OrderStatCard title="En attente" value={pendingOrders} />
@@ -101,15 +101,13 @@ export default async function OrdersPage({ searchParams }: Props) {
         <OrderStatCard title="Préparation" value={preparingOrders} />
 
         <OrderStatCard title="Livrées" value={deliveredOrders} />
-
-        <OrderStatCard
-          title="Chiffre d'affaires"
-          value={`${revenue.toLocaleString()} FCFA`}
-        />
       </div>
+      <OrderStatCard
+        title="Chiffre d'affaires"
+        value={`${revenue.toLocaleString()} FCFA`}
+      />
       <div className="flex flex-wrap items-center justify-between gap-4">
         <OrderFilters />
-        <OrderSearch />
       </div>
       <OrderTable orders={orders} />
     </div>

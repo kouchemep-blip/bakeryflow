@@ -108,7 +108,7 @@ export function ChatWithChef({ conversationId, participantName = "Lino's Food", 
 
       {/* Messages */}
       <div
-        className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3"
+        className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3 [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-thumb]:bg-[#C3B9B1] [&::-webkit-scrollbar-thumb]:rounded-[10px] [&::-webkit-scrollbar-thumb]:backdrop-blur-[150px]"
         aria-live="polite"
       >
         {isLoading && (

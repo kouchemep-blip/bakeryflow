@@ -9,8 +9,10 @@ export default async function ProductsPage() {
   });
 
   return (
-    <ProductTable
-      products={products}
-    />
+    <div className="mt-[26vh] lg:mt-[12vh]">
+      <ProductTable
+        products={products}
+      />
+    </div>
   );
 }

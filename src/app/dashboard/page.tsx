@@ -117,7 +117,7 @@ export default async function DashboardPage() {
     {
       label: "Nouveau produit",
       href: "/dashboard/products/new",
-      icon: "PackagePlus"
+      icon: "PackagePlus",
     },
     {
       label: "Nouvelle catégorie",
@@ -135,10 +135,10 @@ export default async function DashboardPage() {
     <div className="space-y-6 bg-[#FBFAF8] p-4 dark:bg-[#161310] sm:p-6">
       {/* Carte de bienvenue */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#161310] via-[#221C16] to-[#161310] p-6 sm:p-8">
-        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[#C2703D]/20 blur-3xl" />
+        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[#EA580C]/20 blur-3xl" />
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="mb-2 flex items-center gap-2 text-[#C2703D]">
+            <div className="mb-2 flex items-center gap-2 text-[#EA580C]">
               <Sparkles className="h-4 w-4" />
               <span className="text-xs font-medium uppercase tracking-wide">
                 Tableau de bord

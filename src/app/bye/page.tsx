@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const RESTAURANT_NAME = "Le Jardin Doré";
 const RESTAURANT_TAGLINE = "Cuisine de saison";
-const HREF_RECONNEXION = "/inscription"; // Lien vers la page de connexion ou d'inscription
+const HREF_RECONNEXION = "/inscription";
 const HREF_ACCUEIL = "/";
 
 export default function DeconnexionPage() {
@@ -42,7 +42,7 @@ export default function DeconnexionPage() {
         }}
       />
 
-      <main className="relative z-10 w-full max-w-md text-center rounded-sm border border-[#c9a15c]/35 bg-gradient-to-b from-[#241a15] to-[#1a130f] px-9 pb-9 pt-12 shadow-[0_30px_70px_rgba(0,0,0,0.55)] before:content-[''] before:absolute before:left-3 before:right-3 before:top-3 before:h-px before:bg-[#c9a15c]/25 after:content-[''] after:absolute after:left-3 after:right-3 after:bottom-3 after:h-px after:bg-[#c9a15c]/25">
+      <main className="relative z-10 w-full max-w-md text-center rounded-2xl border border-[#c9a15c]/35 bg-gradient-to-b from-[#241a15] to-[#1a130f] px-9 pb-9 pt-12 shadow-[0_30px_70px_rgba(0,0,0,0.55)] before:content-[''] before:absolute before:left-3 before:right-3 before:top-3 before:h-px before:bg-[#c9a15c]/25 after:content-[''] after:absolute after:left-3 after:right-3 after:bottom-3 after:h-px after:bg-[#c9a15c]/25">
         {/* Sceau de cire */}
         <div
           className={`mx-auto -mt-[3.25rem] mb-5 h-[84px] w-[84px] transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
@@ -96,11 +96,22 @@ export default function DeconnexionPage() {
         </h1>
 
         {/* Séparateur */}
-        <div className="mx-auto my-6 h-4 w-36 text-[#c9a15c] opacity-75" aria-hidden="true">
+        <div
+          className="mx-auto my-6 h-4 w-36 text-[#c9a15c] opacity-75"
+          aria-hidden="true"
+        >
           <svg viewBox="0 0 200 20" className="h-full w-full">
-            <path d="M0 10 H70 M130 10 H200" stroke="currentColor" strokeWidth="1" fill="none" />
+            <path
+              d="M0 10 H70 M130 10 H200"
+              stroke="currentColor"
+              strokeWidth="1"
+              fill="none"
+            />
             <circle cx="100" cy="10" r="3" fill="currentColor" />
-            <path d="M85 10 Q100 -4 115 10 Q100 24 85 10 Z" fill="currentColor" />
+            <path
+              d="M85 10 Q100 -4 115 10 Q100 24 85 10 Z"
+              fill="currentColor"
+            />
           </svg>
         </div>
 
@@ -113,13 +124,14 @@ export default function DeconnexionPage() {
         <div className="mb-7 flex flex-col gap-3">
           <Link
             href={HREF_RECONNEXION}
-            className="inline-block rounded-sm bg-gradient-to-b from-[#e6c98a] to-[#c9a15c] px-6 py-3.5 text-[0.85rem] font-medium uppercase tracking-[0.12em] text-[#1a130f] shadow-[0_8px_18px_rgba(201,161,92,0.25)] transition-all hover:-translate-y-px hover:brightness-105"
+            className="inline-block rounded-xl bg-gradient-to-b from-[#e6c98a] to-[#c9a15c] px-6 py-3.5 text-[0.85rem] font-medium uppercase tracking-[0.12em] text-[#1a130f] shadow-[0_8px_18px_rgba(201,161,92,0.25)] transition-all hover:-translate-y-px hover:brightness-105"
           >
             Se reconnecter
           </Link>
+
           <Link
             href={HREF_ACCUEIL}
-            className="inline-block rounded-sm border border-[#cdbfa4]/35 bg-transparent px-6 py-3.5 text-[0.85rem] uppercase tracking-[0.12em] text-[#cdbfa4] transition-all hover:border-[#c9a15c] hover:text-[#f3ead9]"
+            className="inline-block rounded-xl border border-[#cdbfa4]/35 bg-transparent px-6 py-3.5 text-[0.85rem] uppercase tracking-[0.12em] text-[#cdbfa4] transition-all hover:border-[#c9a15c] hover:text-[#f3ead9]"
           >
             Retour à l&apos;accueil
           </Link>

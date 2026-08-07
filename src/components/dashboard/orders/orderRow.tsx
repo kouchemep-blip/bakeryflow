@@ -1,7 +1,7 @@
 "use client";
+
 import Link from "next/link";
 import OrderStatus from "./orderStatus";
-import { SimpleBtn } from "@/components/ui/SimpleBtn";
 import { Eye } from "lucide-react";
 
 type OrderRowProps = {
@@ -26,41 +26,45 @@ type OrderRowProps = {
   };
 };
 
-export default function OrderRow({
-  order,
-}: OrderRowProps) {
+export default function OrderRow({ order }: OrderRowProps) {
   return (
-    <tr className="border-b hover:bg-gray-50">
-      <td className="p-4 font-semibold">
+    <tr className="hover:bg-slate-50/80">
+      <td className="px-6 py-5 font-semibold text-slate-900">
         #{order.id}
       </td>
 
-      <td className="p-4">
-        {order.user.firstName} {order.user.lastName}
+      <td className="px-6 py-3">
+        <div className="font-medium text-slate-900">
+          {order.user.firstName} {order.user.lastName}
+        </div>
       </td>
 
-      <td className="p-4 text-center">
-        {order.orderitem.length}
+      <td className="px-6 py-5 text-center text-slate-700">
+        <span className="inline-flex min-w-10 justify-center rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+          {order.orderitem.length}
+        </span>
       </td>
 
-      <td className="p-4">
+      <td className="px-6 py-5 font-medium text-slate-900">
         {order.totalPrice.toLocaleString()} FCFA
       </td>
 
-      <td className="p-4">
+      <td className="px-6 py-5">
         <OrderStatus status={order.status} />
       </td>
 
-      <td className="p-4">
+      <td className="px-6 py-5 text-slate-600">
         {new Date(order.createdAt).toLocaleDateString("fr-FR")}
       </td>
 
-      <td className="p-4">
+      <td className="px-6 py-5 text-center">
         <Link
           href={`/dashboard/orders/${order.id}`}
-          // className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
+          aria-label={`Voir la commande ${order.id}`}
+          title="Voir les détails"
+          className="inline-flex px-2 py-2.5 bg-[#EA580C]/10 hover:bg-black/5 rounded-l-xl rounded-tr-xl duration-300 ease-in-out"
         >
-          <SimpleBtn icon={Eye} />
+          <Eye className="text-[#EA580C]" />
         </Link>
       </td>
     </tr>

@@ -9,27 +9,28 @@ import {
   MessageCircle,
   Package,
   User,
+  Settings,
+  ShieldCheck,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { DiscoverButton } from "../ui/DiscoverBtn";
 import Link from "next/link";
+import Image from "next/image";
 
 type UserData = {
   id: number;
   firstName: string;
   lastName: string;
   role: string;
+  avatar: string;
 };
 
 export default function UserMenu() {
   const router = useRouter();
-
   const menuRef = useRef<HTMLDivElement>(null);
 
   const [loading, setLoading] = useState(true);
-
   const [user, setUser] = useState<UserData | null>(null);
-
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -45,8 +46,8 @@ export default function UserMenu() {
         }
 
         const data = await res.json();
-
         setUser(data);
+        console.log("User data:", data);
       } catch {}
 
       setLoading(false);
@@ -88,7 +89,9 @@ export default function UserMenu() {
 
   if (loading) {
     return (
-      <div className="h-12 w-44 rounded-full bg-white/30 animate-pulse backdrop-blur-md border border-white/40" />
+      <div className="h-[10vh] flex w-44 items-center justify-center rounded-full bg-white/30 animate-pulse backdrop-blur-md border border-white/40">
+        <p className="text-sm text-slate-500">Chargement...</p>
+      </div>
     );
   }
 
@@ -101,30 +104,42 @@ export default function UserMenu() {
   }
 
   const admin = user.role === "ADMIN" || user.role === "SUPER_ADMIN";
+  const initials =
+    `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase();
 
   return (
-    <div ref={menuRef} className="relative h-[10vh]">
+    <div ref={menuRef} className="relative h-[10vh] cursor-pointer">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-3 rounded-full border border-white/40 bg-white/40 backdrop-blur-md px-3 py-2 shadow-lg hover:bg-white/60 transition"
+        className="group flex items-center gap-3 rounded-full border border-white/40 bg-white/40 backdrop-blur-md px-3 py-2 shadow-lg transition hover:bg-white/60"
       >
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 text-white font-semibold">
-          {user.firstName.charAt(0).toUpperCase()}
-        </div>
+        {user.avatar ? (
+          <Image
+            width={40}
+            height={40}
+            src={user.avatar}
+            alt={`${user.firstName} ${user.lastName}`}
+            className="flex h-10 w-10 items-center justify-center rounded-full object-cover"
+          />
+        ) : (
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-bold uppercase text-white shadow-md">
+            {initials}
+          </div>
+        )}
 
         <div className="text-left">
-          <p className="text-sm font-semibold text-gray-900">
+          <p className="text-sm font-semibold text-slate-900">
             {user.firstName}
           </p>
 
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-slate-500">
             {admin ? "Administrateur" : "Client"}
           </p>
         </div>
 
         <ChevronDown
           size={18}
-          className={`transition ${open ? "rotate-180" : ""}`}
+          className={`text-slate-500 transition group-hover:text-slate-700 ${open ? "rotate-180" : ""}`}
         />
       </button>
 
@@ -149,16 +164,41 @@ export default function UserMenu() {
             transition={{
               duration: 0.18,
             }}
-            className="absolute right-0 mt-3 w-72 rounded-3xl border border-white/40 bg-white/80 backdrop-blur-xl shadow-2xl overflow-hidden"
+            className="absolute right-0 mt-3 w-72 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl"
           >
-            <div className="p-5 border-b">
-              <p className="font-bold">
-                {user.firstName} {user.lastName}
-              </p>
+            <div className="border-b border-slate-100 bg-slate-50 p-5">
+              <div className="flex items-center gap-3">
+                {user.avatar ? (
+                  <Image
+                    width={40}
+                    height={40}
+                    src={user.avatar}
+                    alt={`${user.firstName} ${user.lastName}`}
+                    className="flex h-10 w-10 items-center justify-center rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-bold uppercase text-white shadow-md">
+                    {initials}
+                  </div>
+                )}
 
-              <p className="text-sm text-gray-500">
-                {admin ? "Administrateur BakeryFlow" : "Client BakeryFlow"}
-              </p>
+                <div>
+                  <p className="font-semibold text-slate-900">
+                    {user.firstName} {user.lastName}
+                  </p>
+
+                  <p className="text-xs text-slate-500">
+                    {admin ? (
+                      <span className="inline-flex items-center gap-1">
+                        <ShieldCheck className="h-3 w-3" />
+                        Administrateur BakeryFlow
+                      </span>
+                    ) : (
+                      "Client BakeryFlow"
+                    )}
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="py-2">
@@ -199,11 +239,20 @@ export default function UserMenu() {
                       setOpen(false);
                     }}
                   />
+
+                  <MenuButton
+                    icon={<Settings size={18} />}
+                    label="Paramètres"
+                    onClick={() => {
+                      router.push("/customers/settings");
+                      setOpen(false);
+                    }}
+                  />
                 </>
               )}
             </div>
 
-            <div className="border-t p-2">
+            <div className="border-t border-slate-100 p-2">
               <MenuButton
                 danger
                 icon={<LogOut size={18} />}
@@ -232,11 +281,11 @@ function MenuButton({
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-5 py-3 text-sm transition hover:bg-gray-100 ${
-        danger ? "text-red-500" : "text-gray-700"
+      className={`flex w-full items-center gap-3 px-5 py-3 text-sm transition hover:bg-slate-50 cursor-pointer ${
+        danger ? "text-rose-600 hover:bg-rose-50" : "text-slate-700"
       }`}
     >
-      {icon}
+      <span className="text-slate-500">{icon}</span>
       {label}
     </button>
   );

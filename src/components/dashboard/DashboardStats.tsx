@@ -60,8 +60,8 @@ export default async function DashboardStats() {
       value: ordersToday.toLocaleString(),
       detail: `${inProgress} commande(s) en cours`,
       icon: "shoppingBag" as const,
-      color: "#C2703D",
-      bg: "#C2703D1A",
+      color: "#EA580C",
+      bg: "#EA580C1A",
     },
     {
       label: "Chiffre d'affaires",
@@ -110,7 +110,7 @@ export default async function DashboardStats() {
           </div>
           <Link
             href="/dashboard/orders"
-            className="flex items-center gap-1 text-sm font-medium text-[#C2703D] transition-colors hover:text-[#D07F49]"
+            className="flex items-center gap-1 text-sm font-medium text-[#EA580C] transition-colors hover:text-[#D07F49]"
           >
             Voir tout
             <ArrowUpRight className="h-3.5 w-3.5" />
@@ -142,7 +142,7 @@ export default async function DashboardStats() {
                   <p className="text-sm font-medium text-[#161310] dark:text-[#F5F1EA]">
                     {order.totalPrice.toLocaleString()} FCFA
                   </p>
-                  <p className="text-xs font-medium text-[#C2703D]">
+                  <p className="text-xs font-medium text-[#EA580C]">
                     {STATUS_LABEL[order.status] ?? order.status}
                   </p>
                 </div>

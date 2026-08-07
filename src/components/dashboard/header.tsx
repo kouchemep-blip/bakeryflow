@@ -9,11 +9,11 @@ export default function Header() {
   const [dark, setDark] = useState(false);
 
   return (
-    <header className="flex flex-col gap-3 border-b border-black/[0.06] bg-[#FBFAF8] px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between dark:border-white/[0.06] dark:bg-[#161310]">
+    <header className="fixed inset-x-0 top-0 z-50 flex flex-col gap-3 border border-white/40 bg-[#F5EFE6]/70 backdrop-blur-md px-4 py-4 sm:px-6 lg:left-64 lg:flex-row lg:items-center lg:justify-between dark:border-white/[0.06] dark:bg-[#161310]">
       {/* Titre */}
       <div>
         <h1 className="text-xl font-bold text-[#161310] sm:text-2xl dark:text-[#F5F1EA]">
-          Bonjour, Chef 
+          Bonjour, Chef
         </h1>
         <p className="text-xs text-[#807A72] sm:text-sm">
           Bienvenue sur votre tableau de bord.
@@ -21,7 +21,7 @@ export default function Header() {
       </div>
 
       {/* Recherche + actions */}
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 ">
         <div className="flex items-center gap-2 rounded-lg border border-black/[0.08] bg-white px-3 py-2 text-sm text-[#807A72] shadow-sm dark:border-white/[0.08] dark:bg-white/[0.04]">
           <Search className="h-4 w-4 shrink-0" />
           <span className="hidden w-32 truncate sm:inline md:w-44">
@@ -32,9 +32,7 @@ export default function Header() {
           </kbd>
         </div>
 
-        <button
-          className="hidden items-center gap-2 rounded-lg bg-[#C2703D] px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#D07F49] sm:flex"
-        >
+        <button className="hidden items-center gap-2 rounded-lg bg-[#EA580C] px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#D07F49] sm:flex">
           <Plus className="h-4 w-4" />
           Ajouter
         </button>
@@ -57,7 +55,7 @@ export default function Header() {
           className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-black/[0.08] bg-white text-[#161310] shadow-sm transition-colors hover:bg-black/[0.03] dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-[#F5F1EA] dark:hover:bg-white/[0.08]"
         >
           <Bell className="h-4 w-4" />
-          <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#C2703D]" />
+          <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#EA580C]" />
         </button>
 
         <button

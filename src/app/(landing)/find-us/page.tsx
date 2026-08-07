@@ -26,7 +26,7 @@ const CONTACT_INFO = [
 
 export default function FindUsPage() {
   return (
-    <main className="min-h-screen bg-[#FDFBF7] pt-[20vh] md:pt-[25vh] pb-20 px-4 sm:px-6 md:px-12 xl:px-24 overflow-x-hidden relative">
+    <main className="min-h-screen bg-[#F5EFE6] pt-[20vh] md:pt-[25vh] pb-20 px-4 sm:px-6 md:px-12 xl:px-24 overflow-x-hidden relative">
       {/* Formes d'arrière-plan douces adaptées à la charte beige */}
       <div className="hidden lg:block absolute left-0 bottom-0 w-[35vw] h-[35vw] bg-[#F5EFE6] rounded-full -translate-x-1/4 translate-y-1/4 pointer-events-none opacity-60" />
 

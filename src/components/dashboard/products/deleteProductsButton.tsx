@@ -1,5 +1,4 @@
 "use client";
-import { SimpleBtn } from "@/components/ui/SimpleBtn";
 import { useRouter } from "next/navigation";
 import { FaTrash } from "react-icons/fa6";
 
@@ -31,8 +30,8 @@ export default function DeleteProductButton({
   }
 
   return (
-    <button onClick={handleDelete}>
-      <SimpleBtn icon={FaTrash} />
+    <button onClick={handleDelete} className="cursor-pointer">
+      <FaTrash className="h-4 w-4 text-[#EA580C] transition hover:text-black" />
     </button>
   );
 }

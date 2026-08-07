@@ -14,5 +14,6 @@ export async function GET(request: NextRequest) {
     lastName: user.lastName,
     email: user.email,
     role: user.role,
+    avatar: user.avatar,
   });
 }

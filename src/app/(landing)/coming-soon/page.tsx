@@ -51,7 +51,7 @@ const STATS = [
 
 export default function AVenirPage() {
   return (
-    <main className="min-h-screen bg-[#FDFBF7] pt-[25vh] pb-20 px-6 md:px-12 xl:px-24 overflow-hidden relative">
+    <main className="min-h-screen bg-[#F5EFE6] pt-[25vh] pb-20 px-6 md:px-12 xl:px-24 overflow-hidden relative">
       {/* ── ARRIÈRE-PLAN GÉOMÉTRIQUE (Inspiré de l'image) ── */}
       <div className="absolute right-0 top-0 w-[50vw] h-[50vw] bg-[#F5EFE6] rounded-full translate-x-1/3 -translate-y-1/4 pointer-events-none opacity-60" />
       <div className="absolute right-[10vw] top-[15vw] w-6 h-6 bg-[#EA580C]/20 rounded-full pointer-events-none" />
@@ -91,7 +91,7 @@ export default function AVenirPage() {
                 </p>
 
                 {/* Footer de la carte avec prix et bouton d'action */}
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#FDFBF7]">
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#F5EFE6]">
                   <div className="flex flex-col">
                     <span className="text-xs text-neutral-400 uppercase font-medium">
                       Tarif

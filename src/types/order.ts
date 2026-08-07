@@ -5,7 +5,7 @@ export type OrderWithUserAndItems = Prisma.orderGetPayload<{
 }>;
 
 export type OrderItemWithProduct = Prisma.orderitemGetPayload<{
-  include: { product: true };
+  include: { product: { include: { category: true } } };
 }>;
 
 export type OrderStatus = order_status;
