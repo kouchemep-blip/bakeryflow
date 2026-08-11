@@ -9,9 +9,9 @@ import { Server as SocketIOServer } from "socket.io";
 import { prisma } from "./src/lib/prisma";
 import { verifyToken } from "./src/lib/jwt";
 
-const dev  = process.env.NODE_ENV !== "production";
+const dev = process.env.NODE_ENV !== "production";
 const port = parseInt(process.env.PORT || "3000", 10);
-const app  = next({ dev });
+const app = next({ dev });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
@@ -35,7 +35,8 @@ app.prepare().then(() => {
       ?.split(";")
       .map((part) => part.trim().split("="))
       .find(([key]) => key === "token")?.[1];
-    const token = (socket.handshake.auth?.token as string | undefined) ?? cookieToken;
+    const token =
+      (socket.handshake.auth?.token as string | undefined) ?? cookieToken;
 
     if (!token) {
       return next(new Error("Non authentifié."));
@@ -45,7 +46,7 @@ app.prepare().then(() => {
       const payload = verifyToken(token) as { id: number; role: string };
       // Attache l'user au socket pour usage dans les events
       socket.data.userId = payload.id;
-      socket.data.role   = payload.role;
+      socket.data.role = payload.role;
       next();
     } catch {
       next(new Error("Token invalide."));
@@ -55,7 +56,7 @@ app.prepare().then(() => {
   // ── Events Socket.IO ───────────────────────────────────────────────────
   io.on("connection", (socket) => {
     const userId: number = socket.data.userId;
-    const role:   string = socket.data.role;
+    const role: string = socket.data.role;
 
     // Cette room personnelle permet de prévenir un client même lorsqu'il n'est pas sur la page chat.
     socket.join(`user_${userId}`);
@@ -64,7 +65,8 @@ app.prepare().then(() => {
 
     // ── Rejoindre la room de conversation ───────────────────────────────
     socket.on("join_admin_inbox", () => {
-      if (role === "ADMIN" || role === "SUPER_ADMIN") socket.join("admin_inbox");
+      if (role === "ADMIN" || role === "SUPER_ADMIN")
+        socket.join("admin_inbox");
     });
 
     socket.on("join_conversation", async (conversationId: number) => {
@@ -78,7 +80,11 @@ app.prepare().then(() => {
         socket.emit("error", "Conversation introuvable.");
         return;
       }
-      if (role !== "ADMIN" && role !== "SUPER_ADMIN" && conv.userId !== userId) {
+      if (
+        role !== "ADMIN" &&
+        role !== "SUPER_ADMIN" &&
+        conv.userId !== userId
+      ) {
         socket.emit("error", "Accès refusé.");
         return;
       }
@@ -101,13 +107,23 @@ app.prepare().then(() => {
         content: string;
       }) => {
         if (!content?.trim() || content.trim().length > 2_000) {
-          socket.emit("error", "Le message doit contenir entre 1 et 2 000 caractères.");
+          socket.emit(
+            "error",
+            "Le message doit contenir entre 1 et 2 000 caractères.",
+          );
           return;
         }
 
         try {
-          const conv = await prisma.conversation.findUnique({ where: { id: conversationId } });
-          if (!conv || ((role !== "ADMIN" && role !== "SUPER_ADMIN") && conv.userId !== userId)) {
+          const conv = await prisma.conversation.findUnique({
+            where: { id: conversationId },
+          });
+          if (
+            !conv ||
+            (role !== "ADMIN" &&
+              role !== "SUPER_ADMIN" &&
+              conv.userId !== userId)
+          ) {
             socket.emit("error", "Accès refusé.");
             return;
           }
@@ -116,42 +132,51 @@ app.prepare().then(() => {
             data: {
               conversationId,
               senderId: userId,
-              content:  content.trim(),
+              content: content.trim(),
             },
           });
 
           // Broadcast à tous les membres de la room (client + cheffe)
           io.to(`conv_${conversationId}`).emit("new_message", {
-            id:             message.id,
+            id: message.id,
             conversationId: message.conversationId,
-            senderId:       message.senderId,
-            content:        message.content,
-            isRead:         message.isRead,
-            createdAt:      message.createdAt,
+            senderId: message.senderId,
+            content: message.content,
+            isRead: message.isRead,
+            createdAt: message.createdAt,
           });
           io.to("admin_inbox").emit("inbox_updated", { conversationId });
           // La notification est réservée au destinataire client : un client ne se notifie pas lui-même.
           if (role === "ADMIN" || role === "SUPER_ADMIN") {
-            io.to(`user_${conv.userId}`).emit("message_notification", { conversationId, content: message.content });
+            io.to(`user_${conv.userId}`).emit("message_notification", {
+              conversationId,
+              content: message.content,
+            });
           }
         } catch (error) {
           console.error("send_message error:", error);
           socket.emit("error", "Erreur lors de l'envoi du message.");
         }
-      }
+      },
     );
 
     // ── Marquer les messages comme lus ───────────────────────────────────
     socket.on("mark_read", async (conversationId: number) => {
       try {
-        const conv = await prisma.conversation.findUnique({ where: { id: conversationId } });
-        if (!conv || ((role !== "ADMIN" && role !== "SUPER_ADMIN") && conv.userId !== userId)) return;
+        const conv = await prisma.conversation.findUnique({
+          where: { id: conversationId },
+        });
+        if (
+          !conv ||
+          (role !== "ADMIN" && role !== "SUPER_ADMIN" && conv.userId !== userId)
+        )
+          return;
         await prisma.message.updateMany({
           where: {
             conversationId,
             // Marque comme lus les messages envoyés par l'autre partie
             senderId: { not: userId },
-            isRead:   false,
+            isRead: false,
           },
           data: { isRead: true },
         });
@@ -168,22 +193,50 @@ app.prepare().then(() => {
     });
 
     // Un utilisateur peut uniquement modifier ou supprimer ses propres messages.
-    socket.on("edit_message", async ({ messageId, content }: { messageId: number; content: string }) => {
-      if (!content?.trim() || content.trim().length > 2_000) return;
-      const message = await prisma.message.findUnique({ where: { id: messageId } });
-      if (!message || message.senderId !== userId) return;
-      const updated = await prisma.message.update({ where: { id: messageId }, data: { content: content.trim() } });
-      io.to(`conv_${updated.conversationId}`).emit("message_updated", updated);
-      io.to("admin_inbox").emit("inbox_updated", { conversationId: updated.conversationId });
-    });
+    socket.on(
+      "edit_message",
+      async ({
+        messageId,
+        content,
+      }: {
+        messageId: number;
+        content: string;
+      }) => {
+        if (!content?.trim() || content.trim().length > 2_000) return;
+        const message = await prisma.message.findUnique({
+          where: { id: messageId },
+        });
+        if (!message || message.senderId !== userId) return;
+        const updated = await prisma.message.update({
+          where: { id: messageId },
+          data: { content: content.trim() },
+        });
+        io.to(`conv_${updated.conversationId}`).emit(
+          "message_updated",
+          updated,
+        );
+        io.to("admin_inbox").emit("inbox_updated", {
+          conversationId: updated.conversationId,
+        });
+      },
+    );
 
-    socket.on("delete_message", async ({ messageId }: { messageId: number }) => {
-      const message = await prisma.message.findUnique({ where: { id: messageId } });
-      if (!message || message.senderId !== userId) return;
-      await prisma.message.delete({ where: { id: messageId } });
-      io.to(`conv_${message.conversationId}`).emit("message_deleted", { messageId });
-      io.to("admin_inbox").emit("inbox_updated", { conversationId: message.conversationId });
-    });
+    socket.on(
+      "delete_message",
+      async ({ messageId }: { messageId: number }) => {
+        const message = await prisma.message.findUnique({
+          where: { id: messageId },
+        });
+        if (!message || message.senderId !== userId) return;
+        await prisma.message.delete({ where: { id: messageId } });
+        io.to(`conv_${message.conversationId}`).emit("message_deleted", {
+          messageId,
+        });
+        io.to("admin_inbox").emit("inbox_updated", {
+          conversationId: message.conversationId,
+        });
+      },
+    );
 
     // ── Présence : notifie la room à la déconnexion ──────────────────────
     socket.on("disconnect", () => {

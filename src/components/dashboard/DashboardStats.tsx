@@ -92,7 +92,7 @@ export default async function DashboardStats() {
 
   return (
     <section className="space-y-5">
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-4 xl:grid-cols-2">
         {stats.map((stat, i) => (
           <StatCard key={stat.label} index={i} {...stat} />
         ))}

@@ -94,7 +94,7 @@ export default async function ClientDashboard() {
       value: reviews,
       detail: "retours partagés",
       icon: Star,
-      color: "text-amber-500",
+      color: "text-[#EA580C]",
       bg: "bg-amber-50",
     },
   ];
@@ -269,7 +269,7 @@ export default async function ClientDashboard() {
               href="/customers/reviews"
               className="block text-sm font-medium text-orange-100 underline transition hover:text-white"
             >
-               Donner mon avis {" "}
+              Donner mon avis{" "}
             </Link>
           </div>
         </aside>

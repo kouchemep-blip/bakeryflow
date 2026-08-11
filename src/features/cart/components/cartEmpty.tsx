@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { ShoppingBasket } from "lucide-react";
+import { FaShoppingBasket, FaShoppingCart } from "react-icons/fa";
 
 type CartEmptyProps = {
   onClose: () => void;
@@ -18,9 +19,9 @@ export function CartEmpty({ onClose }: CartEmptyProps) {
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        className="w-20 h-20 rounded-full bg-amber-50 flex items-center justify-center"
+        className="w-20 h-20 rounded-full bg-[#EA580C]/10 flex items-center justify-center"
       >
-        <ShoppingBasket size={36} className="text-amber-400" />
+        <FaShoppingCart size={36} className="text-[#EA580C]" />
       </motion.div>
 
       <div className="flex flex-col gap-1">
@@ -34,7 +35,7 @@ export function CartEmpty({ onClose }: CartEmptyProps) {
 
       <button
         onClick={onClose}
-        className="px-6 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-amber-500 transition-colors duration-200"
+        className="px-6 py-2.5 cursor-pointer bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-[#EA580C] transition-colors duration-200"
       >
         Voir la carte
       </button>

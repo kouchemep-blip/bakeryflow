@@ -1,9 +1,7 @@
 import Footer from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
-import { GlassFilter } from "@/components/ui/GlassFilter";
 import { CartDrawer } from "@/features/cart/components/cartDrawer";
 import type { Metadata, Viewport } from "next";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,13 +19,9 @@ export default function LandingLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
-      <div className="fixed inset-0 w-full">
-        <Image src={"/images/bg.jpg"} fill alt="background" />
-      </div>
+    <div className="relative min-h-screen bg-[#F5EFE6] text-[#1a1a1a] font-sans antialiased overflow-x-hidden selection:bg-[#c5a880] p-4 md:p-8">
       <Navbar />
       <main>
-      <GlassFilter />
         {children}
         <CartDrawer />
       </main>

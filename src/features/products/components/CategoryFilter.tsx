@@ -57,12 +57,10 @@ function CategoryPill({ label, isActive, onClick }: CategoryPillProps) {
       aria-selected={isActive}
       onClick={onClick}
       className={[
-        "relative px-4 py-1.5 rounded-full text-sm font-medium",
+        "relative cursor-pointer px-4 py-1.5 rounded-full text-sm font-medium",
         "transition-colors duration-200 outline-none",
-        "focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2",
-        isActive
-          ? "text-white"
-          : "text-gray-600 bg-gray-100 hover:bg-gray-200",
+        "focus-visible:ring-2 focus-visible:ring-[#EA580C] focus-visible:ring-offset-2",
+        isActive ? "text-white" : "text-gray-600 bg-gray-100 hover:bg-gray-200",
       ].join(" ")}
     >
       {/* Fond animé sur la pill active */}

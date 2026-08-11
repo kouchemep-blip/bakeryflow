@@ -1,14 +1,4 @@
-// app/dashboard/page.tsx
-import {
-  Sparkles,
-  Zap,
-  PackagePlus,
-  MessageCirclePlus,
-  TicketPercent,
-} from "lucide-react";
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { LiveClock } from "@/components/dashboard/live-clock";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import {
   SalesEvolutionChart,
@@ -113,62 +103,8 @@ async function getChartData() {
 export default async function DashboardPage() {
   const { salesData, statusCounts, topProducts, monthlyRevenue } =
     await getChartData();
-  const quickActions = [
-    {
-      label: "Nouveau produit",
-      href: "/dashboard/products/new",
-      icon: "PackagePlus",
-    },
-    {
-      label: "Nouvelle catégorie",
-      href: "/dashboard/categories",
-      icon: "TicketPercent",
-    },
-    {
-      label: "Répondre aux messages",
-      href: "/dashboard/messages",
-      icon: "MessageCirclePlus",
-    },
-  ];
-
   return (
-    <div className="space-y-6 bg-[#FBFAF8] p-4 dark:bg-[#161310] sm:p-6">
-      {/* Carte de bienvenue */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#161310] via-[#221C16] to-[#161310] p-6 sm:p-8">
-        <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[#EA580C]/20 blur-3xl" />
-        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <div className="mb-2 flex items-center gap-2 text-[#EA580C]">
-              <Sparkles className="h-4 w-4" />
-              <span className="text-xs font-medium uppercase tracking-wide">
-                Tableau de bord
-              </span>
-            </div>
-            <h1 className="text-2xl font-bold text-[#F5F1EA] sm:text-3xl">
-              Bonjour, Chef
-            </h1>
-            <div className="mt-2">
-              <LiveClock />
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {quickActions.map((action) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.06] px-3.5 py-2 text-sm font-medium text-[#F5F1EA] backdrop-blur transition-colors hover:bg-white/[0.12]"
-              >
-                <span className="icon-wrapper">{action.icon}</span>
-                <span className="hidden sm:inline">{action.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Statistiques + activité récente */}
-      <DashboardStats />
-
+    <div className="space-y-6 bg-[#FBFAF8] p-4 dark:bg-[#161310] sm:p-6 mt-[26vh] lg:mt-[12vh]">
       {/* Graphiques */}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <div className="lg:col-span-2">
@@ -177,23 +113,12 @@ export default async function DashboardPage() {
         <OrderStatusChart data={statusCounts} />
       </div>
 
+      {/* Statistiques + activité récente */}
+      <DashboardStats />
+
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <TopProductsChart data={topProducts} />
         <MonthlyRevenueChart data={monthlyRevenue} />
-      </div>
-
-      {/* Raccourcis rapides mobile */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:hidden">
-        {quickActions.map((action) => (
-          <Link
-            key={action.href}
-            href={action.href}
-            className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.06] px-3.5 py-2 text-sm font-medium text-[#F5F1EA] backdrop-blur transition-colors hover:bg-white/[0.12]"
-          >
-            <span className="icon-wrapper">{action.icon}</span>
-            <span className="hidden sm:inline">{action.label}</span>
-          </Link>
-        ))}
       </div>
     </div>
   );

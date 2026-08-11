@@ -13,6 +13,7 @@ import {
   Settings,
   Wheat,
 } from "lucide-react";
+import { LiveClock } from "./live-clock";
 
 const NAV_LINKS = [
   { name: "Tableau de bord", href: "/dashboard", icon: LayoutGrid },
@@ -29,13 +30,16 @@ export function DashboardNav() {
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex h-[72px] w-full items-center border-t border-white/[0.08] bg-[#F5EFE6] px-2 backdrop-blur md:sticky md:top-0 md:h-screen md:min-h-screen md:w-64 md:flex-col md:items-stretch md:border-r md:border-t-0 md:p-5">
-      <div className="mb-8 hidden items-center gap-2 px-2 md:flex">
+      <div className=" hidden items-center gap-2 px-2 md:flex">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EA580C]">
           <Wheat className="h-5 w-5 text-[#161310]" strokeWidth={2.5} />
         </div>
         <span className="text-[15px] font-semibold tracking-tight text-black">
           BakeryFlow
         </span>
+      </div>
+      <div className="md:block mt-1 mb-8 hidden">
+        <LiveClock />
       </div>
 
       <ul className="flex w-full flex-1 items-center justify-around gap-1 md:flex-col md:items-stretch md:justify-start">

@@ -1,9 +1,9 @@
 "use client";
+
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ShoppingCart,
   Check,
   Star,
   Flame,
@@ -11,13 +11,11 @@ import {
   Sparkles,
   TrendingUp,
 } from "lucide-react";
+
 import { useCartStore } from "@/features/cart/store/cart.store";
 import { getAverageRating } from "@/types/products";
 import type { ProductWithCategoryAndReviews } from "@/types/products";
-
-// ─── Tags visuels ─────────────────────────────────────────────────────────────
-// Logique simple basée sur les données existantes (pas de champ tag en DB)
-// Extension future : ajouter un champ tags[] dans le modèle Prisma
+import { FaShoppingCart } from "react-icons/fa";
 
 type Tag = {
   label: string;
@@ -25,83 +23,92 @@ type Tag = {
   icon: React.ReactNode;
 };
 
+type ProductCardProps = {
+  product: ProductWithCategoryAndReviews;
+  cartButtonRef?: React.RefObject<HTMLElement | null>;
+  onAddToCart?: (productEl: HTMLElement) => void;
+  className?: string;
+};
+
 function resolveTags(product: ProductWithCategoryAndReviews): Tag[] {
   const tags: Tag[] = [];
-  const avg = getAverageRating(product.review);
+  const averageRating = getAverageRating(product.review);
 
-  // Nouveau : créé dans les 7 derniers jours
   const isNew =
     new Date(product.createdAt).getTime() >
     Date.now() - 7 * 24 * 60 * 60 * 1000;
 
-  // Populaire : note ≥ 4.5 avec au moins 3 avis
-  const isPopular = avg !== null && avg >= 4.5 && product.review.length >= 3;
+  const isPopular =
+    averageRating !== null &&
+    averageRating >= 4.5 &&
+    product.review.length >= 3;
 
-  // Végé : détection naïve par nom/description (à affiner selon ton catalogue)
-  const isVege = /salade|végé|vegan|légume/i.test(
-    product.name + product.description,
+  const searchableText = `${product.name} ${product.description}`;
+
+  const isVegetarian = /salade|végé|vegan|légume|legume/i.test(searchableText);
+
+  const isSpicy = /épicé|epice|pimenté|pimente|harissa|spicy/i.test(
+    searchableText,
   );
 
-  // Épicé : détection par nom/description
-  const isSpicy = /épicé|pimenté|harissa|spicy/i.test(
-    product.name + product.description,
-  );
-
-  if (isNew)
+  if (isNew) {
     tags.push({
       label: "Nouveau",
       color: "bg-blue-500",
       icon: <Sparkles size={10} />,
     });
-  if (isPopular)
+  }
+
+  if (isPopular) {
     tags.push({
       label: "Populaire",
       color: "bg-orange-500",
       icon: <TrendingUp size={10} />,
     });
-  if (isVege)
+  }
+
+  if (isVegetarian) {
     tags.push({
       label: "Végé",
       color: "bg-green-500",
       icon: <Leaf size={10} />,
     });
-  if (isSpicy)
+  }
+
+  if (isSpicy) {
     tags.push({
       label: "Épicé",
       color: "bg-red-500",
       icon: <Flame size={10} />,
     });
+  }
 
   return tags;
 }
 
-// ─── Props ────────────────────────────────────────────────────────────────────
-
-type ProductCardProps = {
-  product: ProductWithCategoryAndReviews;
-  // Ref du bouton panier pour l'animation fly-to-cart (étape 5)
-  cartButtonRef?: React.RefObject<HTMLElement | null>;
-  // Callback déclenché après ajout (pour fly-to-cart)
-  onAddToCart?: (productEl: HTMLElement) => void;
-};
-
-// ─── Composant ────────────────────────────────────────────────────────────────
-
-export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+export function ProductCard({
+  product,
+  onAddToCart,
+  className = "",
+}: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
 
-  // Feedback bouton : idle | added (check) | back à idle après 1.5s
-  const [btnState, setBtnState] = useState<"idle" | "added">("idle");
+  const [buttonState, setButtonState] = useState<"idle" | "added">("idle");
+  const productRef = useRef<HTMLElement | null>(null);
 
   const isUnavailable = product.status === "UNAVAILABLE";
-  const avgRating = getAverageRating(product.review);
+  const averageRating = getAverageRating(product.review);
   const tags = resolveTags(product);
 
-  // Ref sur l'image pour passer au fly-to-cart
-  const imageRef = useState<HTMLDivElement | null>(null);
-  const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    if (isUnavailable || btnState === "added") return;
+  const titleId = `product-${product.id}-title`;
+  const cardId = `product-card-${product.id}`;
+
+  const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+
+    if (isUnavailable || buttonState === "added") {
+      return;
+    }
 
     addItem({
       product: {
@@ -113,159 +120,268 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
       },
     });
 
-    // Feedback check temporaire
-    setBtnState("added");
-    setTimeout(() => setBtnState("idle"), 1500);
+    setButtonState("added");
 
-    // Déclenche fly-to-cart si le parent le gère (étape 5)
-    if (onAddToCart && imageRef[0]) {
-      onAddToCart(imageRef[0]);
+    window.setTimeout(() => {
+      setButtonState("idle");
+    }, 1500);
+
+    if (onAddToCart && productRef.current) {
+      onAddToCart(productRef.current);
     }
   };
 
   return (
-    <motion.article
-      layout
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 24 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className={[
-        "relative flex flex-col rounded-2xl overflow-hidden",
-        "bg-white shadow-sm border border-gray-100",
-        "hover:shadow-md transition-shadow duration-300",
-        isUnavailable ? "opacity-60 cursor-not-allowed" : "cursor-pointer",
-      ].join(" ")}
-    >
-      {/* ── Image ────────────────────────────────────────────────────────── */}
-      <div
-        ref={(el) => {
-          imageRef[1](el);
+    <>
+      <style>{`
+        #${cardId} .product-card-title {
+          background-image: linear-gradient(currentColor, currentColor);
+          background-position: 0% 100%;
+          background-repeat: no-repeat;
+          background-size: 0% 1px;
+          text-decoration: none;
+          transition-property: background-size;
+          transition-duration: 0.3s;
+          transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #${cardId}:hover .product-card-title,
+        #${cardId}:focus-visible .product-card-title {
+          background-size: 100% 1px;
+        }
+
+        #${cardId}:hover .product-card-btn-icon,
+        #${cardId}:focus-visible .product-card-btn-icon {
+          transform: scale(0.875);
+        }
+      `}</style>
+
+      <motion.article
+        ref={(element) => {
+          productRef.current = element;
         }}
-        className="relative w-full h-48 overflow-hidden bg-gray-50"
+        id={cardId}
+        layout
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 24 }}
+        transition={{
+          duration: 0.35,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        aria-labelledby={titleId}
+        className={[
+          "group relative flex min-h-[420px] w-full flex-col overflow-hidden border-none",
+          "rounded-[20px] bg-transparent p-[26px_32px]",
+          "text-[#222f30] shadow-sm",
+          isUnavailable ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+          className,
+        ].join(" ")}
       >
-        {product.image ? (
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className="object-cover transition-transform duration-500"
-          />
-        ) : (
-          // Fallback si pas d'image
-          <div className="w-full h-full flex items-center justify-center bg-amber-50">
-            <span className="text-4xl">🍞</span>
-          </div>
-        )}
+        {/* Fond blanc avec la même forme que le composant initial */}
+        <figure
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-0 m-0 rounded-[20px_20px_0_20px] bg-[#F5EFE6]"
+          style={{
+            clipPath:
+              "polygon(100% 0, 100% calc(100% - 75px), calc(100% - 75px) calc(100% - 75px), calc(100% - 75px) 100%, 0 100%, 0 0)",
+          }}
+        />
 
-        {/* Rupture de stock overlay */}
-        {isUnavailable && (
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <span className="bg-white/90 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full">
-              Rupture de stock
-            </span>
-          </div>
-        )}
+        {/* Métadonnées */}
+        <div className="relative z-10 flex w-full flex-none items-center justify-between gap-[10px]">
+          <div className="inline-flex w-fit items-center rounded-lg bg-[#f7f7f5] px-3 py-2 pr-3 font-mono text-[0.75rem] uppercase leading-none tracking-normal text-[#222f30]">
+            <span
+              aria-hidden="true"
+              className="mr-3 inline-flex h-[10px] w-[10px] shrink-0"
+            />
 
-        {/* Tags visuels */}
-        {tags.length > 0 && (
-          <div className="absolute top-2 left-2 flex flex-wrap gap-1">
-            {tags.map((tag) => (
-              <span
-                key={tag.label}
-                className={[
-                  "flex items-center gap-1 px-2 py-0.5 rounded-full",
-                  "text-white text-[10px] font-semibold",
-                  tag.color,
-                ].join(" ")}
-              >
-                {tag.icon}
-                {tag.label}
+            {product.category.name}
+          </div>
+
+          <time
+            dateTime={new Date(product.createdAt).toISOString()}
+            className="overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[0.8125rem] uppercase leading-none tracking-[-0.02em] text-[#222f30] opacity-50"
+          >
+            {new Intl.DateTimeFormat("fr-FR", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            }).format(new Date(product.createdAt))}
+          </time>
+        </div>
+
+        {/* Image */}
+        <div className="relative z-10 mt-5 h-40 w-full overflow-hidden rounded-[14px] bg-[#f7f7f5]">
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-amber-50 text-4xl">
+              🍞
+            </div>
+          )}
+
+          {isUnavailable && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+              <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-gray-800">
+                Rupture de stock
               </span>
-            ))}
-          </div>
-        )}
-      </div>
+            </div>
+          )}
 
-      {/* ── Contenu ──────────────────────────────────────────────────────── */}
-      <div className="flex flex-col flex-1 p-4 gap-2">
-        {/* Catégorie */}
-        <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">
-          {product.category.name}
-        </span>
+          {tags.length > 0 && (
+            <div className="absolute left-2 top-2 flex flex-wrap gap-1">
+              {tags.map((tag) => (
+                <span
+                  key={tag.label}
+                  className={[
+                    "flex items-center gap-1 rounded-full px-2 py-0.5",
+                    "text-[10px] font-semibold text-white",
+                    tag.color,
+                  ].join(" ")}
+                >
+                  {tag.icon}
+                  {tag.label}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
 
-        {/* Nom */}
-        <h3 className="text-gray-900 font-semibold text-base leading-snug line-clamp-2">
-          {product.name}
-        </h3>
+        {/* Contenu */}
+        <div className="relative z-10 flex flex-1 flex-col gap-3 pt-5">
+          <h3
+            id={titleId}
+            className="m-0 line-clamp-2 font-[Aspekta,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif] text-[1.375rem] font-normal leading-[1.3em] tracking-[-0.02em]"
+          >
+            <span className="product-card-title">{product.name}</span>
+          </h3>
 
-        {/* Description */}
-        <p className="text-gray-500 text-sm leading-relaxed line-clamp-2 flex-1">
-          {product.description}
-        </p>
+          <p className="line-clamp-3 m-0 text-sm leading-relaxed text-[#222f30]/65">
+            {product.description}
+          </p>
 
-        {/* Note */}
-        {avgRating !== null && (
-          <div className="flex items-center gap-1">
-            <Star size={13} className="fill-amber-400 text-amber-400" />
-            <span className="text-sm font-medium text-gray-700">
-              {avgRating}
+          {averageRating !== null && (
+            <div className="flex items-center gap-1 font-mono">
+              <Star size={13} className="fill-amber-400 text-amber-400" />
+
+              <span className="text-sm font-medium text-[#222f30]">
+                {averageRating}
+              </span>
+
+              <span className="text-xs text-[#222f30]/50">
+                ({product.review.length} avis)
+              </span>
+            </div>
+          )}
+
+          {/* Pied de carte */}
+          <div className="mt-auto flex items-end justify-between gap-2 pr-[55px]">
+            <div className="flex flex-wrap items-end gap-1 font-mono text-[0.8125rem] uppercase leading-none tracking-[-0.02em]">
+              <span className="font-semibold text-[#222f30]">
+                {product.price.toLocaleString("fr-FR")} FCFA
+              </span>
+            </div>
+
+            <span className="font-mono text-[0.8125rem] uppercase leading-none tracking-[-0.02em] text-[#222f30]/70">
+              Ajouter
             </span>
-            <span className="text-xs text-gray-400">
-              ({product.review.length} avis)
-            </span>
           </div>
-        )}
+        </div>
 
-        {/* Prix + bouton ajout */}
-        <div className="flex items-center justify-between mt-2">
-          <span className="text-lg font-bold text-gray-900">
-            {product.price.toLocaleString("fr-FR")} FCFA
-          </span>
+        {/* Bouton décoratif intégré dans l'angle inférieur droit */}
+        <div className="absolute bottom-0 right-0 z-20 h-[90px] w-[87px]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="87"
+            height="90"
+            viewBox="0 0 87 90"
+            fill="#fff"
+            className="absolute bottom-0 right-0 h-full w-full"
+            aria-hidden="true"
+          >
+            <path
+              fill="#F5EFE6"
+              d="M35.43 45.104 23.71 81.57A12.146 12.146 0 0 1 12.145 90C5.438 90 0 84.562 0 77.854V16C0 7.163 7.163 0 16 0h55c8.837 0 16 7.163 16 16v2c0 8.837-7.163 16-16 16H50.663a16 16 0 0 0-15.232 11.104Z"
+            />
+          </svg>
 
-          {/* Bouton ajout — feedback check animé */}
-          <motion.button
-            onClick={handleAdd}
+          <button
+            type="button"
+            onClick={handleAddToCart}
             disabled={isUnavailable}
-            whileTap={isUnavailable ? {} : { scale: 0.88 }}
             aria-label={`Ajouter ${product.name} au panier`}
             className={[
-              "flex items-center justify-center w-10 h-10 rounded-full",
-              "transition-colors duration-200",
+              "absolute bottom-0 right-0 z-30 flex h-12 w-[51px]",
+              "items-center justify-center bg-transparent p-0",
               isUnavailable
-                ? "bg-gray-100 text-gray-300 cursor-not-allowed"
-                : btnState === "added"
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-900 text-white hover:bg-amber-500",
+                ? "cursor-not-allowed text-gray-300"
+                : "cursor-pointer text-[#222f30]",
             ].join(" ")}
           >
-            <AnimatePresence mode="wait" initial={false}>
-              {btnState === "added" ? (
-                <motion.span
-                  key="check"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Check size={16} strokeWidth={2.5} />
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="cart"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <ShoppingCart size={16} />
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
+            <span
+              className={[
+                "product-card-btn-icon relative block h-full w-full p-[10px] bg-[#222f30] hover:bg-[#a7e26e] text-white]",
+                "origin-center transition-transform duration-500 ease-in-out",
+              ].join(" ")}
+              style={{
+                WebkitMaskImage:
+                  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='51' height='48' viewBox='0 0 51 48' fill='none'%3E%3Cpath fill='%23000' d='M6.728 9.09A12 12 0 0 1 18.369 0H39c6.627 0 12 5.373 12 12v24c0 6.627-5.373 12-12 12H12.37C4.561 48-1.167 40.663.727 33.09l6-24Z'/%3E%3C/svg%3E\")",
+                maskImage:
+                  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='51' height='48' viewBox='0 0 51 48' fill='none'%3E%3Cpath fill='%23000' d='M6.728 9.09A12 12 0 0 1 18.369 0H39c6.627 0 12 5.373 12 12v24c0 6.627-5.373 12-12 12H12.37C4.561 48-1.167 40.663.727 33.09l6-24Z'/%3E%3C/svg%3E\")",
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskSize: "100% 100%",
+                maskSize: "100% 100%",
+                WebkitMaskPosition: "center",
+                maskPosition: "center",
+              }}
+            >
+              <span
+                className={[
+                  "absolute inset-[10px] flex items-center justify-center",
+                  "rounded-[12px] transition-colors duration-200",
+                  isUnavailable
+                    ? "bg-gray-100 text-gray-300"
+                    : buttonState === "added"
+                      ? "bg-green-500 text-white"
+                      : "bg-transparent text-[#222f30] ]",
+                ].join(" ")}
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  {buttonState === "added" ? (
+                    <motion.span
+                      key="check"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Check size={16} strokeWidth={2.5} />
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="cart"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <FaShoppingCart size={16} className="text-[#F5EFE6] group-hover:text-black" />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </span>
+            </span>
+          </button>
         </div>
-      </div>
-    </motion.article>
+      </motion.article>
+    </>
   );
 }

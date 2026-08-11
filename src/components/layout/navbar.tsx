@@ -4,10 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import UserMenu from "./UserMenu";
-import { Wheat } from "lucide-react";
-import Image from "next/image";
+import { Menu, Wheat, X } from "lucide-react";
 
-// Modification des URLs pour correspondre aux pages créées précédemment
 const NAV_LINKS = [
   { label: "ACCUEIL", href: "/" },
   { label: "A VENIR", href: "/coming-soon" },
@@ -28,21 +26,17 @@ export function Navbar() {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // 1. On trouve d'abord l'élément <a> actif
     const activeLinkElement = containerRef.current.querySelector(
       `a[data-active="true"]`,
     ) as HTMLElement;
 
     if (activeLinkElement) {
-      // CORRECTION : On récupère le parent <li> pour avoir le bon offsetLeft dans le <ul>
       const parentLi = activeLinkElement.parentElement as HTMLElement;
-
       setBgStyle({
         width: parentLi.offsetWidth,
         left: parentLi.offsetLeft,
       });
     } else {
-      // Fallback sur le premier item (Accueil)
       const firstLi = containerRef.current.querySelector("li") as HTMLElement;
       if (firstLi) {
         setBgStyle({
@@ -51,15 +45,19 @@ export function Navbar() {
         });
       }
     }
-  }, [pathname]); // Se déclenche à chaque changement d'URL
+  }, [pathname]);
+
+  // Fermer le menu mobile lors d'un changement de page
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   return (
     <div className="fixed inset-x-0 top-0 z-50">
+      {/* ── Structure Desktop (md et plus) ── */}
       <div className="hidden md:flex flex-row items-center h-[23vh]">
         <div className="relative left-8 h-full w-[26vw] shrink-0 text-[#F5EFE6] group">
-          {/* Le lien englobe tout le bloc pour rendre l'ensemble cliquable proprement */}
           <Link href="/" className="block h-full w-full relative">
-            {/* Fond SVG graphique */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 450 420"
@@ -71,7 +69,7 @@ export function Navbar() {
                 fill="currentColor"
               />
             </svg>
-            <div className="absolute top-6 left-4 hidden items-center gap-2 px-2 md:flex">
+            <div className="absolute top-6 left-4 flex items-center gap-2 px-2">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EA580C]">
                 <Wheat className="h-6 w-6 text-[#161310]" strokeWidth={2} />
               </div>
@@ -82,13 +80,12 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Repositionnement centré absolu avec l'effet de flou et de bordure */}
+        {/* Liens de navigation centrés */}
         <div className="absolute left-1/2 -translate-x-1/2 top-4 flex items-center gap-3 rounded-full h-[10vh] border border-white/40 bg-white/40 backdrop-blur-md px-3 py-2 shadow-lg hover:bg-white/60 transition">
           <ul
             ref={containerRef}
             className="flex flex-row gap-4 xl:gap-8 items-center justify-center relative py-2 px-4"
           >
-            {/* LE FOND COULISSANT - Suit maintenant parfaitement le parent <li> */}
             <div
               className="absolute bg-[#EA580C] rounded-full h-full transition-all duration-300 ease-out z-0"
               style={{
@@ -102,7 +99,6 @@ export function Navbar() {
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
               return (
-                /* Note: La classe relative est conservée pour le z-index, mais l'offset est calculé sur le li entier */
                 <li key={link.href} className="relative z-10">
                   <Link
                     href={link.href}
@@ -119,65 +115,92 @@ export function Navbar() {
           </ul>
         </div>
 
-        {/* Bouton droite */}
-        <div className="absolute right-6 top-4">
+        {/* Menu utilisateur desktop */}
+        <div className="absolute right-6 top-5">
           <UserMenu />
         </div>
       </div>
 
-      {/* ── Mobile ── */}
-      <div className="flex md:hidden items-center justify-between px-5 py-4 bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm">
-        <div className="mb-8 hidden items-center gap-2 px-2 md:flex">
-          <Image
-            src="/logo.jpg"
-            alt="Logo BakeryFlow"
-            width={40}
-            height={40}
-            className="object-contain"
-          />
-          <span className="text-[15px] font-semibold tracking-tight text-[#F5F1EA]">
+      {/* ── Structure Mobile & Tablette (En dessous de md) ── */}
+      <div className="flex md:hidden items-center justify-between px-4 py-3 bg-white/80 backdrop-blur-md border-b border-neutral-200/50 shadow-sm h-16">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#EA580C]">
+            <Wheat className="h-5 w-5 text-white" strokeWidth={2.5} />
+          </div>
+          <span className="text-lg font-bold tracking-tight text-slate-900">
             BakeryFlow
           </span>
-        </div>
+        </Link>
 
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="flex flex-col gap-1.5 p-2"
-          aria-label="Menu"
-        >
-          <span
-            className={`block w-6 h-0.5 bg-gray-800 transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`}
-          />
-          <span
-            className={`block w-6 h-0.5 bg-gray-800 transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`}
-          />
-          <span
-            className={`block w-6 h-0.5 bg-gray-800 transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`}
-          />
-        </button>
+        {/* Actions à droite : Menu utilisateur + Bouton Burger */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="relative flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 transition cursor-pointer text-slate-800"
+            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+          >
+            {/* Icône Menu Burger */}
+            <div
+              className={`absolute transition-all duration-300 transform ${
+                menuOpen
+                  ? "scale-0 rotate-90 opacity-0"
+                  : "scale-100 rotate-0 opacity-100"
+              }`}
+            >
+              <Menu size={20} strokeWidth={2.5} />
+            </div>
+
+            {/* Icône Croix de fermeture */}
+            <div
+              className={`absolute transition-all duration-300 transform ${
+                menuOpen
+                  ? "scale-100 rotate-0 opacity-100"
+                  : "scale-0 -rotate-90 opacity-0"
+              }`}
+            >
+              <X size={20} strokeWidth={2.5} />
+            </div>
+          </button>
+        </div>
       </div>
 
-      {/* Menu mobile déroulant */}
+      {/* Menu mobile déroulant fluide */}
       <div
-        className={`md:hidden flex flex-col bg-white/95 backdrop-blur-md px-6 overflow-hidden transition-all duration-400 ease-in-out ${
-          menuOpen ? "max-h-96 py-6" : "max-h-0 py-0"
+        className={`md:hidden absolute w-full left-0 bg-[#F5EFE6] shadow-2xl transition-all duration-300 ease-in-out border-b border-neutral-200 overflow-visible ${
+          menuOpen
+            ? "max-h-72 opacity-100 py-5"
+            : "max-h-0 opacity-0 py-0 pointer-events-none"
         }`}
       >
-        <ul className="flex flex-col gap-5">
-          {NAV_LINKS.map((link) => (
-            <li
-              key={link.href}
-              className="text-sm font-medium text-gray-800 hover:text-black cursor-pointer border-b border-gray-100 pb-4 last:border-0"
-              onClick={() => setMenuOpen(false)}
-            >
-              <Link href={link.href} className="block w-full">
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-6">
-          <UserMenu />
+        <div className="flex w-full flex-col items-center px-6">
+          <div className="w-full flex justify-center">
+            <UserMenu />
+          </div>
+
+          <ul className="flex w-full flex-col items-center">
+            {NAV_LINKS.map((link) => {
+              const isActive = pathname === link.href;
+
+              return (
+                <li
+                  key={link.href}
+                  className="w-full flex flex-col items-center"
+                >
+                  <div className="mt-2 h-px w-15 bg-black/60" />
+                  <Link
+                    href={link.href}
+                    className={`flex w-full items-center justify-center py-3 text-center text-sm font-bold border-b border-neutral-200/60 last:border-0 transition-colors ${
+                      isActive
+                        ? "text-[#EA580C]"
+                        : "text-gray-700 hover:text-black"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Check, Home, LogIn, Sparkles } from "lucide-react";
 
 const RESTAURANT_NAME = "Le Jardin Doré";
 const RESTAURANT_TAGLINE = "Cuisine de saison";
@@ -9,138 +9,91 @@ const HREF_RECONNEXION = "/inscription";
 const HREF_ACCUEIL = "/";
 
 export default function DeconnexionPage() {
-  const [sceauBrise, setSceauBrise] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setSceauBrise(true), 450);
-    return () => clearTimeout(t);
-  }, []);
-
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#100c0a] px-5 py-8">
-      {/* Ambiance : dégradé façon bougie + vignette */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 20%, #241a15 0%, #1c1512 45%, #100c0a 100%)",
-        }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 animate-pulse"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 38%, rgba(230,201,138,0.08), transparent 55%)",
-          animationDuration: "6s",
-        }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(0,0,0,0.55) 100%)",
-        }}
-      />
+    <main className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#07111f] px-5 py-10 text-white">
+      {/* Arrière-plan décoratif */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-cyan-400/20 blur-3xl" />
+        <div className="absolute -bottom-40 -right-32 h-[30rem] w-[30rem] rounded-full bg-violet-500/20 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-3xl" />
 
-      <main className="relative z-10 w-full max-w-md text-center rounded-2xl border border-[#c9a15c]/35 bg-gradient-to-b from-[#241a15] to-[#1a130f] px-9 pb-9 pt-12 shadow-[0_30px_70px_rgba(0,0,0,0.55)] before:content-[''] before:absolute before:left-3 before:right-3 before:top-3 before:h-px before:bg-[#c9a15c]/25 after:content-[''] after:absolute after:left-3 after:right-3 after:bottom-3 after:h-px after:bg-[#c9a15c]/25">
-        {/* Sceau de cire */}
-        <div
-          className={`mx-auto -mt-[3.25rem] mb-5 h-[84px] w-[84px] transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
-            sceauBrise ? "-rotate-[14deg] scale-[1.04]" : "rotate-0 scale-100"
-          }`}
-          aria-hidden="true"
-        >
-          <svg
-            viewBox="0 0 120 120"
-            className="h-full w-full drop-shadow-[0_6px_10px_rgba(0,0,0,0.5)]"
-          >
-            <circle
-              cx="60"
-              cy="60"
-              r="52"
-              fill="none"
-              stroke="#c9a15c"
-              strokeWidth="1.5"
-              opacity="0.7"
-            />
-            <circle
-              cx="60"
-              cy="60"
-              r="44"
-              fill="#5a1d24"
-              stroke="#e6c98a"
-              strokeWidth="1"
-              className={`transition-opacity duration-500 ${
-                sceauBrise ? "opacity-90" : "opacity-0"
-              }`}
-            />
-            <text
-              x="60"
-              y="70"
-              textAnchor="middle"
-              fill="#e6c98a"
-              fontSize="44"
-              fontStyle="italic"
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:42px_42px]" />
+      </div>
+
+      <section className="relative z-10 w-full max-w-lg">
+        {/* Logo */}
+        <div className="mb-6 flex justify-center">
+          <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-white/15 bg-white/10 shadow-2xl shadow-cyan-950/40 backdrop-blur-xl">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300 to-blue-500 text-[#07111f] shadow-lg shadow-cyan-500/30">
+              <Check size={26} strokeWidth={3} />
+            </div>
+          </div>
+        </div>
+
+        {/* Carte principale */}
+        <div className="rounded-[2rem] border border-white/15 bg-white/[0.08] p-7 shadow-2xl shadow-black/30 backdrop-blur-2xl sm:p-10">
+          <div className="mb-8 text-center">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-cyan-200">
+              <Sparkles size={14} />
+              {RESTAURANT_TAGLINE}
+            </div>
+
+            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              À bientôt !
+            </h1>
+
+            <p className="mx-auto mt-4 max-w-sm text-sm leading-7 text-slate-300 sm:text-base">
+              Vous avez été déconnecté de votre espace. Merci pour votre visite
+              chez <span className="font-semibold text-white">{RESTAURANT_NAME}</span>.
+            </p>
+          </div>
+
+          {/* Confirmation */}
+          <div className="mb-8 flex items-center gap-3 rounded-2xl border border-emerald-300/15 bg-emerald-300/10 p-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/20 text-emerald-300">
+              <Check size={20} strokeWidth={2.5} />
+            </div>
+
+            <div>
+              <p className="text-sm font-semibold text-emerald-200">
+                Déconnexion réussie
+              </p>
+              <p className="mt-1 text-xs text-emerald-100/60">
+                Votre session est maintenant fermée.
+              </p>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Link
+              href={HREF_RECONNEXION}
+              className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-300 to-blue-500 px-5 py-3.5 text-sm font-bold text-[#07111f] shadow-lg shadow-cyan-500/20 transition duration-300 hover:-translate-y-0.5 hover:from-cyan-200 hover:to-blue-400 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-offset-2 focus:ring-offset-[#07111f]"
             >
-              {RESTAURANT_NAME.charAt(0)}
-            </text>
-          </svg>
+              <LogIn size={18} />
+              Se reconnecter
+            </Link>
+
+            <Link
+              href={HREF_ACCUEIL}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/[0.06] px-5 py-3.5 text-sm font-semibold text-slate-200 transition duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40 focus:ring-offset-2 focus:ring-offset-[#07111f]"
+            >
+              <Home size={18} />
+              Accueil
+            </Link>
+          </div>
+
+          <div className="mt-8 border-t border-white/10 pt-6 text-center">
+            <p className="text-xs tracking-[0.18em] text-slate-400">
+              {RESTAURANT_NAME}
+            </p>
+          </div>
         </div>
 
-        <p className="mb-2 text-[0.72rem] uppercase tracking-[0.28em] text-[#c9a15c] opacity-85">
-          {RESTAURANT_TAGLINE}
-        </p>
-
-        <h1 className="text-[2.15rem] font-semibold leading-tight tracking-wide text-[#f3ead9]">
-          Vous avez été déconnecté
-        </h1>
-
-        {/* Séparateur */}
-        <div
-          className="mx-auto my-6 h-4 w-36 text-[#c9a15c] opacity-75"
-          aria-hidden="true"
-        >
-          <svg viewBox="0 0 200 20" className="h-full w-full">
-            <path
-              d="M0 10 H70 M130 10 H200"
-              stroke="currentColor"
-              strokeWidth="1"
-              fill="none"
-            />
-            <circle cx="100" cy="10" r="3" fill="currentColor" />
-            <path
-              d="M85 10 Q100 -4 115 10 Q100 24 85 10 Z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-
-        <p className="mx-auto mb-8 max-w-[320px] text-[0.98rem] leading-relaxed text-[#cdbfa4]">
-          Merci de votre visite chez {RESTAURANT_NAME}.
-          <br />
+        <p className="mt-6 text-center text-xs text-slate-500">
           Nous espérons vous revoir très bientôt.
         </p>
-
-        <div className="mb-7 flex flex-col gap-3">
-          <Link
-            href={HREF_RECONNEXION}
-            className="inline-block rounded-xl bg-gradient-to-b from-[#e6c98a] to-[#c9a15c] px-6 py-3.5 text-[0.85rem] font-medium uppercase tracking-[0.12em] text-[#1a130f] shadow-[0_8px_18px_rgba(201,161,92,0.25)] transition-all hover:-translate-y-px hover:brightness-105"
-          >
-            Se reconnecter
-          </Link>
-
-          <Link
-            href={HREF_ACCUEIL}
-            className="inline-block rounded-xl border border-[#cdbfa4]/35 bg-transparent px-6 py-3.5 text-[0.85rem] uppercase tracking-[0.12em] text-[#cdbfa4] transition-all hover:border-[#c9a15c] hover:text-[#f3ead9]"
-          >
-            Retour à l&apos;accueil
-          </Link>
-        </div>
-
-        <p className="italic text-[0.95rem] tracking-wide text-[#c9a15c]/60">
-          {RESTAURANT_NAME}
-        </p>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }

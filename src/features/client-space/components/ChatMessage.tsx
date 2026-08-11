@@ -14,16 +14,21 @@ type ChatMessageProps = {
 // Formate HH:MM depuis une date ISO
 function formatTime(dateStr: string): string {
   return new Date(dateStr).toLocaleTimeString("fr-FR", {
-    hour:   "2-digit",
+    hour: "2-digit",
     minute: "2-digit",
   });
 }
 
-export function ChatMessageBubble({ message, isMine, onEdit, onDelete }: ChatMessageProps) {
+export function ChatMessageBubble({
+  message,
+  isMine,
+  onEdit,
+  onDelete,
+}: ChatMessageProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1    }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
       className={[
         "flex flex-col max-w-[75%]",
@@ -48,17 +53,31 @@ export function ChatMessageBubble({ message, isMine, onEdit, onDelete }: ChatMes
           {formatTime(message.createdAt)}
         </span>
         {isMine && (
-          <span className={[
-            "text-[10px] font-medium",
-            message.isRead ? "text-amber-500" : "text-gray-300",
-          ].join(" ")}>
+          <span
+            className={[
+              "text-[10px] font-medium",
+              message.isRead ? "text-[#EA580C]" : "text-gray-300",
+            ].join(" ")}
+          >
             {message.isRead ? "Lu" : "Envoyé"}
           </span>
         )}
         {isMine && (
           <span className="ml-1 flex gap-1">
-            <button aria-label="Modifier le message" onClick={() => onEdit(message)} className="text-gray-400 hover:text-amber-600"><Pencil size={12} /></button>
-            <button aria-label="Supprimer le message" onClick={() => onDelete(message.id)} className="text-gray-400 hover:text-red-600"><Trash2 size={12} /></button>
+            <button
+              aria-label="Modifier le message"
+              onClick={() => onEdit(message)}
+              className="text-gray-400 hover:text-amber-600"
+            >
+              <Pencil size={12} />
+            </button>
+            <button
+              aria-label="Supprimer le message"
+              onClick={() => onDelete(message.id)}
+              className="text-gray-400 hover:text-red-600"
+            >
+              <Trash2 size={12} />
+            </button>
           </span>
         )}
       </div>

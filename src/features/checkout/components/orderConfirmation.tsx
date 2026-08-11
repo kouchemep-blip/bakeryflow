@@ -158,7 +158,7 @@ export function OrderConfirmation({
             className={[
               "w-full py-3.5 rounded-full",
               "bg-gray-900 text-white text-sm font-semibold",
-              "hover:bg-amber-500 transition-colors duration-200",
+              "hover:bg-[#EA580C] transition-colors duration-200",
               "flex items-center justify-center gap-2",
             ].join(" ")}
           >

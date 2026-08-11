@@ -40,8 +40,8 @@ export default async function ReviewsPage() {
           </div>
 
           <div className="inline-flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-amber-500 shadow-sm">
-              <Star className="h-5 w-5 fill-amber-500" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[#EA580C] shadow-sm">
+              <Star className="h-5 w-5 fill-[#EA580C]" />
             </div>
             <div>
               <p className="text-xl font-bold text-amber-700">{average} / 5</p>
@@ -101,13 +101,13 @@ export default async function ReviewsPage() {
                     </td>
 
                     <td className="px-6 py-4 text-center">
-                      <div className="inline-flex items-center justify-center gap-0.5 text-amber-500">
+                      <div className="inline-flex items-center justify-center gap-0.5 text-[#EA580C]">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
                             className={`h-4 w-4 ${
                               i < review.rating
-                                ? "fill-amber-500"
+                                ? "fill-[#EA580C]"
                                 : "fill-transparent text-slate-300"
                             }`}
                           />

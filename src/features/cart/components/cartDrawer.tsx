@@ -9,6 +9,7 @@ import { AuthGate } from "@/features/auth/components/authGate";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { createOrder } from "@/features/checkout/actions/createOrder";
 import { OrderConfirmation } from "@/features/checkout/components/orderConfirmation";
+import { FaShoppingCart } from "react-icons/fa";
 
 // ─── Hook : trap focus dans le drawer (accessibilité) ─────────────────────────
 function useFocusTrap(
@@ -164,12 +165,12 @@ export function CartDrawer() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
               <div className="flex items-center gap-2">
-                <ShoppingBag size={20} className="text-gray-700" />
+                <FaShoppingCart size={20} className="text-gray-700" />
                 <h2 className="text-base font-bold text-gray-900">
                   Mon panier
                 </h2>
                 {totalItems > 0 && (
-                  <span className="text-xs font-semibold text-white bg-amber-500 px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-semibold text-white bg-[#EA580C] px-2 py-0.5 rounded-full">
                     {totalItems} article{totalItems > 1 ? "s" : ""}
                   </span>
                 )}
@@ -178,7 +179,7 @@ export function CartDrawer() {
                 {items.length > 0 && (
                   <button
                     onClick={clearCart}
-                    className="text-xs text-gray-400 hover:text-red-400 transition-colors duration-150"
+                    className="text-xs text-gray-400 cursor-pointer hover:text-red-400 transition-colors duration-150"
                   >
                     Tout supprimer
                   </button>
@@ -186,7 +187,7 @@ export function CartDrawer() {
                 <button
                   onClick={closeDrawer}
                   aria-label="Fermer le panier"
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-150"
+                  className="w-8 h-8 rounded-full cursor-pointer flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-150"
                 >
                   <X size={18} />
                 </button>
@@ -244,9 +245,9 @@ export function CartDrawer() {
                     onClick={handleCheckout}
                     disabled={isSubmitting}
                     className={[
-                      "w-full py-3.5 rounded-full",
+                      "w-full py-3.5 rounded-full cursor-pointer",
                       "bg-gray-900 text-white text-sm font-semibold",
-                      "hover:bg-amber-500 transition-colors duration-200",
+                      "hover:bg-[#EA580C] transition-colors duration-200",
                       "disabled:opacity-60 disabled:cursor-not-allowed",
                       "flex items-center justify-center gap-2",
                     ].join(" ")}

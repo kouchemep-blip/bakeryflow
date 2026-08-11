@@ -4,8 +4,8 @@
 
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
 import { useCartStore } from "@/features/cart/store/cart.store";
+import { FaShoppingCart } from "react-icons/fa";
 
 export const CartButton = forwardRef<HTMLButtonElement>((_, ref) => {
   const totalItems = useCartStore((state) => state.totalItems());
@@ -38,18 +38,18 @@ export const CartButton = forwardRef<HTMLButtonElement>((_, ref) => {
           transition={{ type: "spring", stiffness: 400, damping: 28 }}
           aria-label={`Ouvrir le panier — ${totalItems} article${totalItems > 1 ? "s" : ""}`}
           className={[
-            "fixed bottom-6 right-6 z-50",
+            "fixed bottom-6 right-6 z-50 cursor-pointer",
             "flex items-center gap-3",
             "bg-gray-900 text-white",
             "pl-4 pr-5 py-3 rounded-full",
-            "shadow-xl hover:bg-amber-500",
+            "shadow-xl hover:bg-[#EA580C]",
             "transition-colors duration-200",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EA580C] focus-visible:ring-offset-2",
           ].join(" ")}
         >
           {/* Icône panier + badge compteur */}
           <div className="relative">
-            <ShoppingCart size={20} />
+            <FaShoppingCart size={20} />
 
             {/* Remplace le badge compteur dans CartButton — fix spring 3 keyframes : */}
             <motion.span
@@ -69,9 +69,9 @@ export const CartButton = forwardRef<HTMLButtonElement>((_, ref) => {
               className={[
                 "absolute -top-2 -right-2",
                 "w-5 h-5 rounded-full",
-                "bg-amber-500 text-white text-[10px] font-bold",
+                "bg-[#EA580C] text-white text-[10px] font-bold",
                 "flex items-center justify-center",
-                "border-2 border-gray-900",
+                "border-1 border-gray-900",
               ].join(" ")}
             >
               {totalItems > 99 ? "99+" : totalItems}

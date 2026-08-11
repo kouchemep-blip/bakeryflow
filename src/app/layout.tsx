@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className="h-full antialiased"
+      className="h-full scroll-smooth antialiased"
     >
       <body className={`flex min-h-full flex-col overflow-x-hidden ${merienda.variable}`}>
         {children}

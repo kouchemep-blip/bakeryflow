@@ -40,7 +40,7 @@ export default function Footer() {
 
   return (
     <footer className="relative min-h-[82vh] overflow-hidden bg-[#F5EFE6] text-neutral-800">
-      <div className="relative z-10 mx-auto flex w-full rounded-[10vw] border border-white/40 bg-white/40 backdrop-blur-md max-w-7xl flex-col gap-12 px-6 py-16 md:px-10 lg:px-16">
+      <div className="relative z-10 mx-auto flex w-full rounded-[10vw] border border-white/40 bg-white/40 backdrop-blur-md max-w-7xl flex-col gap-12 px-6 py-10 md:px-10 lg:px-16">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr_auto] lg:items-start">
           <div className="max-w-md">
             <div className="mb-6 flex items-center gap-3">

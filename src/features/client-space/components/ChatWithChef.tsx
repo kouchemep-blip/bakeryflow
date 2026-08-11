@@ -14,7 +14,11 @@ type ChatWithChefProps = {
   participantSubtitle?: string;
 };
 
-export function ChatWithChef({ conversationId, participantName = "Lino's Food", participantSubtitle }: ChatWithChefProps) {
+export function ChatWithChef({
+  conversationId,
+  participantName = "Lino's Food",
+  participantSubtitle,
+}: ChatWithChefProps) {
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
   const {
@@ -80,16 +84,21 @@ export function ChatWithChef({ conversationId, participantName = "Lino's Food", 
 
   function handleEdit(message: (typeof messages)[number]) {
     const content = window.prompt("Modifier le message", message.content);
-    if (content !== null && content.trim() && content.trim() !== message.content) editMessage(message.id, content);
+    if (
+      content !== null &&
+      content.trim() &&
+      content.trim() !== message.content
+    )
+      editMessage(message.id, content);
   }
 
   function handleDelete(messageId: number) {
-    if (window.confirm("Supprimer définitivement ce message ?")) deleteMessage(messageId);
+    if (window.confirm("Supprimer définitivement ce message ?"))
+      deleteMessage(messageId);
   }
 
   return (
     <div className="flex flex-col h-full max-h-[600px] bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-
       {/* Header */}
       <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
         <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
@@ -97,11 +106,11 @@ export function ChatWithChef({ conversationId, participantName = "Lino's Food", 
         </div>
 
         <div>
-          <h2 className="font-semibold text-gray-900">
-            {participantName}
-          </h2>
+          <h2 className="font-semibold text-gray-900">{participantName}</h2>
 
-          {participantSubtitle && <p className="text-xs text-gray-500">{participantSubtitle}</p>}
+          {participantSubtitle && (
+            <p className="text-xs text-gray-500">{participantSubtitle}</p>
+          )}
           <ChatPresence isConnected={isConnected} />
         </div>
       </div>
@@ -126,10 +135,7 @@ export function ChatWithChef({ conversationId, participantName = "Lino's Food", 
 
         {!isLoading && messages.length === 0 && (
           <div className="flex flex-col flex-1 items-center justify-center gap-3 text-center">
-            <ChefHat
-              size={36}
-              className="text-gray-200"
-            />
+            <ChefHat size={36} className="text-gray-200" />
 
             <p className="text-sm text-gray-400">
               Pas encore de message. Commencez la discussion avec notre équipe.
@@ -169,7 +175,7 @@ export function ChatWithChef({ conversationId, participantName = "Lino's Food", 
           onClick={handleSend}
           className={`w-10 h-10 rounded-full flex items-center justify-center transition ${
             input.trim()
-              ? "bg-gray-900 text-white hover:bg-amber-500"
+              ? "bg-gray-900 text-white hover:bg-[#EA580C]"
               : "bg-gray-100 text-gray-300 cursor-not-allowed"
           }`}
         >

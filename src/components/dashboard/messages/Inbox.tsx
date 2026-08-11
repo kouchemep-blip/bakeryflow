@@ -115,7 +115,7 @@ export function Inbox({
                     {conversation.lastMessage?.content ?? "Aucun message"}
                   </p>
                   {conversation.unreadCount > 0 && (
-                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white">
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#EA580C] px-1 text-[10px] font-bold text-white">
                       {conversation.unreadCount}
                     </span>
                   )}

@@ -129,7 +129,7 @@ export function CartItem({ item }: CartItemProps) {
               className={[
                 "w-7 h-7 rounded-full flex items-center justify-center",
                 "border border-gray-200 text-gray-500",
-                "hover:border-amber-400 hover:text-amber-500",
+                "hover:border-amber-400 hover:text-[#EA580C]",
                 "transition-colors duration-150",
               ].join(" ")}
             >

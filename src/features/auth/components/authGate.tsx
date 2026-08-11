@@ -39,8 +39,8 @@ export function AuthGate({ onAuthSuccess, onClose }: AuthGateProps) {
         aria-modal="true"
         aria-label={mode === "login" ? "Connexion" : "Création de compte"}
         initial={{ opacity: 0, scale: 0.95, y: 16 }}
-        animate={{ opacity: 1, scale: 1,    y: 0  }}
-        exit={{ opacity: 0, scale: 0.95, y: 16    }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 16 }}
         transition={{ type: "spring", stiffness: 380, damping: 32 }}
         className={[
           "fixed z-[70] bg-white rounded-2xl shadow-2xl",
@@ -66,7 +66,7 @@ export function AuthGate({ onAuthSuccess, onClose }: AuthGateProps) {
           <button
             onClick={onClose}
             aria-label="Fermer"
-            className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors"
+            className="w-8 h-8 cursor-pointer rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors"
           >
             <X size={16} />
           </button>
@@ -79,8 +79,8 @@ export function AuthGate({ onAuthSuccess, onClose }: AuthGateProps) {
               <motion.div
                 key="login"
                 initial={{ opacity: 0, x: -16 }}
-                animate={{ opacity: 1, x: 0   }}
-                exit={{ opacity: 0, x: 16      }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 16 }}
                 transition={{ duration: 0.25 }}
               >
                 <LoginInline
@@ -93,14 +93,12 @@ export function AuthGate({ onAuthSuccess, onClose }: AuthGateProps) {
             ) : (
               <motion.div
                 key="register"
-                initial={{ opacity: 0, x: 16  }}
-                animate={{ opacity: 1, x: 0   }}
-                exit={{ opacity: 0, x: -16    }}
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -16 }}
                 transition={{ duration: 0.25 }}
               >
-                <RegisterInline
-                  onSuccess={() => setMode("login")}
-                />
+                <RegisterInline onSuccess={() => setMode("login")} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -112,7 +110,7 @@ export function AuthGate({ onAuthSuccess, onClose }: AuthGateProps) {
                 Pas encore de compte ?{" "}
                 <button
                   onClick={() => setMode("register")}
-                  className="text-amber-500 font-semibold hover:underline"
+                  className="text-[#EA580C] cursor-pointer font-semibold hover:underline"
                 >
                   S&apos;inscrire
                 </button>
@@ -122,7 +120,7 @@ export function AuthGate({ onAuthSuccess, onClose }: AuthGateProps) {
                 Déjà un compte ?{" "}
                 <button
                   onClick={() => setMode("login")}
-                  className="text-amber-500 font-semibold hover:underline"
+                  className="text-[#EA580C] font-semibold hover:underline cursor-pointer"
                 >
                   Se connecter
                 </button>
@@ -144,10 +142,10 @@ type LoginInlineProps = {
 function LoginInline({ onSuccess }: LoginInlineProps) {
   const { refetch } = useCurrentUser();
 
-  const [email, setEmail]       = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPwd, setShowPwd]   = useState(false);
-  const [error, setError]       = useState("");
+  const [showPwd, setShowPwd] = useState(false);
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -188,7 +186,10 @@ function LoginInline({ onSuccess }: LoginInlineProps) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       {/* Email */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="gate-email" className="text-xs font-medium text-gray-600">
+        <label
+          htmlFor="gate-email"
+          className="text-xs font-medium text-gray-600"
+        >
           Email
         </label>
         <input
@@ -204,7 +205,10 @@ function LoginInline({ onSuccess }: LoginInlineProps) {
 
       {/* Mot de passe */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="gate-password" className="text-xs font-medium text-gray-600">
+        <label
+          htmlFor="gate-password"
+          className="text-xs font-medium text-gray-600"
+        >
           Mot de passe
         </label>
         <div className="relative">
@@ -229,9 +233,7 @@ function LoginInline({ onSuccess }: LoginInlineProps) {
       </div>
 
       {/* Erreur */}
-      {error && (
-        <p className="text-xs text-red-500">{error}</p>
-      )}
+      {error && <p className="text-xs text-red-500">{error}</p>}
 
       {/* Submit */}
       <motion.button
@@ -241,7 +243,7 @@ function LoginInline({ onSuccess }: LoginInlineProps) {
         className={[
           "w-full py-3 rounded-full text-sm font-semibold",
           "bg-gray-900 text-white",
-          "hover:bg-amber-500 transition-colors duration-200",
+          "hover:bg-[#EA580C] transition-colors duration-200",
           "disabled:opacity-60 disabled:cursor-not-allowed",
           "flex items-center justify-center gap-2",
         ].join(" ")}
@@ -262,12 +264,12 @@ type RegisterInlineProps = {
 
 function RegisterInline({ onSuccess }: RegisterInlineProps) {
   const [firstName, setFirstName] = useState("");
-  const [lastName,  setLastName]  = useState("");
-  const [email,     setEmail]     = useState("");
-  const [phone,     setPhone]     = useState("");
-  const [password,  setPassword]  = useState("");
-  const [showPwd,   setShowPwd]   = useState(false);
-  const [error,     setError]     = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -311,7 +313,10 @@ function RegisterInline({ onSuccess }: RegisterInlineProps) {
       {/* Prénom + Nom */}
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1">
-          <label htmlFor="gate-firstname" className="text-xs font-medium text-gray-600">
+          <label
+            htmlFor="gate-firstname"
+            className="text-xs font-medium text-gray-600"
+          >
             Prénom
           </label>
           <input
@@ -324,7 +329,10 @@ function RegisterInline({ onSuccess }: RegisterInlineProps) {
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="gate-lastname" className="text-xs font-medium text-gray-600">
+          <label
+            htmlFor="gate-lastname"
+            className="text-xs font-medium text-gray-600"
+          >
             Nom
           </label>
           <input
@@ -340,7 +348,10 @@ function RegisterInline({ onSuccess }: RegisterInlineProps) {
 
       {/* Email */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="gate-reg-email" className="text-xs font-medium text-gray-600">
+        <label
+          htmlFor="gate-reg-email"
+          className="text-xs font-medium text-gray-600"
+        >
           Email
         </label>
         <input
@@ -356,7 +367,10 @@ function RegisterInline({ onSuccess }: RegisterInlineProps) {
 
       {/* Téléphone */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="gate-phone" className="text-xs font-medium text-gray-600">
+        <label
+          htmlFor="gate-phone"
+          className="text-xs font-medium text-gray-600"
+        >
           Téléphone
         </label>
         <input
@@ -371,7 +385,10 @@ function RegisterInline({ onSuccess }: RegisterInlineProps) {
 
       {/* Mot de passe */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="gate-reg-password" className="text-xs font-medium text-gray-600">
+        <label
+          htmlFor="gate-reg-password"
+          className="text-xs font-medium text-gray-600"
+        >
           Mot de passe
         </label>
         <div className="relative">
@@ -396,9 +413,7 @@ function RegisterInline({ onSuccess }: RegisterInlineProps) {
       </div>
 
       {/* Erreur */}
-      {error && (
-        <p className="text-xs text-red-500">{error}</p>
-      )}
+      {error && <p className="text-xs text-red-500">{error}</p>}
 
       {/* Submit */}
       <motion.button
@@ -407,8 +422,8 @@ function RegisterInline({ onSuccess }: RegisterInlineProps) {
         disabled={isLoading}
         className={[
           "w-full py-3 rounded-full text-sm font-semibold mt-1",
-          "bg-gray-900 text-white",
-          "hover:bg-amber-500 transition-colors duration-200",
+          "bg-gray-900 text-white cursor-pointer",
+          "hover:bg-[#EA580C] transition-colors duration-200",
           "disabled:opacity-60 disabled:cursor-not-allowed",
           "flex items-center justify-center gap-2",
         ].join(" ")}
