@@ -18,7 +18,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-type ShowcaseIcon = "search" | "shopping-bag" | "check" | "package";
+export type ShowcaseIcon = "search" | "shopping-bag" | "check" | "package";
 
 export interface ShowcaseItem {
   index: string;

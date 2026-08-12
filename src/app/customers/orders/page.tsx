@@ -2,9 +2,10 @@ import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/jwt";
 import { OrdersContent } from "@/components/customers/orderContent";
+import { order_status } from "@prisma/client";
 
-const STATUS_FILTERS = [
-  { key: "all", label: "Toutes", statuses: null as string[] | null },
+const STATUS_FILTERS: { key: string; label: string; statuses: order_status[] | null }[] = [
+  { key: "all", label: "Toutes", statuses: null },
   {
     key: "preparing",
     label: "En préparation",

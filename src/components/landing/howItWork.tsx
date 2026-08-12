@@ -1,6 +1,7 @@
 import ImmersiveScrollShowcase from "@/components/common/Immersivescrollshowcase ";
+import type { ShowcaseItem } from "@/components/common/Immersivescrollshowcase ";
 
-const ITEMS = [
+const ITEMS: ShowcaseItem[] = [
   {
     index: "01",
     title: "Découvrez",

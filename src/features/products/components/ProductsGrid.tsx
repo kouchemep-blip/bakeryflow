@@ -1,7 +1,6 @@
 
 "use client";
-import { useRef } from "react";
-import { CartButton } from "@/features/cart/components/cartButton";
+import { useState } from "react";
 import { flyToCart } from "@/features/cart/components/FlyToCart";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
@@ -9,6 +8,8 @@ import { useProducts } from "@/hooks/useProduct";
 import { ProductCard } from "./ProductCard";
 import { ProductSkeleton } from "./ProductSkeleton";
 import { CategoryFilter } from "./CategoryFilter";
+import { ProductDetailsModal } from "./ProductDetailsModal";
+import type { ProductWithCategoryAndReviews } from "@/types/products";
 
 const SKELETON_COUNT = 6;
 
@@ -62,7 +63,7 @@ export function ProductGrid() {
   } = useProducts();
 
   // Une seule déclaration — HTMLButtonElement pour matcher CartButton + flyToCart
-  const cartButtonRef = useRef<HTMLButtonElement>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductWithCategoryAndReviews | null>(null);
 
   const categories = Array.from(
     new Map(
@@ -74,11 +75,12 @@ export function ProductGrid() {
   );
 
   const handleAddToCart = (sourceEl: HTMLElement, imageSrc: string) => {
-    if (!cartButtonRef.current) return;
+    const cartButton = document.getElementById("floating-cart-button");
+    if (!cartButton) return;
     flyToCart({
       sourceEl,
       // Cast explicite : HTMLButtonElement est un HTMLElement, flyToCart attend HTMLElement
-      targetEl: cartButtonRef.current as HTMLElement,
+      targetEl: cartButton,
       imageSrc,
     });
   };
@@ -213,9 +215,7 @@ export function ProductGrid() {
                     <ProductCard
                       product={product}
                       // Ref castée pour matcher le type attendu par ProductCard
-                      cartButtonRef={
-                        cartButtonRef as React.RefObject<HTMLElement>
-                      }
+                      onOpenDetails={setSelectedProduct}
                       onAddToCart={(sourceEl) =>
                         handleAddToCart(sourceEl, product.image)
                       }
@@ -228,7 +228,7 @@ export function ProductGrid() {
         )}
       </AnimatePresence>
 
-      <CartButton ref={cartButtonRef} />
+      <ProductDetailsModal product={selectedProduct} onClose={() => setSelectedProduct(null)} onAddToCart={handleAddToCart} />
     </section>
   );
 }

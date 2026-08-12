@@ -28,6 +28,7 @@ type ProductCardProps = {
   product: ProductWithCategoryAndReviews;
   cartButtonRef?: React.RefObject<HTMLElement | null>;
   onAddToCart?: (productEl: HTMLElement) => void;
+  onOpenDetails?: (product: ProductWithCategoryAndReviews) => void;
   className?: string;
 };
 
@@ -90,6 +91,7 @@ function resolveTags(product: ProductWithCategoryAndReviews): Tag[] {
 export function ProductCard({
   product,
   onAddToCart,
+  onOpenDetails,
   className = "",
 }: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
@@ -171,6 +173,15 @@ export function ProductCard({
           ease: [0.16, 1, 0.3, 1],
         }}
         aria-labelledby={titleId}
+        onClick={() => onOpenDetails?.(product)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onOpenDetails?.(product);
+          }
+        }}
+        role={onOpenDetails ? "button" : undefined}
+        tabIndex={onOpenDetails ? 0 : undefined}
         className={[
           "group relative flex min-h-[460px] w-full flex-col overflow-hidden border-none",
           "rounded-[20px] bg-transparent",

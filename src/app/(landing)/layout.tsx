@@ -1,6 +1,7 @@
 import Footer from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { CartDrawer } from "@/features/cart/components/cartDrawer";
+import { CartButton } from "@/features/cart/components/cartButton";
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
@@ -23,8 +24,9 @@ export default function LandingLayout({
       <Navbar />
       <main>
         {children}
-        <CartDrawer />
       </main>
+      <CartDrawer />
+      <CartButton />
       <Footer />
     </div>
   );

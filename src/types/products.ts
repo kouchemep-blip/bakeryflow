@@ -15,6 +15,9 @@ export type ProductWithCategoryAndReviews = Prisma.productGetPayload<{
     review: {
       select: {
         rating: true;
+        comment: true;
+        createdAt: true;
+        user: { select: { firstName: true; lastName: true } };
       };
     };
   };

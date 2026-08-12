@@ -25,6 +25,9 @@ export async function GET(request: Request) {
         review: {
           select: {
             rating: true,
+            comment: true,
+            createdAt: true,
+            user: { select: { firstName: true, lastName: true } },
           },
         },
       },

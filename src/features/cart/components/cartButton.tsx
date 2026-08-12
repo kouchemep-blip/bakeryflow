@@ -30,6 +30,7 @@ export const CartButton = forwardRef<HTMLButtonElement>((_, ref) => {
       {totalItems > 0 && (
         <motion.button
           ref={ref}
+          id="floating-cart-button"
           onClick={openDrawer}
           // Apparition au 1er ajout : bounce depuis le bas
           initial={{ y: 80, opacity: 0, scale: 0.8 }}
