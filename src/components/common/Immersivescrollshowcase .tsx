@@ -1,17 +1,32 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
+import Link from "next/link";
+import {
+  ArrowUpRight,
+  Check,
+  PackageCheck,
+  Search,
+  ShoppingBag,
+} from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion } from "framer-motion";
+import { DiscoverButton } from "../ui/DiscoverBtn";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+type ShowcaseIcon = "search" | "shopping-bag" | "check" | "package";
+
 export interface ShowcaseItem {
   index: string;
   title: string;
   description: string;
+  actionLabel: string;
+  href: string;
+  icon: ShowcaseIcon;
 }
 
 export interface ImmersiveScrollShowcaseProps {
@@ -19,6 +34,23 @@ export interface ImmersiveScrollShowcaseProps {
   title: string;
   items: ShowcaseItem[];
   segmentVh?: number;
+}
+
+function StepIcon({ name }: { name: ShowcaseIcon }) {
+  const iconClassName =
+    "h-6 w-6 transition-transform duration-500 ease-out group-hover:rotate-[-8deg] group-hover:scale-110";
+
+  switch (name) {
+    case "shopping-bag":
+      return <ShoppingBag className={iconClassName} strokeWidth={1.7} />;
+    case "check":
+      return <Check className={iconClassName} strokeWidth={1.9} />;
+    case "package":
+      return <PackageCheck className={iconClassName} strokeWidth={1.7} />;
+    case "search":
+    default:
+      return <Search className={iconClassName} strokeWidth={1.7} />;
+  }
 }
 
 export default function ImmersiveScrollShowcase({
@@ -35,12 +67,15 @@ export default function ImmersiveScrollShowcase({
   itemRefs.current = [];
 
   const registerItem = (el: HTMLDivElement | null) => {
-    if (el && !itemRefs.current.includes(el)) itemRefs.current.push(el);
+    if (el && !itemRefs.current.includes(el)) {
+      itemRefs.current.push(el);
+    }
   };
 
   useLayoutEffect(() => {
     const wrapper = wrapperRef.current;
     const pin = pinRef.current;
+
     if (!wrapper || !pin) return;
 
     const ctx = gsap.context(() => {
@@ -50,10 +85,17 @@ export default function ImmersiveScrollShowcase({
         const itemEls = itemRefs.current.filter(Boolean) as HTMLElement[];
         const n = itemEls.length;
 
-        // CORRECTION IMMERSIVE : Tous les items commencent cachés et décalés vers le bas au même endroit
-        gsap.set(itemEls, { opacity: 0, y: 60, scale: 0.95 });
-        // On affiche le premier dès le départ
-        gsap.set(itemEls[0], { opacity: 1, y: 0, scale: 1 });
+        gsap.set(itemEls, {
+          opacity: 0,
+          y: 60,
+          scale: 0.95,
+        });
+
+        gsap.set(itemEls[0], {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+        });
 
         const master = ScrollTrigger.create({
           trigger: wrapper,
@@ -70,11 +112,10 @@ export default function ImmersiveScrollShowcase({
         });
 
         itemEls.forEach((el, i) => {
-          // Division stricte des fenêtres de scroll selon le nombre d'éléments
           const startPct = (i / n) * 100;
           const endPct = ((i + 1) / n) * 100;
 
-          const tl = gsap.timeline({
+          const timeline = gsap.timeline({
             scrollTrigger: {
               trigger: wrapper,
               start: `top+=${startPct}% top`,
@@ -83,14 +124,32 @@ export default function ImmersiveScrollShowcase({
             },
           });
 
-          // Animation d'entrée pour les éléments suivants
           if (i > 0) {
-            tl.to(el, { opacity: 1, y: 0, scale: 1, ease: "power2.out", duration: 0.4 }, 0);
+            timeline.to(
+              el,
+              {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                ease: "power2.out",
+                duration: 0.4,
+              },
+              0,
+            );
           }
 
-          // Animation de sortie (sauf pour le tout dernier élément qui reste visible à la fin)
           if (i < n - 1) {
-            tl.to(el, { opacity: 0, y: -60, scale: 0.95, ease: "power2.in", duration: 0.4 }, 0.6);
+            timeline.to(
+              el,
+              {
+                opacity: 0,
+                y: -60,
+                scale: 0.95,
+                ease: "power2.in",
+                duration: 0.4,
+              },
+              0.6,
+            );
           }
         });
 
@@ -99,7 +158,11 @@ export default function ImmersiveScrollShowcase({
 
       mm.add("(max-width: 767px)", () => {
         const itemEls = itemRefs.current.filter(Boolean) as HTMLElement[];
-        gsap.set(itemEls, { opacity: 0, y: 40 });
+
+        gsap.set(itemEls, {
+          opacity: 0,
+          y: 40,
+        });
 
         itemEls.forEach((el) => {
           gsap.to(el, {
@@ -124,55 +187,91 @@ export default function ImmersiveScrollShowcase({
   return (
     <section
       ref={wrapperRef}
-      className="relative bg-transparent text-black h-auto md:h-[var(--desktop-height)]"
-      style={{ "--desktop-height": `${items.length * segmentVh}vh` } as React.CSSProperties}
+      className="relative h-auto bg-transparent text-black md:h-[var(--desktop-height)]"
+      style={
+        {
+          "--desktop-height": `${items.length * segmentVh}vh`,
+        } as React.CSSProperties
+      }
     >
-      <div ref={pinRef} className="relative overflow-visible md:overflow-hidden h-auto md:h-screen">
+      <div
+        ref={pinRef}
+        className="relative h-auto overflow-visible md:h-screen md:overflow-hidden"
+      >
         <div className="pointer-events-none absolute inset-0" />
 
         <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 gap-12 px-6 py-20 md:grid-cols-[1fr_auto_1fr] md:px-16">
-          
-          {/* Colonne gauche : titre */}
           <div className="flex flex-col justify-start md:justify-center">
+            {eyebrow && (
+              <p className="mb-5 text-xs font-medium uppercase tracking-[0.24em] text-[#ea580c]">
+                {eyebrow}
+              </p>
+            )}
+
             <h2 className="max-w-md text-4xl font-medium leading-tight md:text-5xl lg:text-6xl">
               {title}
             </h2>
           </div>
 
-          {/* Ligne séparatrice verticale */}
           <div className="relative mt-5 hidden md:flex md:justify-center">
-            <div className="absolute top-0 h-full w-px bg-transparent" />
+            <div className="absolute top-0 h-full w-px bg-[#8b5b4d]/15" />
+
             <div
               ref={lineRef}
-              className="absolute top-0 h-full w-px bg-[#EA580C]"
+              className="absolute top-0 h-full w-px bg-[#ea580c]"
               style={{ transform: "scaleY(0.1)" }}
             />
           </div>
 
-          {/* Colonne droite : Les étapes fixes sur PC, empilées sur mobile */}
-          {/* CORRECTION DESKTOP : h-auto sur mobile, h-[45vh] fixe sur PC pour servir de boîte d'ancrage */}
-          <div className="relative flex flex-col justify-start md:justify-center gap-16 md:gap-0 h-auto md:h-[45vh] my-auto">
+          <div className="relative my-auto flex h-auto flex-col justify-start gap-16 md:h-[45vh] md:justify-center md:gap-0">
             {items.map((item, i) => (
-              <div
+              <Link
+                href={item.href}
                 key={item.index}
-                ref={registerItem}
-                // CORRECTION TAILWIND : md:absolute et md:inset-0 forcent tous les blocs à occuper le même espace exact au centre
-                className="relative md:absolute md:inset-0 flex flex-col justify-center max-w-lg"
+                className="group block relative"
               >
-                <div className="mb-4 flex items-center gap-4">
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#8b5b4d]/50 bg-white text-lg font-medium text-[#6d2f2f] shadow-sm">
-                    {item.index}
-                  </span>
-                  <div className="h-px flex-1 bg-[#8b5b4d]/20" />
-                </div>
+                <div
+                  ref={registerItem}
+                  className="relative flex max-w-lg flex-col justify-center md:absolute md:inset-0"
+                >
+                  <div className="mb-5 flex items-center gap-4">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#8b5b4d]/35 bg-white text-[#6d2f2f] shadow-sm transition-all duration-500 ease-out group-hover:-translate-y-1 group-hover:border-[#ea580c]/60 group-hover:shadow-md">
+                      <StepIcon name={item.icon} />
+                    </div>
 
-                <h3 className="mb-3 text-2xl font-medium text-[#4b1f1f] md:text-3xl">
-                  {item.title}
-                </h3>
-                <p className="max-w-md text-sm leading-7 text-[#6f4b45] md:text-base">
-                  {item.description}
-                </p>
-              </div>
+                    <div className="h-px flex-1 bg-[#8b5b4d]/20 transition-colors duration-500 group-hover:bg-[#ea580c]/50" />
+
+                    <span className="text-sm font-medium tracking-[0.18em] text-[#8b5b4d]/70">
+                      {item.index}
+                    </span>
+                  </div>
+
+                  <h3 className="mb-3 text-2xl font-medium text-[#4b1f1f] transition-transform duration-500 ease-out group-hover:translate-x-1 md:text-3xl">
+                    {item.title}
+                  </h3>
+
+                  <p className="max-w-md text-sm leading-7 text-[#6f4b45] md:text-base mb-4">
+                    {item.description}
+                  </p>
+
+                  {/* CORRECTION : Ajout de z-20 et pointer-events-auto pour forcer le bouton à passer au-dessus du conflit absolu */}
+                  <motion.div
+                    className="relative z-20 pointer-events-auto w-full lg:max-w-md text-left pt-6 border-t border-neutral-200/60"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.7,
+                      delay: 0.9,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  >
+                    <DiscoverButton
+                      icon={ArrowUpRight}
+                      label={item.actionLabel}
+                    />
+                  </motion.div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>

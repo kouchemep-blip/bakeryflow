@@ -47,13 +47,18 @@ export default async function ClientChatPage() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto px-4 py-12">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">
+    // Sur mobile : plein écran, hauteur = viewport moins la barre de navigation basse (68px).
+    // Sur desktop : carte centrée classique, comme les autres pages de l'espace client.
+    <main className="flex h-[calc(100dvh-68px)] flex-col md:mx-auto md:h-[calc(100vh-3rem)] md:max-w-3xl md:px-6 md:py-8">
+      <h1 className="hidden shrink-0 text-2xl font-bold text-gray-900 md:mb-6 md:block">
         Discussion avec Lino&apos;s Food
       </h1>
 
-      <div className="h-[600px]">
-        <ChatWithChef conversationId={conversation.id} />
+      <div className="min-h-0 flex-1">
+        <ChatWithChef
+          conversationId={conversation.id}
+          participantSubtitle="Réponse sous 24h en général"
+        />
       </div>
     </main>
   );

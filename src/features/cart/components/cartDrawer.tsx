@@ -163,7 +163,7 @@ export function CartDrawer() {
             ].join(" ")}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+            <div id="cart" className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
               <div className="flex items-center gap-2">
                 <FaShoppingCart size={20} className="text-gray-700" />
                 <h2 className="text-base font-bold text-gray-900">

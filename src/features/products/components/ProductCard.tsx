@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -171,14 +172,14 @@ export function ProductCard({
         }}
         aria-labelledby={titleId}
         className={[
-          "group relative flex min-h-[420px] w-full flex-col overflow-hidden border-none",
-          "rounded-[20px] bg-transparent p-[26px_32px]",
+          "group relative flex min-h-[460px] w-full flex-col overflow-hidden border-none",
+          "rounded-[20px] bg-transparent",
           "text-[#222f30] shadow-sm",
           isUnavailable ? "cursor-not-allowed opacity-60" : "cursor-pointer",
           className,
         ].join(" ")}
       >
-        {/* Fond blanc avec la même forme que le composant initial */}
+        {/* Fond crème avec la même forme découpée que le composant initial (derrière le contenu bas) */}
         <figure
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 z-0 m-0 rounded-[20px_20px_0_20px] bg-[#F5EFE6]"
@@ -188,37 +189,14 @@ export function ProductCard({
           }}
         />
 
-        {/* Métadonnées */}
-        <div className="relative z-10 flex w-full flex-none items-center justify-between gap-[10px]">
-          <div className="inline-flex w-fit items-center rounded-lg bg-[#f7f7f5] px-3 py-2 pr-3 font-mono text-[0.75rem] uppercase leading-none tracking-normal text-[#222f30]">
-            <span
-              aria-hidden="true"
-              className="mr-3 inline-flex h-[10px] w-[10px] shrink-0"
-            />
-
-            {product.category.name}
-          </div>
-
-          <time
-            dateTime={new Date(product.createdAt).toISOString()}
-            className="overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[0.8125rem] uppercase leading-none tracking-[-0.02em] text-[#222f30] opacity-50"
-          >
-            {new Intl.DateTimeFormat("fr-FR", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            }).format(new Date(product.createdAt))}
-          </time>
-        </div>
-
-        {/* Image */}
-        <div className="relative z-10 mt-5 h-40 w-full overflow-hidden rounded-[14px] bg-[#f7f7f5]">
+        {/* Image — plein bord, mise en valeur, hauteur responsive */}
+        <div className="relative z-10 h-60 w-full flex-none overflow-hidden bg-[#f7f7f5] sm:h-64 md:h-72">
           {product.image ? (
             <Image
               src={product.image}
               alt={product.name}
               fill
-              sizes="(max-width: 768px) 100vw, 33vw"
+              sizes="(max-width: 640px) 82vw, (max-width: 768px) 50vw, 33vw"
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
             />
           ) : (
@@ -236,12 +214,12 @@ export function ProductCard({
           )}
 
           {tags.length > 0 && (
-            <div className="absolute left-2 top-2 flex flex-wrap gap-1">
+            <div className="absolute left-3 top-3 flex flex-wrap gap-1">
               {tags.map((tag) => (
                 <span
                   key={tag.label}
                   className={[
-                    "flex items-center gap-1 rounded-full px-2 py-0.5",
+                    "flex items-center gap-1 rounded-full px-2.5 py-1",
                     "text-[10px] font-semibold text-white",
                     tag.color,
                   ].join(" ")}
@@ -254,8 +232,19 @@ export function ProductCard({
           )}
         </div>
 
-        {/* Contenu */}
-        <div className="relative z-10 flex flex-1 flex-col gap-3 pt-5">
+        {/* Contenu, padding uniquement ici (pas sur l'image) */}
+        <div className="relative z-10 flex flex-1 flex-col gap-3 px-6 py-5">
+          <div className="flex items-center justify-between gap-2 font-mono text-[0.7rem] uppercase leading-none tracking-normal text-[#222f30]/50">
+            <span>{product.category.name}</span>
+            <time dateTime={new Date(product.createdAt).toISOString()}>
+              {new Intl.DateTimeFormat("fr-FR", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              }).format(new Date(product.createdAt))}
+            </time>
+          </div>
+
           <h3
             id={titleId}
             className="m-0 line-clamp-2 font-[Aspekta,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif] text-[1.375rem] font-normal leading-[1.3em] tracking-[-0.02em]"

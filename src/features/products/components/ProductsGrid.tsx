@@ -1,3 +1,4 @@
+
 "use client";
 import { useRef } from "react";
 import { CartButton } from "@/features/cart/components/cartButton";
@@ -42,6 +43,13 @@ const fadeUp = {
   hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
+
+// Conteneur responsive : scroll horizontal snapé sur mobile, grille classique dès sm:
+const RESPONSIVE_TRACK_CLASS =
+  "flex snap-x snap-mandatory gap-5 overflow-x-auto -mx-6 px-6 pb-4 scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 sm:snap-none lg:grid-cols-3";
+
+// Chaque carte : largeur fixe sur mobile (scroll horizontal), largeur auto dès sm: (grille)
+const RESPONSIVE_ITEM_CLASS = "w-[100%] flex-none snap-start sm:w-auto";
 
 export function ProductGrid() {
   const {
@@ -153,10 +161,10 @@ export function ProductGrid() {
             animate="visible"
             exit={{ opacity: 0, transition: { duration: 0.2 } }}
             variants={gridVariants}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            className={RESPONSIVE_TRACK_CLASS}
           >
             {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-              <motion.div key={i} variants={cardVariants}>
+              <motion.div key={i} variants={cardVariants} className={RESPONSIVE_ITEM_CLASS}>
                 <ProductSkeleton />
               </motion.div>
             ))}
@@ -189,7 +197,7 @@ export function ProductGrid() {
               initial="hidden"
               animate="visible"
               variants={gridVariants}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              className={RESPONSIVE_TRACK_CLASS}
             >
               <AnimatePresence mode="popLayout">
                 {products.map((product) => (
@@ -200,6 +208,7 @@ export function ProductGrid() {
                     initial="hidden"
                     animate="visible"
                     exit="exit"
+                    className={RESPONSIVE_ITEM_CLASS}
                   >
                     <ProductCard
                       product={product}

@@ -1,3 +1,4 @@
+import Contact from "@/components/landing/contact";
 import { Hero } from "@/components/landing/hero";
 import HowItWorks from "@/components/landing/howItWork";
 import WhyChooseUs from "@/components/landing/whyUs";
@@ -10,6 +11,7 @@ export default function LandingPage() {
       <HowItWorks />
       <WhyChooseUs />
       <ProductGrid />
+      <Contact />
     </div>
   );
 }
