@@ -3,6 +3,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { CartDrawer } from "@/features/cart/components/cartDrawer";
 import { CartButton } from "@/features/cart/components/cartButton";
 import type { Metadata, Viewport } from "next";
+import Magnet from "@/components/common/Magnet";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,9 +23,7 @@ export default function LandingLayout({
   return (
     <div className="relative min-h-screen bg-[#F5EFE6] text-[#1a1a1a] font-sans antialiased overflow-x-hidden selection:bg-[#c5a880] p-4 md:p-8">
       <Navbar />
-      <main>
-        {children}
-      </main>
+      <main>{children}</main>
       <CartDrawer />
       <CartButton />
       <Footer />

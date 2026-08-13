@@ -1,79 +1,97 @@
-// // Magnet.jsx
-// // Source originale : React Bits — https://reactbits.dev/animations/magnet
-// // Ce composant enveloppe n'importe quel élément enfant et lui ajoute
-// // un effet magnétique : l'élément glisse vers la souris quand elle est proche.
+// Magnet.tsx
+// Source originale : React Bits — https://reactbits.dev/animations/magnet
+// Ce composant enveloppe n'importe quel élément enfant et lui ajoute
+// un effet magnétique : l'élément glisse vers la souris quand elle est proche.
 
-// import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 
-// const Magnet = ({
-//   children,
-//   padding        = 100,   // Zone d'attraction autour du bouton (en px)
-//   disabled       = false, // Si true, l'effet est désactivé
-//   magnetStrength = 2,     // Plus le chiffre est grand, moins l'attraction est forte
-//   activeTransition   = 'transform 0.3s ease-out',   // Animation pendant l'attraction
-//   inactiveTransition = 'transform 0.5s ease-in-out', // Animation au retour
-//   wrapperClassName = '',
-//   innerClassName   = '',
-//   ...props
-// }) => {
-//   const [isActive, setIsActive] = useState(false)
-//   const [position, setPosition] = useState({ x: 0, y: 0 })
-//   const magnetRef = useRef(null)
+interface MagnetProps {
+  children: ReactNode
+  padding?: number
+  disabled?: boolean
+  magnetStrength?: number
+  activeTransition?: string
+  inactiveTransition?: string
+  wrapperClassName?: string
+  innerClassName?: string
+  [key: string]: unknown
+}
 
-//   useEffect(() => {
-//     if (disabled) {
-//       setPosition({ x: 0, y: 0 })
-//       return
-//     }
+const Magnet = ({
+  children,
+  padding = 100,
+  disabled = false,
+  magnetStrength = 2,
+  activeTransition = 'transform 0.3s ease-out',
+  inactiveTransition = 'transform 0.5s ease-in-out',
+  wrapperClassName = '',
+  innerClassName = '',
+  ...props
+}: MagnetProps) => {
+  const [isActive, setIsActive] = useState(false)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const magnetRef = useRef<HTMLDivElement>(null)
 
-//     const handleMouseMove = e => {
-//       if (!magnetRef.current) return
+  useEffect(() => {
+    // Si désactivé, on ne fait rien : on n'a plus besoin de setState ici,
+    // la position affichée est dérivée directement au rendu (voir plus bas).
+    if (disabled) return
 
-//       // On récupère la position et la taille du bouton dans la page
-//       const { left, top, width, height } = magnetRef.current.getBoundingClientRect()
-//       const centerX = left + width  / 2
-//       const centerY = top  + height / 2
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!magnetRef.current) return
 
-//       // On calcule la distance entre la souris et le centre du bouton
-//       const distX = Math.abs(centerX - e.clientX)
-//       const distY = Math.abs(centerY - e.clientY)
+      const { left, top, width, height } = magnetRef.current.getBoundingClientRect()
+      const centerX = left + width / 2
+      const centerY = top + height / 2
 
-//       if (distX < width / 2 + padding && distY < height / 2 + padding) {
-//         // La souris est dans la zone d'attraction → on active l'effet
-//         setIsActive(true)
-//         const offsetX = (e.clientX - centerX) / magnetStrength
-//         const offsetY = (e.clientY - centerY) / magnetStrength
-//         setPosition({ x: offsetX, y: offsetY })
-//       } else {
-//         // La souris est trop loin → le bouton revient à sa place
-//         setIsActive(false)
-//         setPosition({ x: 0, y: 0 })
-//       }
-//     }
+      const distX = Math.abs(centerX - e.clientX)
+      const distY = Math.abs(centerY - e.clientY)
 
-//     window.addEventListener('mousemove', handleMouseMove)
-//     return () => window.removeEventListener('mousemove', handleMouseMove)
-//   }, [padding, disabled, magnetStrength])
+      if (distX < width / 2 + padding && distY < height / 2 + padding) {
+        setIsActive(true)
+        const offsetX = (e.clientX - centerX) / magnetStrength
+        const offsetY = (e.clientY - centerY) / magnetStrength
+        setPosition({ x: offsetX, y: offsetY })
+      } else {
+        setIsActive(false)
+        setPosition({ x: 0, y: 0 })
+      }
+    }
 
-//   return (
-//     <div
-//       ref={magnetRef}
-//       className={wrapperClassName}
-//       style={{ position: 'relative', display: 'inline-block' }}
-//       {...props}
-//     >
-//       <div
-//         className={innerClassName}
-//         style={{
-//           transform:   `translate3d(${position.x}px, ${position.y}px, 0)`,
-//           transition:  isActive ? activeTransition : inactiveTransition,
-//           willChange:  'transform',
-//         }}
-//       >
-//         {children}
-//       </div>
-//     </div>
-//   )
-// }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [padding, disabled, magnetStrength])
 
-// export default Magnet
+  // Position réellement appliquée : si disabled, on force {0,0} au rendu
+  // au lieu de le faire via setState dans l'effet.
+  const appliedPosition = disabled ? { x: 0, y: 0 } : position
+
+  // Si l'appelant fournit déjà une classe de positionnement (fixed/absolute/...),
+  // on ne force pas 'relative' en inline style, sinon ça écrase la classe.
+  const hasPositionClass = /\b(fixed|absolute|sticky|static|relative)\b/.test(wrapperClassName)
+
+  return (
+    <div
+      ref={magnetRef}
+      className={wrapperClassName}
+      style={{
+        position: hasPositionClass ? undefined : 'relative',
+        display: 'inline-block',
+      }}
+      {...props}
+    >
+      <div
+        className={innerClassName}
+        style={{
+          transform: `translate3d(${appliedPosition.x}px, ${appliedPosition.y}px, 0)`,
+          transition: isActive ? activeTransition : inactiveTransition,
+          willChange: 'transform',
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
+
+export default Magnet

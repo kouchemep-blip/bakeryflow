@@ -1,30 +1,15 @@
 "use client";
 
-/**
- * RotatingHeadline
- * -----------------
- * Reproduit l'animation observée : une phrase fixe dont deux segments
- * (mis en évidence en vert) changent en boucle, avec une transition
- * "blur fade" — le texte sortant se floute et s'estompe sur place,
- * puis le texte entrant apparaît flouté et se stabilise net.
- *
- * Le reste de la phrase ("Je transforme vos idées en ... qui ... vite.")
- * ne bouge jamais : seuls les deux mots dynamiques sont animés, et les
- * sauts de ligne sont fixes (via <br/>) pour que la mise en page ne
- * bouge pas quand un mot est plus long/court qu'un autre.
- *
- * Fichier unique, autonome — copiez-le tel quel dans votre projet
- * Next.js (`npm i gsap`), c'est un composant client ("use client").
- */
-
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
-// Les paires de mots qui se succèdent en boucle. Modifiez librement.
 const PHRASES: { a: string; b: string }[] = [
-  { a: "interfaces premium", b: "convertissent" },
-  { a: "expériences web", b: "évoluent" },
-  { a: "produits digitaux", b: "captent" },
+  { a: "mariages", b: "convertissent" },
+  { a: "cérémonies", b: "évoluent" },
+  { a: "anniversaires", b: "captent" },
+  { a: "reception privées", b: "captent" },
+  { a: "moments en familles", b: "captent" },
+  { a: "évènements professionnels", b: "captent" },
 ];
 
 const HOLD_DURATION = 1800; // temps d'affichage de chaque phrase (ms)
@@ -91,26 +76,26 @@ export default function RotatingHeadline() {
   const current = PHRASES[index];
 
   return (
-    <section className="flex min-h-screen items-center justify-center bg-[#F1F8F3] px-6">
+    <section className="flex min-h-screen items-center justify-center px-6">
       <h1 className="max-w-3xl text-center font-serif text-4xl font-black leading-[1.15] tracking-tight text-[#0F2E1F] sm:text-5xl md:text-6xl">
-        Je transforme vos idées
+        Nous vous accompagnons
         <br />
-        en{" "}
+        pour vos{" "}
         <span
           ref={wordARef}
-          className="inline-block text-[#22A559] will-change-transform"
+          className="inline-block text-[#EA580C] will-change-transform"
         >
           {current.a}
         </span>
         <br />
-        qui{" "}
+        {/* qui{" "}
         <span
           ref={wordBRef}
           className="inline-block text-[#22A559] will-change-transform"
         >
           {current.b}
         </span>{" "}
-        vite.
+        vite. */}
       </h1>
     </section>
   );
