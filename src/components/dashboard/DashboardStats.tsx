@@ -1,12 +1,6 @@
 // components/dashboard/DashboardStats.tsx
 import Link from "next/link";
-import {
-  MessageCircle,
-  PackageCheck,
-  ShoppingBag,
-  Users,
-  ArrowUpRight,
-} from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { StatCard } from "@/components/dashboard/stat-card";
 
@@ -101,7 +95,7 @@ export default async function DashboardStats() {
       <div className="rounded-2xl border border-black/[0.06] bg-white p-6 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-[15px] font-semibold text-[#161310] dark:text-[#F5F1EA]">
+            <h2 className="text-[15px] font-semibold text-[#161310] dark:text-white">
               Activité récente
             </h2>
             <p className="text-xs text-[#807A72]">
@@ -126,7 +120,8 @@ export default async function DashboardStats() {
                 className="flex items-center justify-between gap-4 rounded-lg px-2 py-3.5 transition-colors hover:bg-black/[0.02] dark:hover:bg-white/[0.03]"
               >
                 <div>
-                  <p className="text-sm font-medium text-[#161310] dark:text-[#F5F1EA]">
+                  {/*  Fermeture corrigée ici */}
+                  <p className="text-sm font-medium text-[#161310] dark:text-white">
                     Commande #{order.id} · {order.user.firstName}{" "}
                     {order.user.lastName}
                   </p>
@@ -139,7 +134,8 @@ export default async function DashboardStats() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-medium text-[#161310] dark:text-[#F5F1EA]">
+                  {/*  Fermeture corrigée ici */}
+                  <p className="text-sm font-medium text-[#161310] dark:text-white">
                     {order.totalPrice.toLocaleString()} FCFA
                   </p>
                   <p className="text-xs font-medium text-[#EA580C]">

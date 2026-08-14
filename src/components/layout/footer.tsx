@@ -9,156 +9,171 @@ import {
   Linkedin,
   ArrowRight,
   Wheat,
+  Mail,
 } from "lucide-react";
 
 const FOOTER_LINKS = [
   {
     title: "Navigation",
     links: [
-      { label: "ACCUEIL", href: "/" },
-      { label: "A VENIR", href: "/coming-soon" },
+      { label: "Accueil", href: "/" },
+      { label: "À venir", href: "/coming-soon" },
     ],
   },
   {
     title: "Support",
     links: [
       { label: "FAQs", href: "/faqs" },
-      { label: "NOUS TROUVER", href: "/find-us" },
+      { label: "Nous trouver", href: "/find-us" },
     ],
   },
   {
     title: "Légal",
     links: [
-      { label: "Mentions Légales", href: "/mentions-legales" },
+      { label: "Mentions légales", href: "/mentions-legales" },
       { label: "Confidentialité", href: "/confidentialite" },
     ],
   },
+];
+
+const SOCIALS = [
+  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
+  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+  { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
+  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
 ];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative min-h-[82vh] overflow-hidden bg-[#F5EFE6] text-neutral-800">
-      <div className="relative z-10 mx-auto flex w-full rounded-[10vw] border border-white/40 bg-white/40 backdrop-blur-md max-w-7xl flex-col gap-12 px-6 py-10 md:px-10 lg:px-16">
-        <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr_auto] lg:items-start">
-          <div className="max-w-md">
+    <footer className="relative isolate overflow-hidden bg-[#2B1B17] text-white">
+      {/* Image de fond — remplace le noir plein. Adapte le chemin à ton asset. */}
+      <Image
+        src="/images/bg.jpg"
+        alt="footer image"
+        fill
+        className="object-cover"
+      />
+      {/* Voile teinté à l'identité (pas un noir générique) pour garder le texte lisible */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#2B1B17]/20 via-[#2B1B17]/50 to-[#2B1B17]" />
+
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-16 px-6 pb-10 pt-20 md:px-10 lg:px-16">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.1fr_0.7fr_0.7fr_0.7fr_1fr]">
+          {/* Marque */}
+          <div>
             <div className="mb-6 flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#EA580C] shadow-lg shadow-orange-500/20">
                 <Wheat className="h-5 w-5 text-white" strokeWidth={2.5} />
               </div>
-              <div>
-                <p className="text-[15px] font-semibold tracking-tight text-black">
-                  BakeryFlow
-                </p>
-                <p className="text-xs text-neutral-500">Fresh bakery experience</p>
-              </div>
-            </div>
-
-            <p className="max-w-sm text-sm leading-7 text-neutral-600">
-              Une expérience culinaire unique au cœur de Cotonou. Des produits frais,
-              locaux et de saison, préparés avec soin pour chaque moment de la journée.
-            </p>
-
-            <div className="mt-8 flex items-center gap-3">
-              <Link
-                href="/reservation"
-                className="inline-flex items-center gap-2 rounded-2xl bg-[#EA580C] px-5 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-neutral-900"
-              >
-                Réserver une table
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-
-              <Link
-                href="/coming-soon"
-                className="inline-flex items-center rounded-2xl border border-neutral-300 bg-white/70 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-700 transition hover:bg-white"
-              >
-                Découvrir
-              </Link>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-1">
-            {FOOTER_LINKS.map((group) => (
-              <div key={group.title}>
-                <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-neutral-500">
-                  {group.title}
-                </h3>
-                <ul className="flex flex-col gap-3">
-                  {group.links.map((link) => (
-                    <li key={link.href}>
-                      <Link
-                        href={link.href}
-                        className="text-sm font-medium text-neutral-700 transition hover:text-[#EA580C]"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          <div className="lg:justify-self-end">
-            <div className="rounded-3xl border border-white/60 bg-white/70 p-5 shadow-sm backdrop-blur-md">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-neutral-500">
-                Suivez-nous
+              <p className="text-[15px] font-semibold tracking-tight">
+                BakeryFlow
               </p>
-              <div className="mt-4 flex items-center gap-4 text-neutral-500">
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-full border border-neutral-200 bg-white p-3 transition hover:border-[#EA580C] hover:text-[#EA580C]"
-                >
-                  <Twitter className="h-4 w-4" />
-                </a>
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-full border border-neutral-200 bg-white p-3 transition hover:border-[#EA580C] hover:text-[#EA580C]"
-                >
-                  <Instagram className="h-4 w-4" />
-                </a>
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-full border border-neutral-200 bg-white p-3 transition hover:border-[#EA580C] hover:text-[#EA580C]"
-                >
-                  <Facebook className="h-4 w-4" />
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-full border border-neutral-200 bg-white p-3 transition hover:border-[#EA580C] hover:text-[#EA580C]"
-                >
-                  <Linkedin className="h-4 w-4" />
-                </a>
-              </div>
             </div>
+            <p className="max-w-xs text-sm leading-7 text-white/60">
+              Une expérience culinaire unique au cœur de Cotonou. Des produits
+              frais, locaux et de saison, préparés avec soin pour chaque moment
+              de la journée.
+            </p>
+            <div className="mt-6 flex items-center gap-3">
+              {SOCIALS.map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="rounded-full border border-white/15 p-2.5 text-white/60 transition hover:border-[#EA580C] hover:text-[#EA580C]"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Colonnes de liens */}
+          {FOOTER_LINKS.map((group) => (
+            <div key={group.title}>
+              <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-white/40">
+                {group.title}
+              </h3>
+              <ul className="flex flex-col gap-3">
+                {group.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm font-medium text-white/75 transition hover:text-[#EA580C]"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
+          {/* Newsletter */}
+          <div>
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-white/40">
+              Nos nouveautés
+            </h3>
+            <p className="mb-4 text-sm leading-6 text-white/60">
+              Nouveaux produits et offres, directement dans votre boîte mail.
+            </p>
+            <form className="flex items-center gap-2">
+              <div className="flex flex-1 items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2.5">
+                <Mail className="h-4 w-4 shrink-0 text-white/40" />
+                <input
+                  type="email"
+                  placeholder="Votre email"
+                  className="w-full bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
+                />
+              </div>
+              <button
+                type="submit"
+                className="shrink-0 rounded-xl bg-[#EA580C] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-white hover:text-[#2B1B17]"
+              >
+                OK
+              </button>
+            </form>
+            <Link
+              href="/reservation"
+              className="mt-5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white/75 transition hover:text-[#EA580C]"
+            >
+              Réserver une table
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
         </div>
 
-        <div className="border-t border-neutral-200 pt-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-col gap-1">
-              <span className="text-xs font-semibold text-neutral-500">
-                © {currentYear} Bakeryflow. Tous droits réservés.
-              </span>
-              <span className="text-[10px] font-medium tracking-[0.14em] text-neutral-400 uppercase">
-                Fait maison avec passion.
-              </span>
-            </div>
+        {/* Wordmark géant */}
+        <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
+          <Wheat
+            className="h-16 w-16 shrink-0 text-[#EA580C] sm:h-20 sm:w-20 lg:h-28 lg:w-28"
+            strokeWidth={1.75}
+          />
+          <p className="select-none text-[clamp(2.75rem,11vw,8rem)] font-black uppercase leading-none tracking-tight text-white">
+            BakeryFlow
+          </p>
+        </div>
 
-            <div className="flex flex-wrap gap-4 text-sm text-neutral-500">
-              <Link href="/mentions-legales" className="transition hover:text-[#EA580C]">
+        {/* Bas de page */}
+        <div className="border-t border-white/10 pt-6">
+          <div className="flex flex-col gap-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+            <span className="text-xs font-semibold text-white/40">
+              © {currentYear} BakeryFlow. Tous droits réservés.
+            </span>
+            <div className="flex flex-wrap justify-center gap-4 text-sm text-white/50 sm:justify-end">
+              <Link
+                href="/mentions-legales"
+                className="transition hover:text-[#EA580C]"
+              >
                 Mentions légales
               </Link>
-              <Link href="/confidentialite" className="transition hover:text-[#EA580C]">
+              <Link
+                href="/confidentialite"
+                className="transition hover:text-[#EA580C]"
+              >
                 Confidentialité
               </Link>
               <Link href="/faqs" className="transition hover:text-[#EA580C]">

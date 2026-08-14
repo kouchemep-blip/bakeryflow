@@ -33,18 +33,24 @@ const lineVariant = {
 export function Hero() {
   return (
     <div className="relative min-h-screen bg-[#F5EFE6] overflow-x-hidden selection:bg-[#EA580C] p-2">
-      <main className="max-w-7xl min-h-screen my-20 rounded-[15px] lg:rounded-[30px] shadow-sm px-6 md:py-12 lg:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 relative overflow-hidden">
-        <div className="inset-0 w-full h-full">
+      <main className="relative mx-auto my-20 grid min-h-screen max-w-7xl grid-cols-1 gap-12 overflow-hidden rounded-[15px] px-6 shadow-sm lg:grid-cols-12 lg:rounded-[30px] md:py-12 lg:py-16">
+        <motion.div
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <Image
             src={"/images/bg.jpg"}
             fill
             alt="background"
             className="object-cover"
+            sizes="100vw"
           />
-        </div>
+        </motion.div>
 
         {/* Colonne Gauche : Titre */}
-        <div className="lg:col-span-6 space-y-8 z-10 lg:-ml-22">
+        <div className="lg:col-span-6 space-y-8 z-10 lg:-ml-22 md:px-25 mt-10 md:mt-0">
           <motion.div
             className="space-y-1"
             initial="hidden"
@@ -75,7 +81,7 @@ export function Hero() {
         </div>
 
         {/* Colonne Droite : Bouton */}
-        <div className="lg:col-span-6 flex flex-col justify-between h-full z-10">
+        <div className="lg:col-span-6 flex flex-col items-end justify-between h-full z-10">
           <div className="hidden lg:block"></div>
 
           <motion.div
@@ -84,7 +90,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Link href="/#plats">
+            <Link href="/#plats" className="flex justify-end jund">
               <DiscoverButton icon={Utensils} label="Découvrir nos plats" />
             </Link>
           </motion.div>

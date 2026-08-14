@@ -59,7 +59,7 @@ function ChartCard({
       className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03] sm:p-6"
     >
       <div className="mb-4">
-        <h3 className="text-[15px] font-semibold text-[#161310] dark:text-[#F5F1EA]">
+        <h3 className="text-[15px] font-semibold text-[#161310] dark:text-black">
           {title}
         </h3>
         {subtitle && <p className="text-xs text-[#807A72]">{subtitle}</p>}

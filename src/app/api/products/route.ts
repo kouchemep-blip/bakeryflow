@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { uploadImage } from "@/lib/upload";
 import { requireAdmin } from "@/lib/auth";
 import { productSchema } from "@/schemas/productSchema";
+import { Prisma } from "@prisma/client";
 
 // ─── GET — liste des produits (landing page client) ───────────────────────────
 export async function GET(request: Request) {
@@ -57,7 +58,12 @@ export async function POST(request: NextRequest) {
       name: formData.get("name"), description: formData.get("description"), price: Number(formData.get("price")),
       categoryId: Number(formData.get("categoryId")), status: formData.get("status"),
     });
-    if (!parsed.success) return NextResponse.json({ message: "Données produit invalides." }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json(
+        { message: parsed.error.issues[0]?.message ?? "Données produit invalides." },
+        { status: 400 },
+      );
+    }
     const { name, description, price, categoryId, status } = parsed.data;
 
     const image = formData.get("image") as File | null;
@@ -71,6 +77,15 @@ export async function POST(request: NextRequest) {
           status: 400,
         }
       );
+    }
+
+    if (!image.type.startsWith("image/")) {
+      return NextResponse.json({ message: "Le fichier sélectionné doit être une image." }, { status: 400 });
+    }
+
+    const category = await prisma.category.findUnique({ where: { id: categoryId } });
+    if (!category) {
+      return NextResponse.json({ message: "La catégorie sélectionnée est introuvable." }, { status: 400 });
     }
 
     const bytes = await image.arrayBuffer();
@@ -97,6 +112,10 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error(error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2003") {
+      return NextResponse.json({ message: "La catégorie sélectionnée est introuvable." }, { status: 400 });
+    }
 
     return NextResponse.json(
       {

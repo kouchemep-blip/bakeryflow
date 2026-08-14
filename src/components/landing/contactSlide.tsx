@@ -43,7 +43,7 @@ export function HeroSlider({ slides, activeIndex }: HeroSliderProps) {
           key={slide.id}
           className={[
             "absolute inset-0",
-            "transition-opacity duration-1200ms ease-in-out",
+            "transition-opacity duration-[1200ms] ease-in-out",
             index === activeIndex ? "animate-ken-burns" : "",
             index === activeIndex ? "opacity-100" : "opacity-0",
           ]

@@ -44,9 +44,21 @@ const NAV: (SimpleLink | GroupLink)[] = [
     icon: ShoppingBag,
     children: [
       { label: "Toutes", href: "/customers/orders" },
-      { label: "En préparation", href: "/customers/orders?status=preparing", dot: "#EA580C" },
-      { label: "Livrées", href: "/customers/orders?status=delivered", dot: "#22C55E" },
-      { label: "Annulées", href: "/customers/orders?status=cancelled", dot: "#807A72" },
+      {
+        label: "En préparation",
+        href: "/customers/orders?status=preparing",
+        dot: "#EA580C",
+      },
+      {
+        label: "Livrées",
+        href: "/customers/orders?status=delivered",
+        dot: "#22C55E",
+      },
+      {
+        label: "Annulées",
+        href: "/customers/orders?status=cancelled",
+        dot: "#807A72",
+      },
     ],
   },
   {
@@ -65,8 +77,19 @@ const ACCOUNT_LINKS: SimpleLink[] = [
 
 const MOBILE_LINKS: SimpleLink[] = [
   { type: "link", label: "Accueil", href: "/customers", icon: Home },
-  { type: "link", label: "Commandes", href: "/customers/orders", icon: ShoppingBag },
-  { type: "link", label: "Discussion", href: "/customers/chat", icon: MessageCircle, badge: UNREAD_MESSAGES },
+  {
+    type: "link",
+    label: "Commandes",
+    href: "/customers/orders",
+    icon: ShoppingBag,
+  },
+  {
+    type: "link",
+    label: "Discussion",
+    href: "/customers/chat",
+    icon: MessageCircle,
+    badge: UNREAD_MESSAGES,
+  },
   { type: "link", label: "Avis", href: "/customers/reviews", icon: Star },
   { type: "link", label: "Profil", href: "/customers/profile", icon: User },
 ];
@@ -94,20 +117,20 @@ export default function ClientSidebar() {
   return (
     <>
       {/* ── Sidebar desktop ── */}
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col items-stretch border-r border-white/[0.08] bg-[#161310]/95 p-5 backdrop-blur md:flex">
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col items-stretch border-r border-white/[0.08] bg-[#F4F0E8] p-5 backdrop-blur md:flex">
         {/* Logo + retour au site */}
         <div className="mb-5 flex items-center gap-2 px-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EA580C]">
             <Wheat className="h-5 w-5 text-[#161310]" strokeWidth={2.5} />
           </div>
-          <span className="text-[15px] font-semibold tracking-tight text-[#F5F1EA]">
+          <span className="text-[15px] font-semibold tracking-tight text-black">
             BakeryFlow
           </span>
         </div>
 
         <Link
           href="/"
-          className="mb-5 flex items-center gap-1.5 px-2 text-[12px] font-medium text-[#807A72] transition-colors hover:text-[#F5F1EA]"
+          className="mb-5 flex items-center gap-1.5 px-2 text-[12px] font-medium text-black transition-colors hover:text-black"
         >
           <ArrowLeft className="h-3.5 w-3.5" strokeWidth={2.5} />
           Retour au site
@@ -115,16 +138,16 @@ export default function ClientSidebar() {
 
         {/* Recherche */}
         <div className="mb-6 flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 transition-colors focus-within:border-[#EA580C]/50">
-          <Search className="h-4 w-4 shrink-0 text-[#807A72]" strokeWidth={2} />
+          <Search className="h-4 w-4 shrink-0 text-black" strokeWidth={2} />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher"
-            className="w-full bg-transparent text-[13px] text-[#F5F1EA] placeholder:text-[#807A72] focus:outline-none"
+            className="w-full bg-transparent text-[13px] text-black placeholder:text-[#807A72] focus:outline-none"
           />
         </div>
 
-        <nav className="flex flex-1 flex-col items-stretch justify-start gap-1 overflow-y-auto">
+        <nav className="flex flex-1 flex-col items-stretch justify-start gap-1 overflow-y-auto [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-thumb]:bg-[#C3B9B1] [&::-webkit-scrollbar-thumb]:rounded-[10px] [&::-webkit-scrollbar-thumb]:backdrop-blur-[150px]">
           <p className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-[#66605A]">
             Principal
           </p>
@@ -140,7 +163,11 @@ export default function ClientSidebar() {
                     <motion.div
                       layoutId="sidebar-active"
                       className="absolute inset-0 rounded-lg bg-[#EA580C]/15"
-                      transition={{ type: "spring", stiffness: 400, damping: 34 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 34,
+                      }}
                     />
                   )}
                   <Link
@@ -148,13 +175,15 @@ export default function ClientSidebar() {
                     aria-label={item.label}
                     className={`group relative z-10 flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13.5px] font-medium transition-colors duration-200 ${
                       active
-                        ? "text-[#F5F1EA]"
-                        : "text-[#A8A29B] hover:bg-white/[0.06] hover:text-[#F5F1EA]"
+                        ? "text-black"
+                        : "text-[#A8A29B] hover:bg-white/[0.06] hover:text-black"
                     }`}
                   >
                     <Icon
                       className={`h-[18px] w-[18px] shrink-0 transition-colors ${
-                        active ? "text-[#EA580C]" : "text-[#807A72] group-hover:text-[#EA580C]"
+                        active
+                          ? "text-[#EA580C]"
+                          : "text-[#807A72] group-hover:text-[#EA580C]"
                       }`}
                       strokeWidth={2}
                     />
@@ -179,13 +208,15 @@ export default function ClientSidebar() {
                   onClick={() => setOpenGroup(isOpen ? null : item.href)}
                   className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[13.5px] font-medium transition-colors duration-200 ${
                     groupActive
-                      ? "text-[#F5F1EA]"
-                      : "text-[#A8A29B] hover:bg-white/[0.06] hover:text-[#F5F1EA]"
+                      ? "text-black"
+                      : "text-[#A8A29B] hover:bg-white/[0.06] hover:text-black"
                   }`}
                 >
                   <Icon
                     className={`h-[18px] w-[18px] shrink-0 transition-colors ${
-                      groupActive ? "text-[#EA580C]" : "text-[#807A72] group-hover:text-[#EA580C]"
+                      groupActive
+                        ? "text-[#EA580C]"
+                        : "text-[#807A72] group-hover:text-[#EA580C]"
                     }`}
                     strokeWidth={2}
                   />
@@ -209,7 +240,10 @@ export default function ClientSidebar() {
                       <div className="ml-[22px] flex flex-col gap-0.5 border-l border-white/[0.08] pb-1 pl-4 pt-1">
                         {item.children.map((child) => {
                           const childActive =
-                            pathname + (typeof window !== "undefined" ? window.location.search : "") ===
+                            pathname +
+                              (typeof window !== "undefined"
+                                ? window.location.search
+                                : "") ===
                             child.href;
                           return (
                             <Link
@@ -217,8 +251,8 @@ export default function ClientSidebar() {
                               href={child.href}
                               className={`flex items-center gap-2 rounded-md px-2.5 py-2 text-[13px] transition-colors duration-200 ${
                                 childActive
-                                  ? "bg-[#EA580C]/15 font-medium text-[#F5F1EA]"
-                                  : "text-[#A8A29B] hover:text-[#F5F1EA]"
+                                  ? "bg-[#EA580C]/15 font-medium text-black"
+                                  : "text-[#A8A29B] hover:text-black"
                               }`}
                             >
                               {child.dot && (
@@ -260,13 +294,15 @@ export default function ClientSidebar() {
                   aria-label={item.label}
                   className={`group relative z-10 flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13.5px] font-medium transition-colors duration-200 ${
                     active
-                      ? "text-[#F5F1EA]"
-                      : "text-[#A8A29B] hover:bg-white/[0.06] hover:text-[#F5F1EA]"
+                      ? "text-black"
+                      : "text-[#A8A29B] hover:bg-white/[0.06] hover:text-black"
                   }`}
                 >
                   <Icon
                     className={`h-[18px] w-[18px] shrink-0 transition-colors ${
-                      active ? "text-[#EA580C]" : "text-[#807A72] group-hover:text-[#EA580C]"
+                      active
+                        ? "text-[#EA580C]"
+                        : "text-[#807A72] group-hover:text-[#EA580C]"
                     }`}
                     strokeWidth={2}
                   />
@@ -278,7 +314,9 @@ export default function ClientSidebar() {
         </nav>
 
         <div className="mt-4 rounded-xl border border-white/[0.06] bg-white/[0.03] p-4">
-          <p className="text-[13px] font-medium text-[#F5F1EA]">Passer en Premium</p>
+          <p className="text-[13px] font-medium text-black">
+            Passer en Premium
+          </p>
           <p className="mt-1 text-[12px] leading-snug text-[#807A72]">
             Débloque analytics avancés et rapports détaillés.
           </p>

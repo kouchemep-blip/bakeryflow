@@ -148,9 +148,9 @@ export default function Contact() {
       className="bg-[#F5EFE6] text-black"
       style={{ "--reveal-mask-bg": "#F5EFE6" } as React.CSSProperties}
     >
-      <section className="relative overflow-hidden px-6 py-8 md:px-10 lg:px-16 max-w-7xl min-h-screen my-20 rounded-[15px] lg:rounded-[30px] shadow-sm md:py-12 lg:py-16">
+      <section className="relative mx-auto my-20 min-h-screen max-w-7xl overflow-hidden rounded-[15px] px-6 py-8 shadow-sm lg:rounded-[30px] md:px-10 md:py-12 lg:px-16 lg:py-16">
         <div className="pointer-events-none absolute inset-0 z-0 " />
-        <div className="inset-0 w-full h-full">
+        <div className="absolute inset-0">
           {/* <Image
             src={"/images/bg.jpg"}
             fill

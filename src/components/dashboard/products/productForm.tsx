@@ -80,8 +80,8 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
     );
 
     if (!response.ok) {
-      const error = await response.json();
-      alert(error.message);
+      const error = await response.json().catch(() => null);
+      alert(error?.message ?? "Le produit n'a pas pu être enregistré.");
       return;
     }
 

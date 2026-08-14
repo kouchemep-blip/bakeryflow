@@ -38,17 +38,13 @@ export default function CategoryForm({ category }: CategoryFormProps) {
     });
 
     if (response.ok) {
-      if (category) {
-        router.push("/dashboard/categories");
-      }
-
+      router.push("/dashboard/categories");
       router.refresh();
       return;
     }
 
-    const error = await response.json();
-
-    alert(error.message);
+    const error = await response.json().catch(() => null);
+    alert(error?.message ?? "La catégorie n'a pas pu être enregistrée.");
   }
 
   return (

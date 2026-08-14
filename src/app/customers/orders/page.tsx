@@ -4,7 +4,11 @@ import { verifyToken } from "@/lib/jwt";
 import { OrdersContent } from "@/components/customers/orderContent";
 import { order_status } from "@prisma/client";
 
-const STATUS_FILTERS: { key: string; label: string; statuses: order_status[] | null }[] = [
+const STATUS_FILTERS: {
+  key: string;
+  label: string;
+  statuses: order_status[] | null;
+}[] = [
   { key: "all", label: "Toutes", statuses: null },
   {
     key: "preparing",
@@ -43,18 +47,20 @@ export default async function ClientOrdersPage({
   const orders = await prisma.order.findMany({
     where: {
       userId,
-      ...(activeFilter.statuses ? { status: { in: activeFilter.statuses } } : {}),
+      ...(activeFilter.statuses
+        ? { status: { in: activeFilter.statuses } }
+        : {}),
     },
     include: {
       orderitem: {
         include: {
-          product: true,
+          product: {
+            select: { name: true, image: true },
+          },
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: { createdAt: "desc" },
   });
 
   // On sérialise pour le composant client : pas de Date brute, pas d'objets Prisma complets.
@@ -67,6 +73,7 @@ export default async function ClientOrdersPage({
       id: item.id,
       name: item.product?.name ?? "Produit",
       quantity: item.quantity ?? 1,
+      image: item.product?.image ?? null,
     })),
   }));
 

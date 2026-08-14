@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Info, MessageSquare, ShoppingCart, Star, X } from "lucide-react";
 import { useCartStore } from "@/features/cart/store/cart.store";
@@ -55,7 +56,9 @@ export function ProductDetailsModal({ product, onClose, onAddToCart }: Props) {
     { id: "avis", label: "Avis", icon: MessageSquare },
   ];
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <AnimatePresence>
       {product && (
         <motion.div
@@ -223,5 +226,6 @@ export function ProductDetailsModal({ product, onClose, onAddToCart }: Props) {
         </motion.div>
       )}
     </AnimatePresence>
+    , document.body,
   );
 }

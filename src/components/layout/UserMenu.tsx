@@ -223,7 +223,7 @@ export default function UserMenu() {
                     icon={<MessageCircle size={18} />}
                     label="Messagerie"
                     onClick={() => {
-                      router.push("/customers/messages");
+                      router.push("/customers/chat");
                       setOpen(false);
                     }}
                   />
@@ -232,7 +232,7 @@ export default function UserMenu() {
                     icon={<Settings size={18} />}
                     label="Paramètres"
                     onClick={() => {
-                      router.push("/customers/settings");
+                      router.push("/customers/profile");
                       setOpen(false);
                     }}
                   />

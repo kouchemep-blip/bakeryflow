@@ -327,7 +327,7 @@ export function ProductCard({
           >
             <span
               className={[
-                "product-card-btn-icon relative block h-full w-full p-[10px] bg-[#222f30] hover:bg-[#a7e26e] text-white]",
+                "product-card-btn-icon relative block h-full w-full p-2.5 bg-[#222f30] hover:bg-[#222f30]/90 text-white]",
                 "origin-center transition-transform duration-500 ease-in-out",
               ].join(" ")}
               style={{
@@ -373,7 +373,7 @@ export function ProductCard({
                       exit={{ scale: 0, opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <FaShoppingCart size={16} className="text-[#F5EFE6] group-hover:text-black" />
+                      <FaShoppingCart size={16} className="text-[#F5EFE6]" />
                     </motion.span>
                   )}
                 </AnimatePresence>
