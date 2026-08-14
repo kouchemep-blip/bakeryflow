@@ -68,8 +68,11 @@ export default function ProductTable({ products }: ProductTableProps) {
             </p>
           </div>
 
+          <Link href="/dashboard/categories">
+            <DiscoverButton icon={FaPlus} label="Categories" />
+          </Link>
           <Link href="/dashboard/products/new">
-            <DiscoverButton icon={FaPlus} label="Ajouter" />
+            <DiscoverButton icon={FaPlus} label="Produits" />
           </Link>
         </div>
 

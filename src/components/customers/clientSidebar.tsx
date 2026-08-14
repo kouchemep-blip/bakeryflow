@@ -117,7 +117,7 @@ export default function ClientSidebar() {
   return (
     <>
       {/* ── Sidebar desktop ── */}
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col items-stretch border-r border-white/[0.08] bg-[#F4F0E8] p-5 backdrop-blur md:flex">
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col items-stretch border-r border-b border-black/8 bg-[#F5EFE6]/90 backdrop-blur-md p-5 md:flex">
         {/* Logo + retour au site */}
         <div className="mb-5 flex items-center gap-2 px-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EA580C]">

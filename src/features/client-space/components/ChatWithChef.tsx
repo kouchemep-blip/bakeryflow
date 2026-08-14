@@ -10,16 +10,9 @@ import {
   Sparkles,
   MessageCircleMore,
   Clock3,
-  Package,
-  CalendarDays,
-  MapPin,
   BadgeInfo,
   Plus,
   ClipboardList,
-  Truck,
-  ShoppingBag,
-  PhoneCall,
-  ArrowRight,
 } from "lucide-react";
 
 import { useChat } from "../hooks/useChat";
@@ -83,15 +76,30 @@ export function ChatWithChef({
   }, [messages.length, markRead]);
 
   const lastCustomerMessage = useMemo(() => {
-    const latest = [...messages].reverse().find((message) => message.senderId === currentUserId);
+    const latest = [...messages]
+      .reverse()
+      .find((message) => message.senderId === currentUserId);
     return latest?.content ?? "Aucun message récent.";
   }, [messages, currentUserId]);
 
   const quickReplies: QuickReply[] = [
-    { label: "Suivi commande", value: "Bonjour, pouvez-vous me faire un point sur ma commande ?" },
-    { label: "Heure de retrait", value: "Bonjour, quelle est l'heure prévue pour le retrait ?" },
-    { label: "Modifier ma commande", value: "Bonjour, je souhaite modifier ma commande." },
-    { label: "Adresse / livraison", value: "Bonjour, pouvez-vous me confirmer l'adresse ou les modalités de livraison ?" },
+    {
+      label: "Suivi commande",
+      value: "Bonjour, pouvez-vous me faire un point sur ma commande ?",
+    },
+    {
+      label: "Heure de retrait",
+      value: "Bonjour, quelle est l'heure prévue pour le retrait ?",
+    },
+    {
+      label: "Modifier ma commande",
+      value: "Bonjour, je souhaite modifier ma commande.",
+    },
+    {
+      label: "Adresse / livraison",
+      value:
+        "Bonjour, pouvez-vous me confirmer l'adresse ou les modalités de livraison ?",
+    },
   ];
 
   const summaryCards = [
@@ -135,7 +143,11 @@ export function ChatWithChef({
 
   function handleEdit(message: (typeof messages)[number]) {
     const content = window.prompt("Modifier le message", message.content);
-    if (content !== null && content.trim() && content.trim() !== message.content) {
+    if (
+      content !== null &&
+      content.trim() &&
+      content.trim() !== message.content
+    ) {
       editMessage(message.id, content);
     }
   }
@@ -147,8 +159,8 @@ export function ChatWithChef({
   }
 
   return (
-    <div className="grid h-full min-h-0 gap-4 lg:grid-cols-[1fr_320px]">
-      <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-[2rem] border border-white/55 bg-white/45 shadow-[0_24px_110px_rgba(0,0,0,0.08)] backdrop-blur-2xl">
+     <div className="flex h-full min-h-0">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[2rem] border border-white/55 bg-white/45 shadow-[0_24px_110px_rgba(0,0,0,0.08)] backdrop-blur-2xl">
         <div className="flex shrink-0 items-center justify-between gap-3 border-b border-black/5 px-4 py-4 md:px-5">
           <div className="flex min-w-0 items-center gap-3">
             <Link
@@ -178,7 +190,9 @@ export function ChatWithChef({
             onClick={() => setSidebarOpen((v) => !v)}
             className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-4 py-2 text-xs font-medium text-black/65 transition hover:bg-white lg:hidden"
           >
-            <Plus className={`h-4 w-4 transition-transform ${sidebarOpen ? "rotate-45" : ""}`} />
+            <Plus
+              className={`h-4 w-4 transition-transform ${sidebarOpen ? "rotate-45" : ""}`}
+            />
             Résumé
           </button>
 
@@ -191,7 +205,10 @@ export function ChatWithChef({
         <div className="border-b border-black/5 px-4 py-3 md:px-5">
           <div className="flex items-center gap-2 text-sm text-black/60">
             <Sparkles className="h-4 w-4 text-[#EA580C]" />
-            <span>Posez une question, demandez un suivi ou réglez un détail en quelques secondes.</span>
+            <span>
+              Posez une question, demandez un suivi ou réglez un détail en
+              quelques secondes.
+            </span>
           </div>
         </div>
 
@@ -221,8 +238,8 @@ export function ChatWithChef({
                 Pas encore de message
               </p>
               <p className="mt-2 max-w-sm text-sm leading-7 text-black/55">
-                Commencez la discussion avec notre équipe. Vous pouvez poser une question,
-                demander un suivi ou clarifier votre commande.
+                Commencez la discussion avec notre équipe. Vous pouvez poser une
+                question, demander un suivi ou clarifier votre commande.
               </p>
             </div>
           )}
@@ -284,146 +301,6 @@ export function ChatWithChef({
           </div>
         </div>
       </div>
-
-      <aside className="hidden h-full min-h-0 flex-col gap-4 lg:flex">
-        <div className="rounded-[2rem] border border-white/55 bg-white/45 p-5 shadow-[0_24px_110px_rgba(0,0,0,0.08)] backdrop-blur-2xl">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FFF7F0] text-[#EA580C]">
-              <Package className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-black/40">
-                Résumé commande
-              </p>
-              <p className="mt-1 text-sm font-medium text-black/85">
-                Suivi rapide de votre dossier
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5 space-y-3">
-            {summaryCards.map((card) => {
-              const Icon = card.icon;
-              return (
-                <div
-                  key={card.title}
-                  className="rounded-[1.25rem] border border-black/5 bg-white/55 p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#FFF7F0] text-[#EA580C]">
-                      <Icon className="h-4 w-4" />
-                    </span>
-                    <div className="min-w-0">
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-black/35">
-                        {card.title}
-                      </p>
-                      <p className="mt-1 line-clamp-2 text-sm leading-6 text-black/75">
-                        {card.value}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="rounded-[2rem] border border-white/55 bg-white/45 p-5 shadow-[0_24px_110px_rgba(0,0,0,0.08)] backdrop-blur-2xl">
-          <p className="text-xs font-medium uppercase tracking-[0.22em] text-black/40">
-            Raccourcis
-          </p>
-
-          <div className="mt-4 space-y-3">
-            {[
-              { label: "Voir mes commandes", href: "/customers/orders", icon: ShoppingBag },
-              { label: "Besoin d’aide", href: "/customers", icon: PhoneCall },
-              { label: "Suivi livraison", href: "/customers/orders", icon: Truck },
-            ].map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="group flex items-center justify-between rounded-[1.15rem] border border-black/5 bg-white/55 px-4 py-3 transition hover:-translate-y-0.5 hover:bg-white"
-                >
-                  <span className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#FFF7F0] text-[#EA580C]">
-                      <Icon className="h-4 w-4" />
-                    </span>
-                    <span className="text-sm font-medium text-black/80">
-                      {item.label}
-                    </span>
-                  </span>
-                  <ArrowRight className="h-4 w-4 text-black/35 transition-transform group-hover:translate-x-1" />
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </aside>
-
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.aside
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 12 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-x-4 bottom-4 z-20 rounded-[1.75rem] border border-white/55 bg-white/85 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.12)] backdrop-blur-2xl lg:hidden"
-          >
-            <div className="flex items-center justify-between">
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-black/40">
-                Résumé et raccourcis
-              </p>
-              <button
-                type="button"
-                onClick={() => setSidebarOpen(false)}
-                className="rounded-full bg-black/5 px-3 py-1.5 text-xs font-medium text-black/60"
-              >
-                Fermer
-              </button>
-            </div>
-
-            <div className="mt-4 space-y-3">
-              {summaryCards.slice(0, 2).map((card) => {
-                const Icon = card.icon;
-                return (
-                  <div key={card.title} className="rounded-[1.15rem] border border-black/5 bg-white px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#FFF7F0] text-[#EA580C]">
-                        <Icon className="h-4 w-4" />
-                      </span>
-                      <div>
-                        <p className="text-xs font-medium uppercase tracking-[0.18em] text-black/35">
-                          {card.title}
-                        </p>
-                        <p className="mt-1 text-sm leading-6 text-black/75">
-                          {card.value}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-4 grid gap-2">
-              <Link
-                href="/customers/orders"
-                className="rounded-full bg-[#111827] px-4 py-3 text-center text-sm font-medium text-white"
-              >
-                Voir mes commandes
-              </Link>
-              <Link
-                href="/customers"
-                className="rounded-full border border-black/10 bg-white px-4 py-3 text-center text-sm font-medium text-black/80"
-              >
-                Retour espace client
-              </Link>
-            </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

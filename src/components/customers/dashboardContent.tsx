@@ -9,6 +9,8 @@ import {
   ShoppingBag,
   Star,
   ChevronRight,
+  CreditCard,
+  ShoppingCart,
 } from "lucide-react";
 
 type StatKey = "orders" | "delivered" | "spent" | "reviews";
@@ -28,9 +30,9 @@ type Order = {
 };
 
 const STAT_STYLES: Record<StatKey, { icon: typeof ShoppingBag; color: string; bg: string }> = {
-  orders: { icon: ShoppingBag, color: "text-blue-600", bg: "bg-blue-50" },
+  orders: { icon: ShoppingCart, color: "text-blue-600", bg: "bg-blue-50" },
   delivered: { icon: PackageCheck, color: "text-emerald-600", bg: "bg-emerald-50" },
-  spent: { icon: ShoppingBag, color: "text-orange-600", bg: "bg-orange-50" },
+  spent: { icon: CreditCard, color: "text-orange-600", bg: "bg-orange-50" },
   reviews: { icon: Star, color: "text-[#EA580C]", bg: "bg-amber-50" },
 };
 

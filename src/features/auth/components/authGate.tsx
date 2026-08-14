@@ -413,7 +413,7 @@ function RegisterInline({ onSuccess }: RegisterInlineProps) {
       </div>
 
       {/* Erreur */}
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && <p className="text-xs -mt-5 text-red-500">{error}</p>}
 
       {/* Submit */}
       <motion.button
