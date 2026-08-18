@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const { email, password } = loginSchema.parse(await request.json());
     const user = await prisma.user.findUnique({ where: { email } });
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user?.password || !(await bcrypt.compare(password, user.password))) {
       return NextResponse.json(
         { message: "Email ou mot de passe incorrect" },
         { status: 401 },

@@ -55,7 +55,7 @@ export default async function SettingsPage() {
         </div>
       </div>
 
-      <ProfileForm profile={user} />
+      <ProfileForm profile={{ ...user, phone: user.phone ?? "" }} />
     </section>
   );
 }

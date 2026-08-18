@@ -29,9 +29,16 @@ type Order = {
   date: string;
 };
 
-const STAT_STYLES: Record<StatKey, { icon: typeof ShoppingBag; color: string; bg: string }> = {
+const STAT_STYLES: Record<
+  StatKey,
+  { icon: typeof ShoppingBag; color: string; bg: string }
+> = {
   orders: { icon: ShoppingCart, color: "text-blue-600", bg: "bg-blue-50" },
-  delivered: { icon: PackageCheck, color: "text-emerald-600", bg: "bg-emerald-50" },
+  delivered: {
+    icon: PackageCheck,
+    color: "text-emerald-600",
+    bg: "bg-emerald-50",
+  },
   spent: { icon: CreditCard, color: "text-orange-600", bg: "bg-orange-50" },
   reviews: { icon: Star, color: "text-[#EA580C]", bg: "bg-amber-50" },
 };
@@ -39,7 +46,10 @@ const STAT_STYLES: Record<StatKey, { icon: typeof ShoppingBag; color: string; bg
 const STATUS_STYLES: Record<string, { label: string; className: string }> = {
   PENDING: { label: "En attente", className: "bg-slate-100 text-slate-600" },
   CONFIRMED: { label: "Confirmée", className: "bg-blue-50 text-blue-600" },
-  PREPARING: { label: "En préparation", className: "bg-orange-50 text-orange-600" },
+  PREPARING: {
+    label: "En préparation",
+    className: "bg-orange-50 text-orange-600",
+  },
   READY: { label: "Prête", className: "bg-amber-50 text-amber-600" },
   DELIVERED: { label: "Livrée", className: "bg-emerald-50 text-emerald-600" },
   CANCELLED: { label: "Annulée", className: "bg-red-50 text-red-500" },
@@ -132,7 +142,9 @@ export function DashboardContent({
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-slate-500">{stat.label}</p>
+                  <p className="text-sm font-medium text-slate-500">
+                    {stat.label}
+                  </p>
                   <p className="mt-2 text-2xl font-bold text-slate-900">
                     {typeof stat.value === "number" ? (
                       <AnimatedNumber value={stat.value} />
@@ -141,7 +153,9 @@ export function DashboardContent({
                     )}
                   </p>
                 </div>
-                <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${bg}`}>
+                <div
+                  className={`flex h-11 w-11 items-center justify-center rounded-2xl ${bg}`}
+                >
                   <Icon className={`h-5 w-5 ${color}`} />
                 </div>
               </div>
@@ -214,7 +228,9 @@ export function DashboardContent({
               })}
             </motion.div>
           ) : (
-            <p className="mt-5 text-sm text-slate-500">Aucune commande pour le moment.</p>
+            <p className="mt-5 text-sm text-slate-500">
+              Aucune commande pour le moment.
+            </p>
           )}
         </motion.section>
 
@@ -226,7 +242,11 @@ export function DashboardContent({
         >
           <motion.div
             animate={unreadMessages ? { scale: [1, 1.08, 1] } : {}}
-            transition={{ duration: 1.4, repeat: unreadMessages ? Infinity : 0, ease: "easeInOut" }}
+            transition={{
+              duration: 1.4,
+              repeat: unreadMessages ? Infinity : 0,
+              ease: "easeInOut",
+            }}
             className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/20"
           >
             <MessageCircle className="h-5 w-5" />

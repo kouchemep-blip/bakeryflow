@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import gsap from "gsap";
 import {
   CalendarDays,
@@ -183,13 +182,17 @@ export default function Contact() {
             </p>
 
             <div className="mt-15 flex flex-wrap items-center gap-4">
-              <button onClick={() => setShowForm(true)}>
-                <DiscoverButton icon={Mail} label="Par mail" />
-              </button>
+              <DiscoverButton
+                icon={Mail}
+                label="Par mail"
+                onClick={() => setShowForm(true)}
+              />
 
-              <Link href={WHATSAPP_URL}>
-                <DiscoverButton icon={FaWhatsapp} label="Sur WhatsApp" />
-              </Link>
+              <DiscoverButton
+                icon={FaWhatsapp}
+                label="Sur WhatsApp"
+                onClick={() => window.open(WHATSAPP_URL, "_blank", "noopener,noreferrer")}
+              />
 
               {/* FORMULAIRE DE CONTACT RAPIDE AVEC ANIMATION GSAP */}
               {showForm && (

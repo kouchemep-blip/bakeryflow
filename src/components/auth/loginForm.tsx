@@ -139,7 +139,7 @@ export function LoginForm({
 
         {/* ── Erreur serveur ── */}
         {loginServerError && (
-          <div className="mb-4 w-full rounded-xl border border-red-100 bg-red-50 px-4 py-2.5 text-left">
+          <div className="-mt-4 w-full rounded-xl border border-red-100 bg-red-50 px-4 py-2.5 text-left">
             <p className="text-xs text-red-600">{loginServerError}</p>
           </div>
         )}
