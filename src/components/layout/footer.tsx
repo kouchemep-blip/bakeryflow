@@ -56,7 +56,7 @@ export default function Footer() {
         className="object-cover"
       />
       {/* Voile teinté à l'identité (pas un noir générique) pour garder le texte lisible */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#2B1B17]/20 via-[#2B1B17]/50 to-[#2B1B17]" />
+      <div className="absolute inset-0 bg-linear-to-b from-[#2B1B17]/20 via-[#2B1B17]/50 to-[#2B1B17]" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-16 px-6 pb-10 pt-20 md:px-10 lg:px-16">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.1fr_0.7fr_0.7fr_0.7fr_1fr]">
@@ -147,12 +147,12 @@ export default function Footer() {
         </div>
 
         {/* Wordmark géant */}
-        <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
+        <div className="flex items-center gap-1.5 sm:gap-6 lg:gap-8">
           <Wheat
-            className="h-16 w-16 shrink-0 text-[#EA580C] sm:h-20 sm:w-20 lg:h-28 lg:w-28"
+            className="h-8 w-8 md:h-16 md:w-16 shrink-0 text-[#EA580C] sm:h-20 sm:w-20 lg:h-28 lg:w-28"
             strokeWidth={1.75}
           />
-          <p className="select-none text-[clamp(2.75rem,11vw,8rem)] font-black uppercase leading-none tracking-tight text-white">
+          <p className="select-none text-[clamp(2rem,10vw,8rem)] font-black uppercase leading-none tracking-tight text-white">
             BakeryFlow
           </p>
         </div>

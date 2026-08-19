@@ -87,9 +87,12 @@ export async function GET(request: Request) {
       role: user.role,
     });
 
-    const destination =
-      user.role === "CLIENT" ? "/customers" : "/dashboard";
-    const response = NextResponse.redirect(new URL(destination, request.url));
+    const destination = user.role === "CLIENT" ? "/customers" : "/dashboard";
+
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL ?? new URL(request.url).origin;
+
+    const response = NextResponse.redirect(new URL(destination, baseUrl));
 
     response.cookies.set("token", token, {
       httpOnly: true,

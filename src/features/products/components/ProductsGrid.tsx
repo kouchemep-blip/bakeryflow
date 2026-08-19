@@ -89,7 +89,7 @@ export function ProductGrid() {
     // Ajout du fond crème (#f5efe6) et des arrondis pour s'intégrer au Hero
     <section
       id="plats"
-      className="my-8 w-full scroll-mt-24 rounded-[40px] border border-white/40 bg-white/70 px-6 py-16 backdrop-blur-md md:px-12"
+      className="my-8 w-full scroll-mt-24 md:rounded-[40px] border border-white/40 md:bg-white/70 px-8 py-16 backdrop-blur-md md:px-12"
     >
       <p
         role="status"

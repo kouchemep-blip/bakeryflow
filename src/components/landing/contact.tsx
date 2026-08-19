@@ -20,7 +20,7 @@ import { HERO_SLIDES, HeroSlider } from "./contactSlide";
 import { useHeroSlider } from "@/hooks/useContactSlider";
 
 const PHRASES = [
-  { a: "mariages", icon: HeartHandshake },
+  { a: "célébrations nuptiales", icon: HeartHandshake },
   { a: "cérémonies", icon: CalendarDays },
   { a: "anniversaires", icon: PartyPopper },
   { a: "moments en famille", icon: CakeSlice },
@@ -149,13 +149,7 @@ export default function Contact() {
     >
       <section className="relative mx-auto my-20 min-h-screen max-w-7xl overflow-hidden rounded-[15px] px-6 py-8 shadow-sm lg:rounded-[30px] md:px-10 md:py-12 lg:px-16 lg:py-16">
         <div className="pointer-events-none absolute inset-0 z-0 " />
-        <div className="absolute inset-0">
-          {/* <Image
-            src={"/images/bg.jpg"}
-            fill
-            alt="background"
-            className="object-cover"
-          /> */}
+        <div className="hidden md:absolute inset-0">
           <HeroSlider slides={HERO_SLIDES} activeIndex={activeIndex} />
         </div>
         <div className="mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
@@ -187,12 +181,15 @@ export default function Contact() {
                 label="Par mail"
                 onClick={() => setShowForm(true)}
               />
-
-              <DiscoverButton
-                icon={FaWhatsapp}
-                label="Sur WhatsApp"
-                onClick={() => window.open(WHATSAPP_URL, "_blank", "noopener,noreferrer")}
-              />
+              <div className="hidden md:block">
+                <DiscoverButton
+                  icon={FaWhatsapp}
+                  label="Sur WhatsApp"
+                  onClick={() =>
+                    window.open(WHATSAPP_URL, "_blank", "noopener,noreferrer")
+                  }
+                />
+              </div>
 
               {/* FORMULAIRE DE CONTACT RAPIDE AVEC ANIMATION GSAP */}
               {showForm && (
@@ -285,10 +282,19 @@ export default function Contact() {
                       <CurrentIcon className="h-5 w-5 mt-1" />
                     </span>
                   </h2>
+                <div className="md:hidden block mt-7">
+                  <DiscoverButton
+                    icon={FaWhatsapp}
+                    label="Sur WhatsApp"
+                    onClick={() =>
+                      window.open(WHATSAPP_URL, "_blank", "noopener,noreferrer")
+                    }
+                  />
+                </div>
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="hidden md:grid gap-4 sm:grid-cols-2">
                 {[
                   {
                     title: "Réservations",
